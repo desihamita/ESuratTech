@@ -221,7 +221,7 @@
                     <span aria-hidden="true">&times;</span>
                   </button>
                 </div>
-                <div class="modal-body p-0">
+                {{-- <div class="modal-body p-0">
                   <form action="{{ route('suratmasuk.cetak') }}" method="POST">
                   @csrf
                   <input type="hidden" name="letter_id" id="letterId">
@@ -234,7 +234,7 @@
                       <button type="button" class="btn btn-info" id="confirmPrint">Cetak</button>
                     </div>
                   </form>
-                </div>
+                </div> --}}
               </div>
             </div>
           </div>
@@ -330,6 +330,7 @@
   </section>
 </x-Layouts.main.app>
 <script>
+  
   $(document).ready(function() {
     setTimeout(function() {
       $(".alert").alert('close');
