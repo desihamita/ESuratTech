@@ -2,13 +2,14 @@
 
 use Illuminate\Support\Facades\Route;
 
-use App\Http\Controllers\UserController;
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\UserController;
 use App\Http\Controllers\DosenController;
-use App\Http\Controllers\ProfilController;
 use App\Http\Controllers\DivisiController;
-use App\Http\Controllers\KlasifikasiController;
+use App\Http\Controllers\ProfilController;
 use App\Http\Controllers\SuratMasukController;
+use App\Http\Controllers\KlasifikasiController;
+use App\Http\Controllers\SuratKeluarController;
 
 // Public Routes
 Route::get('/', [UserController::class, 'login'])->name('login');
@@ -29,8 +30,15 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/surat-masuk/create', [SuratMasukController::class, 'create'])->name('suratmasuk.create');
     Route::post('/surat-masuk/store', [SuratMasukController::class, 'store'])->name('suratmasuk.store');
     Route::get('/surat-masuk/detail/{id}', [SuratMasukController::class, 'detail'])->name('suratmasuk.detail');
-
+    
     Route::post('/surat-masuk/disposisi', [SuratMasukController::class, 'storeDisposisi'])->name('suratmasuk.storeDisposisi');
+
+// surat keluar controller
+    Route::get('/surat-keluar', [SuratKeluarController::class, 'index'])->name('suratkeluar.index');
+    Route::post('/surat-keluar/store', [SuratKeluarController::class, 'store'])->name('suratkeluar.store');
+    Route::post('/surat-keluar/update/{id}', [SuratKeluarController::class, 'update'])->name('suratkeluar.update');
+    Route::post('/surat-keluar/delete/{id}', [SuratKeluarController::class, 'destroy'])->name('suratkeluar.delete');
+    Route::get('/surat-keluar/detail/{id}', [SuratKeluarController::class, 'detail'])->name('suratkeluar.detail');
 
     Route::get('/divisi', [DivisiController::class, 'index'])->name('divisi.index');
     Route::post('/divisi/store', [DivisiController::class, 'store'])->name('divisi.store');

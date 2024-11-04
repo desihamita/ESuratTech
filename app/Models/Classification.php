@@ -10,7 +10,7 @@ class Classification extends Model
     use HasFactory;
     protected $table = 'classifications';
     protected $fillable = [
-        'code',
+        'kode',
         'name',
     ];
 }
