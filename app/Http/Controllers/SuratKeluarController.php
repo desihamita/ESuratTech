@@ -49,6 +49,7 @@ class SuratKeluarController extends Controller
             'kode_klasifikasi' => 'required|string',
             'file_surat' => 'required|file|mimes:pdf|max:2048',
         ]);
+
         // \dd($validator);
         if ($validator->fails()) {
             return redirect()->back()->withErrors($validator)->withInput();
