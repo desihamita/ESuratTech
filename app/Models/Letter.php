@@ -2,8 +2,9 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo; // Import untuk relasi
 
 class Letter extends Model
@@ -31,6 +32,11 @@ class Letter extends Model
 
     public function classification(): BelongsTo
     {
-        return $this->belongsTo(Classification::class, 'kode_klasifikasi', 'code');
+        return $this->belongsTo(Classification::class, 'kode_klasifikasi', 'kode');
     }
+    public function dispositions(): HasMany
+    {
+        return $this->hasMany(Disposisi::class, 'letter_id', 'id');
+    }
+     
 }
