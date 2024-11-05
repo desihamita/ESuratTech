@@ -4,15 +4,9 @@
   </div>
   <section class="content">
     <div class="container-fluid">
+
       <!-- Notifications -->
-      @if(session('success'))
-        <div class="alert alert-info alert-dismissible fade show" role="alert">
-          {{ session('success') }}
-          <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-          </button>
-        </div>
-      @endif
+      <x-alert/>
 
       <div class="row">
         <div class="col-12">
@@ -60,10 +54,13 @@
                     <td>{{ $d->pengirim }}</td>
                     <td>{{ $d->perihal }}</td>
                     <td>
-                      <button class="btn btn-sm btn-primary edit-btn" data-id="{{ $d->id }}" data-toggle="modal" data-target="#modal-edit">
+                      <button class="btn btn-sm btn-danger " data-id="" data-toggle="modal" data-target="#modal-delete{{ $d->id }}">
+                        <i class="fas fa-trash"></i>
+                      </button>
+                      <button class="btn btn-sm btn-primary edit-btn" data-id="" data-toggle="modal" data-target="#modal-edit{{ $d->id }}">
                         <i class="fas fa-edit"></i>
                       </button>
-                      <button class="btn btn-sm btn-info detail-btn" data-id="{{ $d->id }}" data-toggle="modal" data-target="#modal-detail">
+                      <button class="btn btn-sm btn-info detail-btn" data-id="" data-toggle="modal" data-target="#modal-detail{{ $d->id }}">
                         <i class="fas fa-eye"></i>
                       </button>
                       <button class="btn btn-sm btn-success print-btn" data-id="{{ $d->id }}" data-toggle="modal" data-target="#modal-print">
@@ -97,8 +94,8 @@
                         <div class="col-md-6">
                           <div class="form-group">
                             <label>No. Surat</label>
-                            <input type="text" name="nomor" class="form-control" placeholder="Masukkan nomor surat">
-                            @error('nomor') <small class="text-danger">{{ $message }}</small> @enderror
+                            <input type="text" name="nomor_surat" class="form-control" placeholder="Masukkan nomor surat">
+                            @error('nomor_surat') <small class="text-danger">{{ $message }}</small> @enderror
                           </div>
                           <div class="form-group">
                             <label>Pengirim</label>
@@ -131,7 +128,7 @@
                                 <select name="kode_klasifikasi" class="form-control">
                                   <option value="">--Pilih Klasifikasi--</option>
                                   @foreach($classifications as $classification)
-                                    <option value="{{ $classification->code }}">{{ $classification->code }}</option>
+                                    <option value="{{ $classification->kode }}">{{ $classification->nama }}</option>
                                   @endforeach
                                 </select>
                                 @error('kode_klasifikasi') <small class="text-danger">{{ $message }}</small> @enderror
@@ -167,6 +164,147 @@
             </div>
           </div>
           <!-- end tambah data -->
+
+          <!-- Modal Edit Data -->
+          @foreach ($data as $d)
+          <div class="modal fade" id="modal-edit{{ $d->id }}">
+            <div class="modal-dialog modal-lg">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h4 class="modal-title"><i class="fas fa-regular fa-envelope mr-2"></i>Edit Surat Masuk</h4>
+                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                  </button>
+                </div>
+                <div class="modal-body p-0">
+                  <form action="{{ route('suratmasuk.update', $d->id) }}" method="POST" enctype="multipart/form-data">
+                    @csrf
+                    <div class="card-body">
+                      <h5 class="font-weight-bold mb-0">Informasi Umum</h5>
+                      <span class="d-block mb-2">Lengkapi informasi pada surat masuk.</span>
+                      <div class="row">
+                        <div class="col-md-6">
+                          <div class="form-group">
+                            <label>No. Surat</label>
+                            <input type="text" name="nomor_surat" class="form-control" placeholder="Masukkan nomor surat"
+                              value="{{ $d->nomor_surat }}">
+                            @error('nomor') <small class="text-danger">{{ $message }}</small> @enderror
+                          </div>
+                          <div class="form-group">
+                            <label>Pengirim</label>
+                            <input type="text" name="pengirim" class="form-control" placeholder="Masukkan instansi asal"
+                              value="{{ $d->pengirim }}">
+                            @error('pengirim') <small class="text-danger">{{ $message }}</small> @enderror
+                          </div>
+                        </div>
+                        <div class="col-md-6">
+                          <div class="row">
+                            <div class="col-md-6">
+                              <div class="form-group">
+                                <label>Tgl. Surat</label>
+                                <input type="date" name="tgl_surat" class="form-control" value="{{ $d->tgl_surat }}">
+                                @error('tgl_surat') <small class="text-danger">{{ $message }}</small> @enderror
+                              </div>
+                              <div class="form-group">
+                                <label>No. Agenda</label>
+                                <input type="text" name="no_agenda" class="form-control" placeholder="No. Urut/Agenda"
+                                  value="{{ $d->no_agenda }}">
+                                @error('no_agenda') <small class="text-danger">{{ $message }}</small> @enderror
+                              </div>
+                            </div>
+                            <div class="col-md-6">
+                              <div class="form-group">
+                                <label>Tgl. Diterima</label>
+                                <input type="date" name="tgl_diterima" class="form-control" value="{{ $d->tgl_diterima }}">
+                                @error('tgl_diterima') <small class="text-danger">{{ $message }}</small> @enderror
+                              </div>
+                              <div class="form-group">
+                                <label>Jenis Dokumen</label>
+                                <select name="kode_klasifikasi" class="form-control">
+                                  <option value="">--Pilih Klasifikasi--</option>
+                                  @foreach($classifications as $classification)
+                                  <option value="{{ $classification->kode }}" {{ $d->kode_klasifikasi == $classification->kode
+                                    ? 'selected' : '' }}>
+                                    {{ $classification->nama }}
+                                  </option>
+                                  @endforeach
+                                </select>
+                                @error('kode_klasifikasi') <small class="text-danger">{{ $message }}</small> @enderror
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="row">
+                        <div class="col-md-12">
+                          <div class="form-group">
+                            <label>Perihal Surat</label>
+                            <textarea name="perihal" class="form-control" rows="3"
+                              placeholder="Masukkan isi perihal surat">{{ $d->perihal }}</textarea>
+                            @error('perihal') <small class="text-danger">{{ $message }}</small> @enderror
+                          </div>
+                        </div>
+                      </div>
+                      <div class="form-group">
+                        <label class="mb-0">Unggah File Surat</label>
+                        <span class="d-block mb-2 text-muted">Silahkan unggah file surat dalam satu file.</span>
+                        <input type="file" name="file_surat" class="form-control">
+                        <small class="form-text text-danger">*File harus bertipe PDF dengan ukuran maksimum 2MB!</small>
+                        @error('file_surat') <small class="text-danger">{{ $message }}</small> @enderror
+                      </div>
+                    </div>
+                    <div class="modal-footer">
+                      <button type="button" class="btn btn-danger" data-dismiss="modal">Tutup</button>
+                      <button type="submit" class="btn btn-info">Simpan</button>
+                    </div>
+                  </form>
+                </div>
+              </div>
+            </div>
+          </div>
+          @endforeach
+          <!-- end edit data -->
+          <!-- modal delete data -->
+          @foreach ($data as $d)
+          <div class="modal fade" id="modal-delete{{ $d->id }}">
+            <div class="modal-dialog modal-lg">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h4 class="modal-title"><i class="fas fa-regular fa-envelope mr-2"></i>Edit Surat Masuk</h4>
+                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                  </button>
+                </div>
+                <div class="modal-body p-0">
+                  <div class="card-body">
+                    <h5>Yakin Menghapus Data Ini?</h5>
+                    <table class="table">
+                      <th>No Surat</th>
+                      <th>Tanggal Surat</th>
+                      <th>Divisi</th>
+                      <tr>
+                        <td>{{ $d->nomor_surat }}</td>
+                        <td>{{ $d->tgl_surat }}</td>
+                        <td>{{ $d->devisi }}</td>
+                    </table>
+                    <h5>File Surat</h5>
+                    <iframe src="{{ asset('uploads/surat_masuk/' . $d->file_surat) }}" width="100%" height="500px" frameborder="0">
+                      Dokumen tidak bisa ditampilkan di frame ini.</a>
+                    </iframe>
+                  </div>
+                  <form action="{{ route('suratmasuk.delete', $d->id) }}" method="POST">
+                    @csrf
+                    <div class="modal-footer">
+                      <button type="button" class="btn btn-info" data-dismiss="modal">Tutup</button>
+                      <button type="submit" class="btn btn-danger">Hapus</button>
+                    </div>
+                  </form>
+                </div>
+              </div>
+            </div>
+          </div>
+          @endforeach
+          <!-- end delete data -->
 
           <!-- Modal disposisi surat -->
           <div class="modal fade" id="modal-disposisi">
@@ -241,7 +379,8 @@
           <!-- end disposisi surat -->
 
           <!-- modal detail data -->
-          <div class="modal fade" id="modal-detail">
+          @foreach ($data as $d)
+          <div class="modal fade" id="modal-detail{{ $d->id }}">
             <div class="modal-dialog modal-lg">
               <div class="modal-content">
                 <div class="modal-header">
@@ -256,7 +395,7 @@
                       <table class="table table-bordered">
                         <tbody>
                           <tr>
-                            <td colspan="2"><strong>Nomor Agenda</strong> ( <span id="detail_nomor_agenda"></span> )</td>
+                            <td colspan="2"><strong>Nomor Agenda</strong> ( <span id="detail_nomor_agenda">{{ $d->no_agenda }}</span> )</td>
                           </tr>
                           <tr>
                             <td><strong>Kode Surat</strong></td>
@@ -323,19 +462,15 @@
               </div>
             </div>
           </div>
+          @endforeach
           <!-- end modal detail -->
+
         </div>
       </div>
     </div>
   </section>
 </x-Layouts.main.app>
-<script>
-  
-  $(document).ready(function() {
-    setTimeout(function() {
-      $(".alert").alert('close');
-    }, 1000);
-  });
+{{-- <script>
 
   $(document).on('click', '.detail-btn', function() { 
     var id = $(this).data('id');
@@ -370,4 +505,4 @@
     let letterId = $(this).data('id');
     $('#letterId').val(letterId);
   });
-</script>
+</script> --}}

@@ -20,7 +20,7 @@
     $(document).ready(function() {
         setTimeout(function() {
             $('.alert').fadeOut(500, function() {
-                $(this).remove(); 
+                $(this).hide(); 
             });
         }, 3000); 
     });
