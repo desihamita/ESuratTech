@@ -47,9 +47,9 @@
                     <td>{{ $d->no_agenda }}</td>
                     <td>{{ $d->tgl_diterima }}</td>
                     <td>
-                      <a class="btn btn-warning disposisi-btn" data-id="{{ $d->id }}" data-toggle="modal" data-target="#modal-disposisi">
+                      <button class="btn btn-warning " data-id="" data-toggle="modal" data-target="#modal-disposisi{{ $d->id }}">
                         <i class="fas fa-clipboard"></i>
-                      </a>
+                      </button>
                     </td>
                     <td>{{ $d->pengirim }}</td>
                     <td>{{ $d->perihal }}</td>
@@ -270,22 +270,23 @@
             <div class="modal-dialog modal-lg">
               <div class="modal-content">
                 <div class="modal-header">
-                  <h4 class="modal-title"><i class="fas fa-regular fa-envelope mr-2"></i>Edit Surat Masuk</h4>
-                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <h4 class="modal-title"><i class="fas fa-regular fa-envelope mr-2"></i>Hapus Surat Masuk</h4>
+                  <button type="button" class="close " data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                   </button>
                 </div>
                 <div class="modal-body p-0">
                   <div class="card-body">
                     <h5>Yakin Menghapus Data Ini?</h5>
-                    <table class="table">
+                    <table class="table border">
                       <th>No Surat</th>
-                      <th>Tanggal Surat</th>
-                      <th>Divisi</th>
+                      <th>No Agenda</th>
+                      <th>Pengirim</th>
                       <tr>
                         <td>{{ $d->nomor_surat }}</td>
-                        <td>{{ $d->tgl_surat }}</td>
-                        <td>{{ $d->devisi }}</td>
+                        <td>{{ $d->no_agenda }}</td>
+                        <td>{{ $d->pengirim }}</td>
+                        </tr>
                     </table>
                     <h5>File Surat</h5>
                     <iframe src="{{ asset('uploads/surat_masuk/' . $d->file_surat) }}" width="100%" height="500px" frameborder="0">
@@ -307,7 +308,8 @@
           <!-- end delete data -->
 
           <!-- Modal disposisi surat -->
-          <div class="modal fade" id="modal-disposisi">
+          @foreach ($data as $d)
+          <div class="modal fade" id="modal-disposisi{{ $d->id }}">
             <div class="modal-dialog">
               <div class="modal-content">
                 <div class="modal-header">
@@ -317,24 +319,25 @@
                   </button>
                 </div>
                 <div class="modal-body p-0">
-                  <form action="{{ route('suratmasuk.storeDisposisi') }}" method="POST">
+                  <form action="{{ route('suratmasuk.storeDisposisi' ) }}" method="POST">
                   @csrf
-                  <input type="hidden" name="letter_id" id="letterId">
+                  <input type="hidden" name="letter_id" value="{{ $d->id }}">
                   <div class="card-body">
                       <div class="form-group">
                         <label for="penerima">Penerima Disposisi</label>
-                        <input type="text" class="form-control" name="penerima" id="penerima" placeholder="Masukkan penerima disposisi" required>
+                        <input type="text" class="form-control" name="penerima" id="penerima" placeholder="Masukkan penerima disposisi" value="{{ $d->penerima }}" required>
                       </div>
                       <div class="form-group">
                         <label for="catatan">Catatan</label>
-                        <textarea class="form-control" name="catatan" id="catatan" rows="3" placeholder="Catatan untuk disposisi"></textarea>
+                        <textarea class="form-control" name="catatan" id="catatan" rows="3" placeholder="Catatan untuk disposisi">{{ $d->catatan }}</textarea>
                       </div>
                       <div class="form-group">
                         <label for="disposisiStatus">Status Disposisi</label>
                         <select class="form-control" id="status" name="status" required>
-                          <option value="Pending">Pending</option>
-                          <option value="Processed">Processed</option>
-                          <option value="Completed">Completed</option>
+                          <option value="Pending" {{ $d->status === 'Pending' ? 'selected' : '' }}>Pending</option>
+                          <option value="Processed" {{ $d->status === 'Processed' ? 'selected' : '' }}>Processed</option>
+                          <option value="Completed" {{ $d->status === 'Completed' ? 'selected' : '' }}>Completed</option>
+                          <option value="Rejected" {{ $d->status === 'Rejected' ? 'selected' : '' }}>Rejected</option>
                         </select>
                       </div>
                     </div>
@@ -347,6 +350,7 @@
               </div>
             </div>
           </div>
+          @endforeach
           <!-- end disposisi surat -->
 
           <!-- Modal disposisi surat -->
@@ -399,15 +403,15 @@
                           </tr>
                           <tr>
                             <td><strong>Kode Surat</strong></td>
-                            <td id="detail_kode"></td>
+                            <td id="detail_kode">{{ $d->nomor_surat }}</td>
                           </tr>
                           <tr>
                             <td><strong>Jenis Dokumen</strong></td>
-                            <td id="detail_klasifikasi_nama"></td>
+                            <td id="detail_klasifikasi_nama">{{ $d->kode_klasifikasi }}</td>
                           </tr>
                           <tr>
                             <td><strong>Diterima</strong></td>
-                            <td id="detail_diterima"></td>
+                            <td id="detail_diterima">{{ $d->tgl_diterima }}</td>
                           </tr>
                         </tbody>
                       </table>
@@ -418,13 +422,21 @@
                           <tr>
                             <td colspan="2"  class="bg-info text-white"><strong>Status</strong></td>
                           </tr>
-                          <tr>
-                            <td><strong>Status</strong></td>
-                            <td id="detail_status"></td>
-                          </tr>
+                          <td><strong>Status</strong></td>
+                          <td>
+                            @foreach($d->dispositions as $disposisi)
+                            <span class="badge 
+                                        {{ $disposisi->status === 'Pending' ? 'badge-warning' : 
+                                           ($disposisi->status === 'Processed' ? 'badge-primary' : 
+                                           ($disposisi->status === 'Completed' ? 'badge-success' : 
+                                           ($disposisi->status === 'Rejected' ? 'badge-danger' : 'badge-secondary'))) }}">
+                              {{ $disposisi->status }}
+                            </span>
+                            @endforeach
+                          </td>
                           <tr>
                             <td><strong>Tanggal</strong></td>
-                            <td id="detail_status_date"></td>
+                            <td id="detail_status_date">{{ $d->tgl_surat }}</td>
                           </tr>
                         </tbody>
                       </table>
@@ -438,23 +450,23 @@
                         </tr>
                         <tr>
                           <td><strong>No. Surat</strong></td>
-                          <td id="detail_no_surat"></td>
+                          <td id="detail_no_surat">{{ $d->nomor_surat }}</td>
                         </tr>
                         <tr>
                           <td><strong>Pengirim</strong></td>
-                          <td id="detail_pengirim"></td>
+                          <td id="detail_pengirim">{{ $d->pengirim }}</td>
                         </tr>
                         <tr>
                           <td><strong>Perihal</strong></td>
-                          <td id="detail_perihal"></td>
+                          <td id="detail_perihal">{{ $d->perihal }}</td>
                         </tr>
                         <tr>
                           <td><strong>Tanggal Surat</strong></td>
-                          <td id="detail_tgl_surat"></td>
+                          <td id="detail_tgl_surat">{{ $d->tgl_surat }}</td>
                         </tr>
                         <tr>
                           <td><strong>File</strong></td>
-                          <td><a id="detail_file" href="#" target="_blank">Download</a></td>
+                          <td><a id="detail_file" href="{{ asset('uploads/surat_masuk/' . $d->file_surat) }}" target="_blank">Download</a></td>
                         </tr>
                       </tbody>
                     </table>

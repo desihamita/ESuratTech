@@ -15,13 +15,14 @@ class SuratMasukController extends Controller
      */
     public function index()
     {
+        $letter = Letter::with('dispositions')->get();
         $title = 'Surat Masuk ';
         $breadcrumbs = [
             ['name' => 'Home', 'url' => '/home'],
             ['name' => 'Surat Masuk', 'url' => ''],
         ];
-        
-        $data = Letter::get();
+
+        $data = $letter;
         $classifications = Classification::all();
 
         return view('pages.suratmasuk.index', compact('data', 'title', 'breadcrumbs', 'classifications'));
@@ -63,7 +64,7 @@ class SuratMasukController extends Controller
                 'tgl_diterima' => $request->tgl_diterima,
                 'perihal' => $request->perihal,
                 'file_surat' => $newFileName,
-                'kode_klasifikasi' => $request->kode_klasifikasi, 
+                'kode_klasifikasi' => $request->kode_klasifikasi,
                 'user_id' => auth()->id(),
             ]);
 
@@ -131,43 +132,52 @@ class SuratMasukController extends Controller
     }
 
 
+    // public function detail(Request $request, string $id)
+    // {
+    //     $surat = Letter::with(['classification', 'user'])->findOrFail($id);
+    //     return response()->json($surat);
+    // }
 
 
 
-
-
-
-
-
-
-
-    public function detail(Request $request, string $id) 
+    public function storeDisposisi(Request $request)
     {
-        $surat = Letter::with(['classification', 'user'])->findOrFail($id);
-        return response()->json($surat);
-    }
+        $request->validate([
+            'letter_id' => 'required|exists:letters,id',
+            'penerima' => 'required|string|max:255',
+            'catatan' => 'nullable|string',
+            'status' => 'required|string',
+        ]);
 
-        public function storeDisposisi(Request $request)
-        {
-            $request->validate([
-                'penerima' => 'required|string|max:255',
-                'catatan' => 'nullable|string',
-                'status' => 'required|string',
-            ]);
+        try {
+            // Cek apakah data Disposisi dengan `letter_id` ini sudah ada
+            $disposisi = Disposisi::where('letter_id', $request->letter_id)->first();
 
-            try {
+            if ($disposisi) {
+                // Jika data sudah ada, update data yang ada
+                $disposisi->update([
+                    'penerima' => $request->penerima,
+                    'catatan' => $request->catatan,
+                    'status' => $request->status,
+                ]);
+                $message = 'Data berhasil diperbarui!';
+            } else {
+                // Jika data belum ada, buat data baru
                 Disposisi::create([
                     'letter_id' => $request->letter_id,
                     'penerima' => $request->penerima,
                     'catatan' => $request->catatan,
                     'status' => $request->status,
                 ]);
-
-                return redirect()->route('suratmasuk.index')->with('success', 'Data berhasil disimpan!');
-            } catch (\Exception $e) {
-                return redirect()->back()->with('error', 'Terjadi kesalahan: ' . $e->getMessage());
+                $message = 'Data berhasil disimpan!';
             }
+
+            return redirect()->route('suratmasuk.index')->with('success', $message);
+        } catch (\Exception $e) {
+            return redirect()->back()->with('error', 'Terjadi kesalahan: ' . $e->getMessage());
         }
+    }
+
 
     /**
      * Remove the specified resource from storage.
@@ -184,4 +194,5 @@ class SuratMasukController extends Controller
         $letter->delete();
         return redirect()->route('suratmasuk.index')->with('success', 'Surat masuk berhasil dihapus.');
     }
+
 }
