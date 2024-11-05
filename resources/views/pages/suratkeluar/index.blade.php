@@ -5,16 +5,8 @@
     <section class="content">
         <div class="container-fluid">
             <!-- Notifications -->
-            @if(session('success'))
-            <div class="alert alert-success alert-dismissible fade show" role="alert">
-                {{ session('success') }}
-                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            @endif
-
-            <div class="row">
+                    <x-alert/>
+           <div class="row">
                 <div class="col-12">
                     <div class="card">
                         <div class="card-header m-2">
@@ -116,20 +108,23 @@
                                                 <div class="col-md-6">
                                                     <div class="form-group">
                                                         <label id="tgl" >Tgl. Surat</label>
-                                                        <input for="tgl" type="date" name="tgl_surat" class="form-control" placeholder="Masukan tanggal surat" required>
-                                                        @error('tgl_surat') <small class="text-danger">{{ $message }}</small> @enderror
+                                                        <input for="tgl" type="date" name="tgl_surat" class="form-control @error('tgl_surat') is-invalid @enderror" placeholder="Masukan tanggal surat"  value="{{ old('tgl_surat') }}" required>
+
+                                                        @error('tgl_surat') <small class="text-danger">{{ $message
+                                                            }}</small> @enderror
                                                     </div>
                                                     <div class="form-group">
                                                         <label>No. Surat</label>
-                                                        <input type="text" name="nomor_surat" class="form-control"
-                                                            placeholder="Masukkan nomor surat" required>
-                                                        @error('nomor_surat') <small class="text-danger">{{ $message
-                                                            }}</small> @enderror
+                                                        <input type="text" name="nomor_surat" class="form-control @error( 'nomor_surat') is-invalid @enderror" placeholder="Masukan nomor surat"
+                                                        value="{{ old('nomor_surat') }}" required>
+                                                        @error('nomor_surat')
+                                                        <div class="invalid-feedback">{{ $message }}</div>
+                                                        @enderror
                                                     </div>
                                                    <div class="form-group">
                                                     <label class="mb-0">Jenis Dokumen</label>
                                                     <select name="kode_klasifikasi" id="" class="form-control" required>
-                                                        <option value="">Pilih Jenis Dokumen</option>
+                                                        <option value="">--Pilih Jenis Dokumen--</option>
                                                         @foreach($klasifikasi as $k)
                                                         <option value="{{$k->nama}}">{{$k->nama}}</option>
                                                         @endforeach
@@ -139,14 +134,14 @@
                                                     <div class="form-group">
                                                         <label>No. Agenda</label>
                                                         <input type="text" name="no_agenda" class="form-control"
-                                                            placeholder="Masukkan nomor agenda" required>
+                                                            placeholder="Masukkan nomor agenda" value="{{ old('no_agenda') }}" required>
                                                         @error('no_agenda') <small class="text-danger">{{ $message
                                                             }}</small> @enderror
                                                     </div>
                                                     <div class="form-group">
                                                         <label>Pengirim</label>
                                                         <input type="text" name="pengirim" class="form-control"
-                                                            placeholder="Masukkan instansi asal" required>
+                                                            placeholder="Masukkan instansi asal" value="{{ old('pengirim') }}" required>
                                                         @error('pengirim') <small class="text-danger">{{ $message
                                                             }}</small> @enderror
                                                     </div>
@@ -155,20 +150,20 @@
                                                     <div class="form-group">
                                                         <label>Penerima</label>
                                                         <input type="text" name="penerima" class="form-control"
-                                                            placeholder="Masukkan penerima" required>
+                                                            placeholder="Masukkan penerima" value="{{ old('penerima') }}" required>
                                                         @error('penerima') <small class="text-danger">{{ $message }}</small> @enderror
                                                     </div>
                                                     <div class="form-group">
-                                                        <label>Perihal</label>
-                                                        <input type="text" name="perihal" class="form-control"
-                                                            placeholder="Masukkan Perihal" required>
+                                                        <label>Perihal Surat</label>
+                                                        <textarea type="text" name="perihal" class="form-control" rows="3"
+                                                            placeholder="Masukkan Perihal" value="{{ old('perihal') }}" required></textarea>
                                                         @error('perihal') <small class="text-danger">{{ $message
                                                             }}</small> @enderror
                                                     </div>
                                                     <div class="form-group">
                                                         <label class="mb-0">Divisi</label>
                                                         <select name="devisi" id="" class="form-control" required>
-                                                            <option value="">Pilih Divisi</option>
+                                                            <option value="">--Pilih Divisi--</option>
                                                             @foreach($divisi as $d)
                                                             <option value="{{$d->nama}}">{{$d->nama}}</option>
                                                             @endforeach
@@ -178,7 +173,7 @@
                                                     <div class="form-group">
                                                         <label class="mb-0">Unggah File Surat</label>
                                                         <span class="d-block mb-2 text-muted">Silahkan unggah file surat dalam satu file.</span>
-                                                        <input type="file" name="file_surat" class="form-control" required>
+                                                        <input type="file" name="file_surat" class="form-control" value="{{ old('file_surat') }}" required>
                                                         <small class="form-text text-danger">*File harus bertipe PDF
                                                             dengan ukuran maksimum 2MB!</small>
                                                         @error('file_surat') <small class="text-danger">{{ $message
