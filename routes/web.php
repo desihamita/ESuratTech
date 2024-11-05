@@ -29,6 +29,8 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/surat-masuk', [SuratMasukController::class, 'index'])->name('suratmasuk.index');
     Route::get('/surat-masuk/create', [SuratMasukController::class, 'create'])->name('suratmasuk.create');
     Route::post('/surat-masuk/store', [SuratMasukController::class, 'store'])->name('suratmasuk.store');
+    Route::post('/surat-masuk/update/{id}', [SuratMasukController::class, 'update'])->name('suratmasuk.update');
+    Route::post('/surat-masuk/delete/{id}', [SuratMasukController::class, 'destroy'])->name('suratmasuk.delete');
     Route::get('/surat-masuk/detail/{id}', [SuratMasukController::class, 'detail'])->name('suratmasuk.detail');
     
     Route::post('/surat-masuk/disposisi', [SuratMasukController::class, 'storeDisposisi'])->name('suratmasuk.storeDisposisi');
@@ -39,7 +41,7 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/surat-keluar/update/{id}', [SuratKeluarController::class, 'update'])->name('suratkeluar.update');
     Route::post('/surat-keluar/delete/{id}', [SuratKeluarController::class, 'destroy'])->name('suratkeluar.delete');
     Route::get('/surat-keluar/detail/{id}', [SuratKeluarController::class, 'detail'])->name('suratkeluar.detail');
-
+    
     Route::get('/divisi', [DivisiController::class, 'index'])->name('divisi.index');
     Route::post('/divisi/store', [DivisiController::class, 'store'])->name('divisi.store');
     Route::get('/divisi/{id}/edit', [DivisiController::class, 'edit'])->name('divisi.edit');
