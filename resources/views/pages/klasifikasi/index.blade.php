@@ -5,14 +5,7 @@
   <section class="content">
     <div class="container-fluid">
       <!-- Notifikasi -->
-      @if(session('success'))
-        <div class="alert alert-info alert-dismissible fade show" role="alert">
-          {{ session('success') }}
-          <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-          </button>
-        </div>
-      @endif
+      <x-alert/>
 
       <div class="row">
         <div class="col-12">
@@ -46,8 +39,8 @@
                 @foreach ($data as $d)
                   <tr>
                     <td>{{ $loop->iteration }}</td>
-                    <td>{{ $d->code }}</td>
-                    <td>{{ $d->name }}</td>
+                    <td>{{ $d->kode }}</td>
+                    <td>{{ $d->nama }}</td>
                     <td>
                       <button class="btn btn-sm btn-primary edit-btn" data-id="{{ $d->id }}" data-toggle="modal" data-target="#modal-edit">
                         <i class="fas fa-edit"></i>
@@ -82,14 +75,14 @@
                         <div class="col-md-12">
                           <div class="form-group">
                             <label>kode</label>
-                            <input type="text" name="kode" class="form-control" placeholder="Masukkan kode divisi">
+                            <input type="text" name="kode" class="form-control" placeholder="Masukkan kode divisi" value="{{ old('kode') }}">
                             @error('kode')
                               <small class="text-danger">{{ $message }}</small>
                             @enderror
                           </div>
                           <div class="form-group">
                             <label>Nama</label>
-                            <input type="text" name="nama" class="form-control" placeholder="Masukkan nama divisi">
+                            <input type="text" name="nama" class="form-control" placeholder="Masukkan nama divisi" value="{{ old('nama') }}">
                             @error('nama')
                               <small class="text-danger">{{ $message }}</small>
                             @enderror
@@ -98,7 +91,7 @@
                       </div>
                     </div>
                     <div class="mr-4 ml-4">
-                      <button type="submit" class="btn btn-default float-right">Batal</button>
+                      <button type="button" class="btn btn-default float-right">Batal</button>
                       <button type="submit" class="btn btn-info" id="btnSimpan">Simpan</button>
                     </div>
                   </form>
@@ -108,6 +101,7 @@
           </div>
           
           <!-- modal Edit data -->
+         
           <div class="modal fade" id="modal-edit">
             <div class="modal-dialog">
               <div class="modal-content">
@@ -152,6 +146,7 @@
               </div>
             </div>
           </div>
+         
           
           <!-- modal detail data -->
           <div class="modal fade" id="modal-detail">
@@ -187,11 +182,7 @@
 </x-Layouts.main.app>
 
 <script>
-  $(document).ready(function() {
-    setTimeout(function() {
-      $(".alert").alert('close');
-    }, 1000);
-  });
+
 
   $(document).on('click', '.edit-btn', function () {
     var id = $(this).data('id');
@@ -201,8 +192,8 @@
       method: 'GET',
       success: function (data) {
         $('#edit_id').val(data.id);
-        $('#edit_kode').val(data.code);
-        $('#edit_nama').val(data.name);
+        $('#edit_kode').val(data.kode);
+        $('#edit_nama').val(data.nama);
 
         $('#editForm').attr('action', '/klasifikasi/' + id);
       }
