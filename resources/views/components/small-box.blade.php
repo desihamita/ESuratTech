@@ -9,7 +9,7 @@
         </a>
       </div>
       <div class="inner">
-        <h3>29</h3>
+        <h3>{{ $countletterin }}</h3>
         <p>Surat Masuk *</p>
         <span class="text-success">
             <i class="fas fa-arrow-up"></i> 12.5%
@@ -28,7 +28,7 @@
         </a>
       </div>
       <div class="inner">
-        <h3>21</h3>
+        <h3>{{ $countletterout }}</h3>
         <p>Surat Keluar *</p>
         <span class="text-success">
             <i class="fas fa-arrow-up"></i> 12.5%
@@ -66,7 +66,7 @@
         </a>
       </div>
       <div class="inner">
-        <h3>1</h3>
+        <h3>{{ $useraktif }}</h3>
         <p>Pengguna Aktif</p>
         <span class="text-success">
             <i class="fas fa-arrow-up"></i> 12.5%
