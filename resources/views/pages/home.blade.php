@@ -56,7 +56,12 @@
               </div>
           </section>
           <section class="col-lg-4 connectedSortable">
-              <x-small-box/>
+              <x-small-box 
+              :countletterin="$countLeters_in" 
+              :countletterout="$countLeters_out" 
+              :useraktif="$useraktif"
+              
+              />
           </section>
       </div>
       </div>
