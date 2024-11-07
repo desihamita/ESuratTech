@@ -11,6 +11,6 @@ class Classification extends Model
     protected $table = 'classifications';
     protected $fillable = [
         'kode',
-        'name',
+        'nama',
     ];
 }
