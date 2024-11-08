@@ -83,4 +83,14 @@ class KlasifikasiController extends Controller
         $klasifikasi = Classification::findOrFail($id);
         return response()->json($klasifikasi);
     }
+
+    public function destroy(string $id){
+        try {
+            $klasifikasi = Classification::find($id);
+            $klasifikasi->delete();
+            return redirect()->route('klasifikasi.index')->with('success', 'Data berhasil dihapus!');
+        } catch (\Exception $e) {
+            return redirect()->back()->with('error', 'Terjadi kesalahan: ' . $e->getMessage());
+        }
+    }
 }
