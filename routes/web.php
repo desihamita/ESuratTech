@@ -25,6 +25,8 @@ Route::middleware(['auth'])->group(function () {
 
     Route::get('/profile', [ProfilController::class, 'index'])->name('profile.index');
     Route::put('/profile/update', [ProfilController::class, 'update'])->name('profile.update');
+    Route::delete('/profile/delete', [ProfilController::class, 'deletePhoto'])->name('photo.delete');
+
 
     Route::get('/surat-masuk', [SuratMasukController::class, 'index'])->name('suratmasuk.index');
     Route::get('/surat-masuk/create', [SuratMasukController::class, 'create'])->name('suratmasuk.create');
