@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash; 
+use Illuminate\Support\Facades\Storage;
 
 class ProfilController extends Controller
 {
@@ -18,7 +19,6 @@ class ProfilController extends Controller
 
         return view('pages.profil.index', compact('title', 'breadcrumbs') );
     }
-
     public function update(Request $request)
     {
         $request->validate([
@@ -36,19 +36,36 @@ class ProfilController extends Controller
             $user->password = Hash::make($request->input('password'));
         }
 
-        if($request->hasFile('profile_picture')) {
-            if($user->profile_picture && Storage::exists('public/profile_picture/'. $user->profile_picture)) {
-                Storage::delete('public/profile_pictures/'.$user->profile_picture);
-            }
+        if ($request->hasFile('profile_picture')) {
             $file = $request->file('profile_picture');
-            $filename = time().'.'.$file->getClientOriginalExtension();
-            $file->storeAs('public/profile_pictures', $filename);
+            $originalNameWithoutExtension = pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME);
+            $extension = $file->getClientOriginalExtension();
+            $newFileName = date('Y_m_d') . '_' . $originalNameWithoutExtension . '.' . $extension;
+            $file->move(public_path('uploads/profile'), $newFileName);
 
-            $user->profile_picture = $filename;
+            // Simpan nama file ke dalam database
+            $user->profile_picture = $newFileName;
         }
+        // \dd($user);
 
-        $user->save();
+        $user->update();
 
         return redirect()->back()->with('success', 'Profile updated successfully.');
     }
+
+    public function deletePhoto()
+    {
+        $user = Auth::user();
+
+        if ($user->profile_picture && file_exists(public_path('uploads/profile/' . $user->profile_picture))) {
+            unlink(public_path('uploads/profile/' . $user->profile_picture));
+        }
+
+        $user->profile_picture = null;
+        $user->save();
+
+        return redirect()->back()->with('success', 'Photo deleted successfully.');
+    }
+
+
 }

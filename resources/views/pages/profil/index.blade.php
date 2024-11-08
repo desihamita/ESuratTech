@@ -10,11 +10,18 @@
             <div class="card-body box-profile">
               <div class="text-center">
                 <img class="profile-user-img img-fluid img-circle"
-                    src="{{ Auth::user()->profile_picture ? asset('storage/profile_pictures/' . Auth::user()->profile_picture) : asset('assets/dist/img/default.png') }}"
+                    src="{{ Auth::user()->profile_picture ? asset('uploads/profile/' . Auth::user()->profile_picture) : asset('assets/dist/img/default.png') }}"
                     alt="User profile picture">
+                    <h1 class="profile-username text-center mt-3 mb-4">{{ Auth::user()->name }}</h1>
+                    <form action="{{ route('photo.delete') }}" method="POST" enctype="multipart/form-data">
+                      @csrf
+                      @method('DELETE')
+                      <input type="hidden" name="id" value="{{ Auth::user()->id }}">
+                      <input type="hidden" name="photo" value="{{ Auth::user()->profile_picture }}">
+                      <button type="submit" class="btn btn-danger btn-small mb-2"><small>Delete Photo</small></button>
+                    </form>
               </div>
 
-              <h1 class="profile-username text-center mt-3 mb-4">{{ Auth::user()->name }}</h1>
               <ul class="list-group list-group-unbordered mb-3">
                 <li class="list-group-item">
                   <form class="form-horizontal mt-3" action="{{ route('profile.update') }}" method="POST" enctype="multipart/form-data">
