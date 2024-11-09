@@ -7,7 +7,7 @@
   <div class="sidebar">
     <div class="user-panel mt-3 pb-3 mb-3 d-flex">
       <div class="image">
-        <img src="{{ Auth::user()->profile_picture ? asset('storage/profile_pictures/' . Auth::user()->profile_picture) : asset('assets/dist/img/default.png') }}"
+        <img src="{{ Auth::user()->profile_picture ? asset('uploads/profile/' . Auth::user()->profile_picture) : asset('assets/dist/img/default.png') }}"
         class="img-circle elevation-2" alt="User Image">
       </div>
 
