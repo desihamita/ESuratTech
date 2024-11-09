@@ -60,10 +60,10 @@
               :countletterin="$countLeters_in" 
               :countletterout="$countLeters_out" 
               :useraktif="$useraktif"
-              
               />
           </section>
-      </div>
+
+        </div>
       </div>
     </section>
 </x-Layouts.main.app>
