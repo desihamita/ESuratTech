@@ -1,7 +1,7 @@
 <?php
 
-use Illuminate\Support\Facades\Route;
 
+use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\DosenController;
@@ -10,6 +10,7 @@ use App\Http\Controllers\ProfilController;
 use App\Http\Controllers\SuratMasukController;
 use App\Http\Controllers\KlasifikasiController;
 use App\Http\Controllers\SuratKeluarController;
+use App\Http\Controllers\StatusSuratController;
 
 // Public Routes
 Route::get('/', [UserController::class, 'login'])->name('login');
@@ -43,6 +44,8 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/surat-keluar/update/{id}', [SuratKeluarController::class, 'update'])->name('suratkeluar.update');
     Route::post('/surat-keluar/delete/{id}', [SuratKeluarController::class, 'destroy'])->name('suratkeluar.delete');
     Route::get('/surat-keluar/detail/{id}', [SuratKeluarController::class, 'detail'])->name('suratkeluar.detail');
+
+    Route::get('status-surat', [StatusSuratController::class,'index'])->name('status_surat.index');
     
     Route::get('/divisi', [DivisiController::class, 'index'])->name('divisi.index');
     Route::post('/divisi/store', [DivisiController::class, 'store'])->name('divisi.store');

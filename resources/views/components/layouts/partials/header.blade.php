@@ -8,6 +8,12 @@
     <title>E-Surat | {{ $title }}</title>
     <link rel="icon" href="{{ asset('assets/img/LOGO_KAMPUS.png') }}">
 
+    <!-- MDB -->
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/8.0.0/mdb.umd.min.js"></script>
+
+    {{-- mystyle --}}
+    <link rel="stylesheet" href="{{ asset('assets/css/style.css') }}">
+
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
 
     <link rel="stylesheet" href="{{ asset('assets/plugins/fontawesome-free/css/all.min.css') }}">
