@@ -5,14 +5,7 @@
   <section class="content">
     <div class="container-fluid">
       <!-- Notifikasi -->
-      @if(session('success'))
-        <div class="alert alert-info alert-dismissible fade show" role="alert">
-          {{ session('success') }}
-          <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-          </button>
-        </div>
-      @endif
+     <x-alert/>
 
       <div class="row">
         <div class="col-12">
@@ -46,8 +39,8 @@
                   @foreach ($data as $d)
                   <tr>
                     <td>{{ $loop->iteration }}</td>
-                    <td>{{ $d->code }}</td>
-                    <td>{{ $d->name }}</td>
+                    <td>{{ $d->kode }}</td>
+                    <td>{{ $d->nama }}</td>
                     <td>
                       <button class="btn btn-sm btn-primary edit-btn" data-id="{{ $d->id }}" data-toggle="modal" data-target="#modal-edit">
                         <i class="fas fa-edit"></i>
@@ -55,6 +48,9 @@
 
                       <button class="btn btn-sm btn-info detail-btn" data-id="{{ $d->id }}" data-toggle="modal" data-target="#modal-detail">
                         <i class="fas fa-eye"></i>
+                      </button>
+                      <button class="btn btn-sm btn-danger delete-btn" data-id="" data-toggle="modal" data-target="#modal-delete{{ $d->id }}">
+                        <i class="fas fa-trash"></i>
                       </button>
                     </td>
                   </tr>
@@ -143,9 +139,9 @@
                         </div>
                       </div>
                     </div>
-                    <div class="mr-4 ml-4">
-                      <button type="submit" class="btn btn-default float-right">Cancel</button>
-                      <button type="submit" class="btn btn-info">Simpan</button>
+                    <div class="modal-footer">
+                      <button type="button" class="btn btn-sm float-right btn-danger" data-dismiss="modal">Tutup</button>
+                      <button type="submit" class="btn btn-sm float-right btn-info">Simpan</button>
                     </div>
                   </form>
                 </div>
@@ -180,6 +176,52 @@
               </div>
             </div>
           </div>
+
+
+          {{-- modal delete --}}
+          @foreach ($data as $d)
+          <div class="modal fade" id="modal-delete{{ $d->id }}">
+            <div class="modal-dialog">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h4 class="modal-title">delete Divisi</h4>
+                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                  </button>
+                </div>
+                <div class="modal-body">
+                  
+                    <div class="card-body">
+                      <div class="row">
+                        <!-- Kolom pertama -->
+                        <div class="col-md-12">
+                          <input type="hidden" id="delete_id" name="id">
+                          <div class="form-group">
+                            <table class="table border">
+                              <th>Kode</th>
+                              <th>Nama Divisi</th>
+                              <tr>
+                                <td>{{ $d->kode }}</td>
+                                <td>{{ $d->nama }}</td>
+                              </tr>
+                            </table>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <form action="{{ route('divisi.delete',$d->id) }}" method="POST">
+                      @csrf
+                    <div class="modal-footer">
+                      <button type="button" class="btn btn-sm btn-info float-right " data-dismiss="modal">Tutup</button>
+                      <button type="submit" class="btn btn-sm btn-danger float-right">Hapus</button>
+                    </div>
+                  </form>
+                </div>
+              </div>
+            </div>
+          </div>
+          @endforeach
+          {{-- end modal delete --}}
         </div>
       </div>
     </div>
@@ -187,11 +229,6 @@
 </x-Layouts.main.app>
 
 <script>
-  $(document).ready(function() {
-    setTimeout(function() {
-      $(".alert").alert('close');
-    }, 1000);
-  });
 
   $(document).on('click', '.edit-btn', function () {
     var id = $(this).data('id');
@@ -201,8 +238,8 @@
       method: 'GET',
       success: function (data) {
         $('#edit_id').val(data.id);
-        $('#edit_kode').val(data.code);
-        $('#edit_nama').val(data.name);
+        $('#edit_kode').val(data.kode);
+        $('#edit_nama').val(data.nama);
 
         $('#editForm').attr('action', '/divisi/' + id);
       }
@@ -216,9 +253,11 @@
       url: '/divisi/detail/' + id,
       method: 'GET',
       success: function(data) {
-        $('#detail_kode').text(data.code);
-        $('#detail_nama').text(data.name);
+        $('#detail_kode').text(data.kode);
+        $('#detail_nama').text(data.nama);
       }
     });
   });
+
+
 </script>

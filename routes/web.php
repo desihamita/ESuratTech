@@ -48,6 +48,7 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/divisi/store', [DivisiController::class, 'store'])->name('divisi.store');
     Route::get('/divisi/{id}/edit', [DivisiController::class, 'edit'])->name('divisi.edit');
     Route::put('/divisi/{id}', [DivisiController::class, 'update'])->name('divisi.update');
+    Route::post('/divisi/delete/{id}', [DivisiController::class, 'destroy'])->name('divisi.delete');
     Route::get('/divisi/detail/{id}', [DivisiController::class, 'detail'])->name('divisi.detail');
 
     Route::get('/klasifikasi', [KlasifikasiController::class, 'index'])->name('klasifikasi.index');

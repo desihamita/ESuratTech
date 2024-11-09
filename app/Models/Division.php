@@ -11,6 +11,6 @@ class Division extends Model
     protected $table = 'divisions';
     protected $fillable = [
         'kode',
-        'name',
+        'nama',
     ];
 }

@@ -25,8 +25,9 @@ class DivisiController extends Controller
 
     public function store(Request $request)
     {
+        // \dd($request);
         $validator = Validator::make($request->all(), [
-            'kode' => 'required|unique:divisions,code',
+            'kode' => 'required|unique:divisions,kode',
             'nama' => 'required|max:30'
         ]);
 
@@ -36,11 +37,11 @@ class DivisiController extends Controller
 
         try {
             Division::create([
-                'name' => $request->nama,
-                'code' => $request->kode,
+                'nama' => $request->nama,
+                'kode' => $request->kode,
             ]);
 
-            return redirect()->route('pages.divisi.index')->with('success', 'Data berhasil disimpan!');
+            return redirect()->route('divisi.index')->with('success', 'Data berhasil disimpan!');
         } catch (\Exception $e) {
             return redirect()->back()->with('error', 'Terjadi kesalahan: ' . $e->getMessage());
         }
@@ -57,8 +58,9 @@ class DivisiController extends Controller
 
     public function update(Request $request, string $id)
     {
+        // \dd($request);
         $validator = Validator::make($request->all(), [
-            'kode' => 'required|unique:divisions,code',
+            'kode' => 'required|unique:divisions,kode,' . $id,
             'nama' => 'required|max:30'
         ]);
 
@@ -67,13 +69,14 @@ class DivisiController extends Controller
         }
 
         try {
-            $divisi = Division::find($id);
-    
-            $divisi->code = $request->kode;
-            $divisi->name = $request->nama;
-            $divisi->save();
-    
-            return redirect()->route('divisi.index')->with('success', 'Data berhasil diupdate!');
+            $divisi = Division::findOrFail($id);
+            $divisi->update([
+                'kode' =>$request->kode,
+                'nama' =>$request->nama,
+                
+            ]);
+
+            return redirect()->route('divisi.index')->with('success', 'Data berhasil diubah!');
         } catch (\Exception $e) {
             return redirect()->back()->with('error', 'Terjadi kesalahan: ' . $e->getMessage());
         }
@@ -83,5 +86,16 @@ class DivisiController extends Controller
     {
         $divisi = Division::findOrFail($id);
         return response()->json($divisi);
+    }
+
+    public function destroy(string $id)
+    {
+        try {
+            $divisi = Division::find($id);
+            $divisi->delete();
+            return redirect()->route('divisi.index')->with('success', 'Data berhasil dihapus!');
+        } catch (\Exception $e) {
+            return redirect()->back()->with('error', 'Terjadi kesalahan: ' . $e->getMessage());
+        }
     }
 }
