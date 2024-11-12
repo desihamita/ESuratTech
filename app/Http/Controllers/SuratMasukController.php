@@ -15,7 +15,7 @@ class SuratMasukController extends Controller
      */
     public function index()
     {
-        $letter = Letter::with('dispositions')->get();
+        $letter = Letter::with('dispositions')->orderBy('created_at', 'desc')->get();
         $title = 'Surat Masuk ';
         $breadcrumbs = [
             ['name' => 'Home', 'url' => '/home'],

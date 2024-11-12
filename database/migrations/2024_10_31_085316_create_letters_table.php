@@ -24,7 +24,7 @@ return new class extends Migration
             $table->text('file_surat')->nullable();
             $table->string('kode_klasifikasi');
             
-            $table->foreign('kode_klasifikasi')->references('code')->on('classifications');
+            $table->foreign('kode_klasifikasi')->references('kode')->on('classifications');
             $table->foreignId('user_id')->constrained('users')->cascadeOnUpdate();
             $table->timestamps();
         });
