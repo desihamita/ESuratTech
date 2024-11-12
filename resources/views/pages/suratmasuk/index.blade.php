@@ -60,7 +60,7 @@
                       <button class="btn btn-sm btn-primary edit-btn" data-id="" data-toggle="modal" data-target="#modal-edit{{ $d->id }}">
                         <i class="fas fa-edit"></i>
                       </button>
-                      <button class="btn btn-sm btn-info detail-btn" data-id="" data-toggle="modal" data-target="#modal-detail{{ $d->id }}">
+                      <button class="btn btn-sm btn-info detail-btn" data-id=" " data-toggle="modal" data-target="#modal-detail{{ $d->id }}">
                         <i class="fas fa-eye"></i>
                       </button>
                       <button class="btn btn-sm btn-success print-btn" data-id="{{ $d->id }}" data-toggle="modal" data-target="#modal-print">
@@ -425,13 +425,13 @@
                           <td><strong>Status</strong></td>
                           <td>
                             @foreach($d->dispositions as $disposisi)
-                            <span class="badge 
-                                        {{ $disposisi->status === 'Pending' ? 'badge-warning' : 
-                                           ($disposisi->status === 'Processed' ? 'badge-primary' : 
-                                           ($disposisi->status === 'Completed' ? 'badge-success' : 
-                                           ($disposisi->status === 'Rejected' ? 'badge-danger' : 'badge-secondary'))) }}">
-                              {{ $disposisi->status }}
-                            </span>
+                              <span class="badge 
+                                          {{ $disposisi->status === 'Pending' ? 'badge-warning' : 
+                                            ($disposisi->status === 'Processed' ? 'badge-primary' : 
+                                            ($disposisi->status === 'Completed' ? 'badge-success' : 
+                                            ($disposisi->status === 'Rejected' ? 'badge-danger' : 'badge-secondary'))) }}">
+                                {{ $disposisi->status }}
+                              </span>
                             @endforeach
                           </td>
                           <tr>

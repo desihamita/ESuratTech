@@ -5,7 +5,12 @@
     <section class="content">
         <div class="container-fluid">
             <div class="row mr-2 ml-3">
-                <x-timeline/>
+                <x-timeline 
+                :statusPending="$statusPending" 
+                :statusProses="$statusProses" 
+                :statusCompleted="$statusCompleted" 
+                :statusReject="$statusReject"
+                />
             </div>
         </div>
     </section>

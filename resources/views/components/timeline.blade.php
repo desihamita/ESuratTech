@@ -3,17 +3,32 @@
     <ul class="timeline-with-icons">
         <li class="timeline-item mb-5">
             <span class="timeline-icon">
-                <i class="fas fa-rocket text-primary fa-sm fa-fw"></i>
+                <i class="fas fa-solid fa-hourglass-half text-warning fa-sm fa-fw"></i>
             </span>
-
-            <h5 class="fw-bold">Our company starts its operations</h5>
-            <p class="text-muted mb-2 fw-bold">11 March 2020</p>
-            <p class="text-muted">
-                Lorem ipsum dolor sit amet consectetur adipisicing elit. Sit
-                necessitatibus adipisci, ad alias, voluptate pariatur officia
-                repellendus repellat inventore fugit perferendis totam dolor
-                voluptas et corrupti distinctio maxime corporis optio?
-            </p>
+            @if (!$statusPending->isEmpty())
+                @foreach ($statusPending as $data )
+                    @foreach ($data->dispositions as $d)
+                    <h5 class="fw-bold badge {{ $d->status === 'Pending' ? 'badge-warning' : '' }}">Status : {{ $d->status }}
+                    </h5>
+                    @endforeach
+                    
+                <details>
+                    <summary>No. Surat : {{ $data->nomor_surat }}</summary>
+                    @foreach ($data->dispositions as $d)
+                    <p class="text-muted mb-2 fw-bold">Status : {{ $d->status }}</p>
+                    @endforeach
+                    <p class="text-muted mb-2 fw-bold">No. Surat : {{ $data->nomor_surat }}</p>
+                    <p class="text-muted mb-2 fw-bold">Pengirim : {{ $data->pengirim }}</p>
+                    <p class="text-muted mb-2 fw-bold">Penerima : {{ $data->penerima }}</p>
+                    <p class="text-muted">
+                        Perihal : {{$data->perihal}}
+                    </p>
+                </details>
+                <hr>
+                @endforeach
+            @else
+            <h5 class="bold">Tidak Ada Data</h5>
+            @endif
         </li>
 
         <li class="timeline-item mb-5">
@@ -21,44 +36,77 @@
             <span class="timeline-icon">
                 <i class="fas fa-hand-holding-usd text-primary fa-sm fa-fw"></i>
             </span>
-            <h5 class="fw-bold">First customer</h5>
-            <p class="text-muted mb-2 fw-bold">19 March 2020</p>
-            <p class="text-muted">
-                Quisque ornare dui nibh, sagittis egestas nisi luctus nec. Sed
-                aliquet laoreet sapien, eget pulvinar lectus maximus vel.
-                Phasellus suscipit porta mattis.
-            </p>
+            @if (!$statusProses->isEmpty())
+            @foreach ($statusProses as $data )
+            @foreach ($data->dispositions as $d)
+            <h5 class="fw-bold badge {{ $d->status === 'Processed' ? 'badge-primary' : '' }}">Status : {{ $d->status }}
+            </h5>
+            @endforeach
+            <details>
+                <summary>Detail</summary>
+                <p class="text-muted mb-2 fw-bold">No. Surat : {{ $data->nomor_surat }}</p>
+                <p class="text-muted mb-2 fw-bold">Pengirim : {{ $data->pengirim }}</p>
+                <p class="text-muted mb-2 fw-bold">Penerima : {{ $data->penerima }}</p>
+                <p class="text-muted">
+                    Perihal : {{$data->perihal}}
+                </p>
+            </details>
+            @endforeach
+            @else
+            <h5 class="bold">Tidak Ada Data</h5>
+            @endif
         </li>
 
         <li class="timeline-item mb-5">
 
             <span class="timeline-icon">
-                <i class="fas fa-users text-primary fa-sm fa-fw"></i>
+                <i class="fas fa-solid fa-check text-success fa-sm fa-fw"></i>
             </span>
-            <h5 class="fw-bold">Our team exceeds 10 people</h5>
-            <p class="text-muted mb-2 fw-bold">24 June 2020</p>
-            <p class="text-muted">
-                Orci varius natoque penatibus et magnis dis parturient montes,
-                nascetur ridiculus mus. Nulla ullamcorper arcu lacus, maximus
-                facilisis erat pellentesque nec. Duis et dui maximus dui aliquam
-                convallis. Quisque consectetur purus erat, et ullamcorper sapien
-                tincidunt vitae.
-            </p>
+            @if (!$statusCompleted->isEmpty())
+                @foreach ($statusCompleted as $data )
+                    @foreach ($data->dispositions as $d)
+                    <h5 class="fw-bold badge {{ $d->status === 'Completed' ? 'badge-success' : '' }}">Status : {{ $d->status }}
+                    </h5>
+                    @endforeach
+                <details>
+                    <summary>Detail</summary>
+                    <p class="text-muted mb-2 fw-bold">No. Surat : {{ $data->nomor_surat }}</p>
+                    <p class="text-muted mb-2 fw-bold">Pengirim : {{ $data->pengirim }}</p>
+                    <p class="text-muted mb-2 fw-bold">Penerima : {{ $data->penerima }}</p>
+                    <p class="text-muted">
+                        Perihal : {{$data->perihal}}
+                    </p>
+                </details>
+                @endforeach
+            @else
+                <h5 class="bold">Tidak Ada Data</h5>
+            @endif
         </li>
 
         <li class="timeline-item mb-5">
 
             <span class="timeline-icon">
-                <i class="fas fa-money-bill-wave text-primary fa-sm fa-fw"></i>
+                <i class="fas fa-solid fa-ban text-danger fa-sm fa-fw"></i>
             </span>
-            <h5 class="fw-bold">Earned the first million $!</h5>
-            <p class="text-muted mb-2 fw-bold">15 October 2020</p>
-            <p class="text-muted">
-                Nulla ac tellus convallis, pulvinar nulla ac, fermentum diam. Sed
-                et urna sit amet massa dapibus tristique non finibus ligula. Nam
-                pharetra libero nibh, id feugiat tortor rhoncus vitae. Ut suscipit
-                vulputate mattis.
-            </p>
+            @if (!$statusReject->isEmpty())
+            @foreach ($statusReject as $data )
+                @foreach ($data->dispositions as $d)
+                <h5 class="fw-bold badge {{ $d->status === 'Rejected' ? 'badge-danger' : '' }}">Status : {{ $d->status }}
+                </h5>
+                @endforeach
+            <details>
+                <summary>Detail</summary>
+                <p class="text-muted mb-2 fw-bold">No. Surat : {{ $data->nomor_surat }}</p>
+                <p class="text-muted mb-2 fw-bold">Pengirim : {{ $data->pengirim }}</p>
+                <p class="text-muted mb-2 fw-bold">Penerima : {{ $data->penerima }}</p>
+                <p class="text-muted">
+                    Perihal : {{$data->perihal}}
+                </p>
+            </details>
+            @endforeach
+            @else
+            <h5 class="bold">Tidak Ada Data</h5>
+            @endif
         </li>
     </ul>
 </section>
