@@ -1,5 +1,5 @@
 <!-- Section: Timeline -->
-<section class="py-5 timeline" style="background-color: #ffff">
+<section class="py-5 px-5 timeline" style="background-color: #ededed; width:100%">
     <ul class="timeline-with-icons">
         <li class="timeline-item mb-5">
             <span class="timeline-icon">
