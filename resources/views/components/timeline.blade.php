@@ -6,28 +6,28 @@
                 <i class="fas fa-solid fa-hourglass-half text-warning fa-sm fa-fw"></i>
             </span>
             <h5 class="fw-bold badge badge-warning">Status : Pending </h5>
-                @if (!$statusPending->isEmpty())
-                    @foreach ($statusPending as $data )
-                    <details>
-                        <summary class="text-bold">No. Surat : {{ $data->nomor_surat }}</summary>
-                        @foreach ($data->dispositions as $d)
-                        <hr>
-                        <p class="text-muted mb-2 fw-bold">Status : {{ $d->status }}</p>
-                        @endforeach
-                        <p class="text-muted mb-2 fw-bold">No. Surat : {{ $data->nomor_surat }}</p>
-                        <p class="text-muted mb-2 fw-bold">Pengirim : {{ $data->pengirim }}</p>
-                        @foreach ($data->dispositions as $d)
-                        <p class="text-muted mb-2 fw-bold">Penerima : {{ $d->penerima }}</p>
-                        <p class="text-muted">
-                            catatan : {{ $d->catatan }}
-                            @endforeach
-                        </p>
-                    </details>
-                    <hr>
+            @if (!$statusPending->isEmpty())
+            @foreach ($statusPending as $data )
+            <details>
+                <summary class="text-bold">No. Surat : {{ $data->nomor_surat }}</summary>
+                @foreach ($data->dispositions as $d)
+                <hr>
+                <p class="text-muted mb-2 fw-bold">Status : {{ $d->status }}</p>
+                @endforeach
+                <p class="text-muted mb-2 fw-bold">No. Surat : {{ $data->nomor_surat }}</p>
+                <p class="text-muted mb-2 fw-bold">Pengirim : {{ $data->pengirim }}</p>
+                @foreach ($data->dispositions as $d)
+                <p class="text-muted mb-2 fw-bold">Penerima : {{ $d->penerima }}</p>
+                <p class="text-muted">
+                    catatan : {{ $d->catatan }}
                     @endforeach
-                @else
-                <h5 class="text-sm bold">Tidak Ada Data</h5>
-                @endif
+                </p>
+            </details>
+            <hr>
+            @endforeach
+            @else
+            <h5 class="text-sm bold">Tidak Ada Data</h5>
+            @endif
         </li>
 
         <li class="timeline-item mb-5">
@@ -46,11 +46,12 @@
                 @endforeach
                 <p class="text-muted mb-2 fw-bold">No. Surat : {{ $data->nomor_surat }}</p>
                 <p class="text-muted mb-2 fw-bold">Pengirim : {{ $data->pengirim }}</p>
-                 @foreach ($data->dispositions as $d)
+
+                @foreach ($data->dispositions as $d)
                 <p class="text-muted mb-2 fw-bold">Penerima : {{ $d->penerima }}</p>
                 <p class="text-muted">
-                    catatan : {{ $d->catatan }}    
-                @endforeach
+                    catatan : {{ $d->catatan }}
+                    @endforeach
                 </p>
             </details>
             @endforeach
@@ -66,6 +67,7 @@
             </span>
             <h5 class="fw-bold badge badge-success ">Status : Sukses </h5>
             @if (!$statusCompleted->isEmpty())
+
                 @foreach ($statusCompleted as $data )
                 <details>
                     <summary class="text-bold">No. Surat : {{ $data->nomor_surat }}</summary>
@@ -82,9 +84,9 @@
                         @endforeach
                     </p>
                 </details>
-                @endforeach
+            @endforeach
             @else
-                <h5 class="bold">Tidak Ada Data</h5>
+            <h5 class="bold">Tidak Ada Data</h5>
             @endif
         </li>
 
