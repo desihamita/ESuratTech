@@ -1,5 +1,5 @@
 <!-- Section: Timeline -->
-<section class="py-5 px-5 timeline" style="background-color: #ededed; width:100%">
+<section class="py-5 px-5 timeline" style="background-color: #ffff; width:100%;">
     <ul class="timeline-with-icons">
         <li class="timeline-item mb-5">
             <span class="timeline-icon">
@@ -9,15 +9,18 @@
                 @if (!$statusPending->isEmpty())
                     @foreach ($statusPending as $data )
                     <details>
-                        <summary>No. Surat : {{ $data->nomor_surat }}</summary>
+                        <summary class="text-bold">No. Surat : {{ $data->nomor_surat }}</summary>
                         @foreach ($data->dispositions as $d)
+                        <hr>
                         <p class="text-muted mb-2 fw-bold">Status : {{ $d->status }}</p>
                         @endforeach
                         <p class="text-muted mb-2 fw-bold">No. Surat : {{ $data->nomor_surat }}</p>
                         <p class="text-muted mb-2 fw-bold">Pengirim : {{ $data->pengirim }}</p>
-                        <p class="text-muted mb-2 fw-bold">Penerima : {{ $data->penerima }}</p>
+                        @foreach ($data->dispositions as $d)
+                        <p class="text-muted mb-2 fw-bold">Penerima : {{ $d->penerima }}</p>
                         <p class="text-muted">
-                            Perihal : {{$data->perihal}}
+                            catatan : {{ $d->catatan }}
+                            @endforeach
                         </p>
                     </details>
                     <hr>
@@ -36,15 +39,18 @@
             @if (!$statusProses->isEmpty())
             @foreach ($statusProses as $data )
             <details>
-                <summary>No. Surat : {{ $data->nomor_surat }}</summary>
+                <summary class="text-bold">No. Surat : {{ $data->nomor_surat }}</summary>
                 @foreach ($data->dispositions as $d)
-                <p class="text-muted mb-2 fw-bold">No. status : {{ $d->status }}</p>
+                <hr>
+                <p class="text-muted mb-2 fw-bold">Status : {{ $d->status }}</p>
                 @endforeach
                 <p class="text-muted mb-2 fw-bold">No. Surat : {{ $data->nomor_surat }}</p>
                 <p class="text-muted mb-2 fw-bold">Pengirim : {{ $data->pengirim }}</p>
-                <p class="text-muted mb-2 fw-bold">Penerima : {{ $data->penerima }}</p>
+                 @foreach ($data->dispositions as $d)
+                <p class="text-muted mb-2 fw-bold">Penerima : {{ $d->penerima }}</p>
                 <p class="text-muted">
-                    Perihal : {{$data->perihal}}
+                    catatan : {{ $d->catatan }}    
+                @endforeach
                 </p>
             </details>
             @endforeach
@@ -62,15 +68,18 @@
             @if (!$statusCompleted->isEmpty())
                 @foreach ($statusCompleted as $data )
                 <details>
-                    <summary>No. Surat : {{ $data->nomor_surat }}</summary>
+                    <summary class="text-bold">No. Surat : {{ $data->nomor_surat }}</summary>
                     @foreach ($data->dispositions as $d)
-                    <p class="text-muted mb-2 fw-bold">No. status : {{ $d->status }}</p>
+                    <hr>
+                    <p class="text-muted mb-2 fw-bold">Status : {{ $d->status }}</p>
                     @endforeach
                     <p class="text-muted mb-2 fw-bold">No. Surat : {{ $data->nomor_surat }}</p>
                     <p class="text-muted mb-2 fw-bold">Pengirim : {{ $data->pengirim }}</p>
-                    <p class="text-muted mb-2 fw-bold">Penerima : {{ $data->penerima }}</p>
+                    @foreach ($data->dispositions as $d)
+                    <p class="text-muted mb-2 fw-bold">Penerima : {{ $d->penerima }}</p>
                     <p class="text-muted">
-                        Perihal : {{$data->perihal}}
+                        catatan : {{ $d->catatan }}
+                        @endforeach
                     </p>
                 </details>
                 @endforeach
@@ -88,15 +97,18 @@
             @if (!$statusReject->isEmpty())
             @foreach ($statusReject as $data )
             <details>
-                <summary>No. Surat : {{ $data->nomor_surat }}</summary>
+                <summary class="text-bold">No. Surat : {{ $data->nomor_surat }}</summary>
                 @foreach ($data->dispositions as $d)
-                <p class="text-muted mb-2 fw-bold">No. status : {{ $d->status }}</p>
+                <hr>
+                <p class="text-muted mb-2 fw-bold">Status : {{ $d->status }}</p>
                 @endforeach
                 <p class="text-muted mb-2 fw-bold">No. Surat : {{ $data->nomor_surat }}</p>
                 <p class="text-muted mb-2 fw-bold">Pengirim : {{ $data->pengirim }}</p>
-                <p class="text-muted mb-2 fw-bold">Penerima : {{ $data->penerima }}</p>
+                @foreach ($data->dispositions as $d)
+                <p class="text-muted mb-2 fw-bold">Penerima : {{ $d->penerima }}</p>
                 <p class="text-muted">
-                    Perihal : {{$data->perihal}}
+                    catatan : {{ $d->catatan }}
+                    @endforeach
                 </p>
             </details>
             @endforeach
