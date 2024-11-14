@@ -47,7 +47,7 @@
         </a>
       </div>
       <div class="inner">
-        <h3>15</h3>
+        <h3>{{ $disposisi }}</h3>
         <p>Surat Disposisi *</p>
         <span class="text-success">
             <i class="fas fa-arrow-up"></i> 12.5%
