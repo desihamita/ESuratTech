@@ -1,6 +1,6 @@
 <!-- Section: Timeline -->
-<section class="py-5 px-5 timeline" style="background-color: #ffff; width:100%;">
-    <ul class="timeline-with-icons">
+<section class="p-5 timeline" style="background-color: #ffff; width:100%;">
+    <ul class="timeline-with-icons ">
         <li class="timeline-item mb-5">
             <span class="timeline-icon">
                 <i class="fas fa-solid fa-hourglass-half text-warning fa-sm fa-fw"></i>

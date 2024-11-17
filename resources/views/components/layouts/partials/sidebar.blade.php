@@ -23,13 +23,13 @@
     <nav class="mt-2">
       <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
           <li class="nav-item">
-              <a href="/home" class="nav-link">
+              <a href="{{ route('home.index') }}" class="nav-link {{ request()->routeIs('home') ? 'active bg-primary text-white' : '' }}">
                 <i class="nav-icon fas fa-tachometer-alt"></i>
                 <p>Dashboard</p>
               </a>
             </li>
             <li class="nav-item">
-              <a href="/surat-masuk" class="nav-link ">
+              <a href="/diposisi" class="nav-link ">
                 <i class="nav-icon fas fa-solid fa-file"></i>
                 <p>Disposisi Surat</p>
               </a>

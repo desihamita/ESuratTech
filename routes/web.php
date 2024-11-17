@@ -1,6 +1,6 @@
 <?php
 
-
+use App\Http\Controllers\DisposisiController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\UserController;
@@ -52,7 +52,6 @@ Route::middleware(['auth'])->group(function () {
 
     Route::get('status-surat', [StatusSuratController::class,'index'])->name('status_surat.index');
     
-    // divisi
     Route::get('/divisi', [DivisiController::class, 'index'])->name('divisi.index');
     Route::post('/divisi/store', [DivisiController::class, 'store'])->name('divisi.store');
     Route::get('/divisi/{id}/edit', [DivisiController::class, 'edit'])->name('divisi.edit');

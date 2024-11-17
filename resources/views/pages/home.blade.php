@@ -60,6 +60,7 @@
               :countletterin="$countLeters_in" 
               :countletterout="$countLeters_out" 
               :useraktif="$useraktif"
+              :disposisi="$disposisi"
               />
           </section>
 
