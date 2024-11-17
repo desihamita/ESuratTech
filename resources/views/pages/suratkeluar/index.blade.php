@@ -5,7 +5,7 @@
     <section class="content">
         <div class="container-fluid">
             <!-- Notifications -->
-                    <x-alert/>
+            <x-alert/>
            <div class="row">
                 <div class="col-12">
                     <div class="card">
@@ -66,10 +66,6 @@
                                                 data-toggle="modal" data-target="#modal-edit{{ $d->id }}">
                                                 <i class="fas fa-edit"></i>
                                             </button>
-                                            <button class="btn btn-sm btn-danger delete-btn"
-                                                data-toggle="modal" data-target="#modal-delete{{ $d->id }}">
-                                                <i class="fas fa-trash"></i>
-                                            </button>
                                             <button class="btn btn-sm btn-info detail-btn"
                                                 data-toggle="modal" data-target="#modal-detail{{ $d->id }}">
                                                 <i class="fas fa-eye"></i>
@@ -91,8 +87,7 @@
                         <div class="modal-dialog modal-lg">
                             <div class="modal-content">
                                 <div class="modal-header">
-                                    <h4 class="modal-title"><i class="fas fa-regular fa-envelope mr-2"></i>Tambah Surat
-                                        Keluar</h4>
+                                    <h4 class="modal-title"><i class="fas fa-regular fa-envelope mr-2"></i>Tambah Surat Keluar</h4>
                                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                         <span aria-hidden="true">&times;</span>
                                     </button>

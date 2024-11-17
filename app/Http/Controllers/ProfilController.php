@@ -6,6 +6,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash; 
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Validator;
+use App\Models\User;
 
 class ProfilController extends Controller
 {
@@ -16,9 +18,49 @@ class ProfilController extends Controller
             ['name' => 'Home', 'url' => '/home'],
             ['name' => 'User Profil', 'url' => ''],
         ];
+        $data = Classification::all();
 
-        return view('pages.profil.index', compact('title', 'breadcrumbs') );
+        return view('pages.profil.index', compact('data','title', 'breadcrumbs') );
     }
+
+    public function indexDatatable()
+    {
+        $title = 'Manajemen User';
+        $breadcrumbs = [
+            ['name' => 'Home', 'url' => '/home'],
+            ['name' => 'Manajemen User', 'url' => ''],
+        ];
+        $data = User::all();
+        return view('pages.kelola_pengguna.index', compact('data','title', 'breadcrumbs') );
+    }
+
+    public function store(Request $request)
+    {
+        // Validasi data
+        $request->validate([
+            'nip' => 'nullable|string|max:20',
+            'nama' => 'required|string|max:255',
+            'jabatan' => 'nullable|string|max:100',
+            'level' => 'nullable|string|max:50',
+            'status' => 'nullable|in:active,inactive',
+            'email' => 'required|string|email|max:255|unique:users',
+            'password' => 'required|string|min:8',
+        ]);
+
+        // Insert data ke tabel users
+        $user = User::create([
+            'nip' => $request->nip,
+            'name' => $request->nama,
+            'jabatan' => $request->jabatan,
+            'level' => $request->level ?? 'user',
+            'status' => $request->status ?? 'inactive',
+            'email' => $request->email,
+            'password' => Hash::make($request->password),
+        ]);
+
+        return redirect()->back()->with('success', 'User berhasil ditambahkan.');
+    }
+
     public function update(Request $request)
     {
         $request->validate([
@@ -46,7 +88,6 @@ class ProfilController extends Controller
             // Simpan nama file ke dalam database
             $user->profile_picture = $newFileName;
         }
-        // \dd($user);
 
         $user->update();
 
@@ -66,6 +107,5 @@ class ProfilController extends Controller
 
         return redirect()->back()->with('success', 'Photo deleted successfully.');
     }
-
 
 }

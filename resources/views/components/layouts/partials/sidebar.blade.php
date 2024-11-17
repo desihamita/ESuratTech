@@ -110,7 +110,7 @@
             </ul>
           </li>
           <li class="nav-item">
-            <a href="#" class="nav-link">
+            <a href="/user" class="nav-link">
               <i class="far fa-solid fa-user nav-icon"></i>
               <p>Kelola Pengguna</p>
             </a>

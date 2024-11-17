@@ -54,9 +54,6 @@
                     <td>{{ $d->pengirim }}</td>
                     <td>{{ $d->perihal }}</td>
                     <td>
-                      <button class="btn btn-sm btn-danger " data-id="" data-toggle="modal" data-target="#modal-delete{{ $d->id }}">
-                        <i class="fas fa-trash"></i>
-                      </button>
                       <button class="btn btn-sm btn-primary edit-btn" data-id="" data-toggle="modal" data-target="#modal-edit{{ $d->id }}">
                         <i class="fas fa-edit"></i>
                       </button>
