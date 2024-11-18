@@ -48,6 +48,7 @@ Route::middleware(['auth'])->group(function () {
     Route::get('status-surat', [StatusSuratController::class,'index'])->name('status_surat.index');
     
     Route::get('/diposisi', [DisposisiController::class,'index'])->name('disposisi.index');
+    Route::get('/diposisi/store', [DisposisiController::class,'store'])->name('disposisi.store');
 
 
     Route::get('/divisi', [DivisiController::class, 'index'])->name('divisi.index');

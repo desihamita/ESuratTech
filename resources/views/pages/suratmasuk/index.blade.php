@@ -57,10 +57,10 @@
                       <button class="btn btn-sm btn-danger " data-id="" data-toggle="modal" data-target="#modal-delete{{ $d->id }}">
                         <i class="fas fa-trash"></i>
                       </button>
-                      <button class="btn btn-sm btn-primary edit-btn" data-id="" data-toggle="modal" data-target="#modal-edit{{ $d->id }}">
+                      <button class="btn btn-sm btn-primary edit-btn" data-id="" data-toggle="modal" data-target="#modal-edit{{$d->id }}">
                         <i class="fas fa-edit"></i>
                       </button>
-                      <button class="btn btn-sm btn-info detail-btn" data-id=" " data-toggle="modal" data-target="#modal-detail{{ $d->id }}">
+                      <button class="btn btn-sm btn-info detail-btn" data-id=" " data-toggle="modal" data-target="#modal-detail{{$d->id }}">
                         <i class="fas fa-eye"></i>
                       </button>
                       <button class="btn btn-sm btn-success print-btn" data-id="{{ $d->id }}" data-toggle="modal" data-target="#modal-print">
@@ -472,12 +472,11 @@
                     </table>
                   </div>
               </div>
+             </div>
             </div>
           </div>
-          @endforeach
-          <!-- end modal detail -->
-
-        </div>
+        @endforeach
+        <!-- end modal detail -->
       </div>
     </div>
   </section>
