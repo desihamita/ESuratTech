@@ -2,12 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\User;
 use Illuminate\Http\Request;
+use App\Models\Classification;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash; 
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
-use App\Models\User;
 
 class ProfilController extends Controller
 {
@@ -39,7 +40,7 @@ class ProfilController extends Controller
         // Validasi data
         $request->validate([
             'nip' => 'nullable|string|max:20',
-            'nama' => 'required|string|max:255',
+            'name' => 'required|string|max:255',
             'jabatan' => 'nullable|string|max:100',
             'level' => 'nullable|string|max:50',
             'status' => 'nullable|in:active,inactive',
@@ -56,6 +57,7 @@ class ProfilController extends Controller
             'status' => $request->status ?? 'inactive',
             'email' => $request->email,
             'password' => Hash::make($request->password),
+            
         ]);
 
         return redirect()->back()->with('success', 'User berhasil ditambahkan.');

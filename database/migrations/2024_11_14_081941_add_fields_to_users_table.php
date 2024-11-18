@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::table('users', function (Blueprint $table) {
             $table->string('nip')->nullable()->after('id');
-            $table->string('jabatan')->nullable()->after('nama_lengkap');
+            $table->string('jabatan')->nullable()->after('name');
             $table->string('level')->nullable()->after('jabatan');
             $table->enum('status', ['active', 'inactive'])->default('inactive')->after('level');
         });
