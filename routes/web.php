@@ -51,7 +51,10 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/surat-keluar/detail/{id}', [SuratKeluarController::class, 'detail'])->name('suratkeluar.detail');
 
     Route::get('status-surat', [StatusSuratController::class,'index'])->name('status_surat.index');
-    
+
+    Route::get('/diposisi', [DisposisiController::class,'index'])->name('disposisi.index');
+    Route::get('/diposisi/store', [DisposisiController::class,'store'])->name('disposisi.store');
+
     Route::get('/divisi', [DivisiController::class, 'index'])->name('divisi.index');
     Route::post('/divisi/store', [DivisiController::class, 'store'])->name('divisi.store');
     Route::get('/divisi/{id}/edit', [DivisiController::class, 'edit'])->name('divisi.edit');
