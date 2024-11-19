@@ -9,32 +9,27 @@ class StatusSuratController extends Controller
 {
     public function index(){
         
-        $statusPending = Letter::with('dispositions')
+        $statusDikirim = Letter::with('dispositions')
         ->whereHas('dispositions', function ($query) {
-            $query->where('status', 'Pending');
+            $query->where('status', 'dikirim');
         })->get();
 
-        $statusProses = Letter::with('dispositions')
+        $statusDiterima = Letter::with('dispositions')
         ->whereHas('dispositions', function ($query) {
-            $query->where('status', 'Processed');
+            $query->where('status', 'diterima');
         })->get();
 
-        $statusCompleted = Letter::with('dispositions')
+        $statusDibaca = Letter::with('dispositions')
         ->whereHas('dispositions', function ($query) {
-            $query->where('status', 'Completed');
+            $query->where('status', 'dibaca');
         })->get();
 
-        $statusReject = Letter::with('dispositions')
-        ->whereHas('dispositions', function ($query) {
-            $query->where('status', 'Rejected');
-        })->get();
 
         $data=[
             'title'=>'Status Surat',
-            'statusCompleted'=> $statusCompleted,
-            'statusPending'=> $statusPending,
-            'statusProses'=> $statusProses,
-            'statusReject'=> $statusReject,
+            'statusDikirim'=> $statusDikirim,
+            'statusDiterima'=> $statusDiterima,
+            'statusDibaca'=> $statusDibaca,
             'breadcrumbs' => [
                 ['name' => 'Home', 'url' => '/home'],
                 ['name' => 'Status Surat', 'url' => ''],

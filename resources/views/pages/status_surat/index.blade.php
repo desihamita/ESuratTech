@@ -6,10 +6,9 @@
         <div class="container-fluid">
             <div class="row mr-2 ml-3">
                 <x-timeline 
-                :statusPending="$statusPending" 
-                :statusProses="$statusProses" 
-                :statusCompleted="$statusCompleted" 
-                :statusReject="$statusReject"
+                :statusDikirim="$statusDikirim" 
+                :statusDiterima="$statusDiterima" 
+                :statusDibaca="$statusDibaca" 
                 />
             </div>
         </div>

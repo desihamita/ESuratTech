@@ -49,7 +49,13 @@
                     <td>
                       <button class="btn btn-warning " data-id="" data-toggle="modal" data-target="#modal-disposisi{{ $d->id }}">
                         <i class="fas fa-clipboard"></i>
-                      </button>
+                      </button> | 
+                      @foreach ($d->dispositions as $ds)
+                        <small class="badge {{ $ds->status === 'dikirim' ? 'badge-warning' : 
+                            ($ds->status === 'diterima' ? 'badge-primary' : 
+                            ($ds->status === 'dibaca' ? 'badge-success' : '')) }}">{{ $ds->status }}</small>
+                      @endforeach
+                      
                     </td>
                     <td>{{ $d->pengirim }}</td>
                     <td>{{ $d->perihal }}</td>
@@ -331,10 +337,9 @@
                       <div class="form-group">
                         <label for="disposisiStatus">Status Disposisi</label>
                         <select class="form-control" id="status" name="status" required>
-                          <option value="Pending" {{ $d->status === 'Pending' ? 'selected' : '' }}>Pending</option>
-                          <option value="Processed" {{ $d->status === 'Processed' ? 'selected' : '' }}>Processed</option>
-                          <option value="Completed" {{ $d->status === 'Completed' ? 'selected' : '' }}>Completed</option>
-                          <option value="Rejected" {{ $d->status === 'Rejected' ? 'selected' : '' }}>Rejected</option>
+                          <option value="dikirim" {{ $d->status === 'dikirim' ? 'selected' : '' }}>Dikirim</option>
+                          <option value="diterima" {{ $d->status === 'diterima' ? 'selected' : '' }}>Diterima</option>
+                          <option value="dibaca" {{ $d->status === 'dibaca' ? 'selected' : '' }}>Dibaca</option>
                         </select>
                       </div>
                     </div>
@@ -423,10 +428,9 @@
                           <td>
                             @foreach($d->dispositions as $disposisi)
                               <span class="badge 
-                                          {{ $disposisi->status === 'Pending' ? 'badge-warning' : 
-                                            ($disposisi->status === 'Processed' ? 'badge-primary' : 
-                                            ($disposisi->status === 'Completed' ? 'badge-success' : 
-                                            ($disposisi->status === 'Rejected' ? 'badge-danger' : 'badge-secondary'))) }}">
+                                          {{ $disposisi->status === 'dikirim' ? 'badge-warning' : 
+                                            ($disposisi->status === 'diterima' ? 'badge-primary' : 
+                                            ($disposisi->status === 'dibaca' ? 'badge-success' :  'badge-secondary')) }}">
                                 {{ $disposisi->status }}
                               </span>
                             @endforeach
