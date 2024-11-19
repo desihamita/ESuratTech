@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Models\User;
 use Illuminate\Http\Request;
 use App\Models\Classification;
+use App\Models\Division;
+use Exception;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash; 
 use Illuminate\Support\Facades\Storage;
@@ -31,18 +33,20 @@ class ProfilController extends Controller
             ['name' => 'Home', 'url' => '/home'],
             ['name' => 'Manajemen User', 'url' => ''],
         ];
-        $data = User::all();
-        return view('pages.kelola_pengguna.index', compact('data','title', 'breadcrumbs') );
+        $data = User::with('division')->get();
+        $divisions = Division::all();
+        return view('pages.kelola_pengguna.index', compact('data', 'divisions', 'title', 'breadcrumbs') );
     }
 
     public function store(Request $request)
     {
+        // \dd($request);
         // Validasi data
         $request->validate([
             'nip' => 'nullable|string|max:20',
             'name' => 'required|string|max:255',
             'jabatan' => 'nullable|string|max:100',
-            'level' => 'nullable|string|max:50',
+            'division_kode' => 'nullable|string|max:50',
             'status' => 'nullable|in:active,inactive',
             'email' => 'required|string|email|max:255|unique:users',
             'password' => 'required|string|min:8',
@@ -51,30 +55,40 @@ class ProfilController extends Controller
         // Insert data ke tabel users
         $user = User::create([
             'nip' => $request->nip,
-            'name' => $request->nama,
+            'name' => $request->name,
             'jabatan' => $request->jabatan,
-            'level' => $request->level ?? 'user',
+            'division_kode' => $request->division_kode,
             'status' => $request->status ?? 'inactive',
             'email' => $request->email,
             'password' => Hash::make($request->password),
-            
         ]);
+
 
         return redirect()->back()->with('success', 'User berhasil ditambahkan.');
     }
 
     public function update(Request $request)
     {
+        // \dd($request);
         $request->validate([
+            'nip' => 'nullable|string|max:20',
             'name' => 'required|string|max:255',
+            'jabatan' => 'nullable|string|max:100',
+            'division_kode' => 'nullable|string|max:50',
+            'status' => 'nullable|in:active,inactive',
             'email' => 'required|email|max:255|unique:users,email,' . Auth::id(),
             'password' => 'nullable|min:8',
             'profile_picture' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
         ]);
 
         $user = Auth::user();
-        $user->name = $request->input('name');
-        $user->email = $request->input('email');
+        $user->nip=$request->nip;
+        $user->name = $request->name;
+        $user->jabatan = $request->jabatan;
+        $user->division_kode = $request->division_kode;
+        $user->status = $request->status ?? 'inactive';
+        $user->email = $request->email;
+
 
         if ($request->filled('password')) {
             $user->password = Hash::make($request->input('password'));
@@ -87,7 +101,7 @@ class ProfilController extends Controller
             $newFileName = date('Y_m_d') . '_' . $originalNameWithoutExtension . '.' . $extension;
             $file->move(public_path('uploads/profile'), $newFileName);
 
-            // Simpan nama file ke dalam database
+            // Simpan name file ke dalam database
             $user->profile_picture = $newFileName;
         }
 
@@ -107,7 +121,21 @@ class ProfilController extends Controller
         $user->profile_picture = null;
         $user->save();
 
-        return redirect()->back()->with('success', 'Photo deleted successfully.');
+        return redirect()->back()->with('success', 'Photo Berhasil Dihapus.');
+    }
+
+    public function destroy(string $id)
+    {
+        // \dd($id);
+        try{
+            $user = User::find($id);
+            $user->delete();
+            return redirect()->back()->with('success', 'User Berhasil Dihapus.');
+        } catch(Exception $e){
+            return redirect()->back()->with('error', 'User Tidak Ditemukan.');
+        }
+
+
     }
 
 }

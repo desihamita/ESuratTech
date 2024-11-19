@@ -14,8 +14,9 @@ return new class extends Migration
         Schema::table('users', function (Blueprint $table) {
             $table->string('nip')->nullable()->after('id');
             $table->string('jabatan')->nullable()->after('name');
-            $table->string('level')->nullable()->after('jabatan');
-            $table->enum('status', ['active', 'inactive'])->default('inactive')->after('level');
+            $table->enum('status', ['active', 'inactive'])->default('inactive')->after('jabatan');
+            $table->string('division_kode')->nullable()->after('status');
+            $table->foreign('division_kode')->references('kode')->on('divisions')->onDelete('set null');
         });
     }
 
@@ -25,7 +26,7 @@ return new class extends Migration
     public function down(): void
     {
         Schema::table('users', function (Blueprint $table) {
-            $table->dropColumn(['nip', 'nama_lengkap', 'jabatan', 'level', 'status']);
+            $table->dropColumn(['nip', 'name', 'jabatan', 'status']);
         });
     }
 };

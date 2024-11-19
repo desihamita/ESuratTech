@@ -50,11 +50,15 @@
                       <button class="btn btn-warning " data-id="" data-toggle="modal" data-target="#modal-disposisi{{ $d->id }}">
                         <i class="fas fa-clipboard"></i>
                       </button> | 
-                      @foreach ($d->dispositions as $ds)
-                        <small class="badge {{ $ds->status === 'dikirim' ? 'badge-warning' : 
-                            ($ds->status === 'diterima' ? 'badge-primary' : 
-                            ($ds->status === 'dibaca' ? 'badge-success' : '')) }}">{{ $ds->status }}</small>
-                      @endforeach
+                      @if ($d->dispositions && $d->dispositions->isNotEmpty())
+                        @foreach ($d->dispositions as $ds)
+                          <small class="badge {{ $ds->status === 'dikirim' ? 'badge-warning' : 
+                              ($ds->status === 'diterima' ? 'badge-primary' : 
+                              ($ds->status === 'dibaca' ? 'badge-success' : '')) }}">{{ $ds->status }}</small>
+                        @endforeach
+                      @else
+                        <small class="text-sm badge badge-secondary">Belum Ada Aksi</small>
+                      @endif
                       
                     </td>
                     <td>{{ $d->pengirim }}</td>
@@ -426,6 +430,7 @@
                           </tr>
                           <td><strong>Status</strong></td>
                           <td>
+                            @if ($d->dispositions && $d->dispositions->isNotEmpty())
                             @foreach($d->dispositions as $disposisi)
                               <span class="badge 
                                           {{ $disposisi->status === 'dikirim' ? 'badge-warning' : 
@@ -434,6 +439,9 @@
                                 {{ $disposisi->status }}
                               </span>
                             @endforeach
+                            @else
+                              <small class="text-sm badge badge-secondary">Belum Ada Aksi</small>
+                            @endif
                           </td>
                           <tr>
                             <td><strong>Tanggal</strong></td>

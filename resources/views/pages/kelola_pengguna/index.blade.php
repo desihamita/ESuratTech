@@ -48,7 +48,13 @@
                       <td>{{ $d->nip }}</td>
                       <td>{{ $d->name }}</td>
                       <td>{{ $d->jabatan }}</td>
-                      <td>{{ $d->level }}</td>
+                      <td>
+                        @if ($d->division)
+                          {{ $d->division->nama }}
+                        @else
+                          -
+                        @endif
+                      </td>
                       <td>
                         @if ($d->status === 'inactive')
                           <button class="btn btn-sm btn-danger">Inactive</button>
@@ -57,12 +63,15 @@
                         @endif
                       </td>
                       <td>
-                        <button class="btn btn-sm btn-primary edit-btn" data-id="{{ $d->id }}" data-toggle="modal" data-target="#modal-edit">
+                        <button class="btn btn-sm btn-primary edit-btn" data-id="{{ $d->id }}" data-toggle="modal" data-target="#modal-edit{{ $d->id }}">
                           <i class="fas fa-edit"></i>
                         </button>
 
-                        <button class="btn btn-sm btn-info detail-btn" data-id="{{ $d->id }}" data-toggle="modal" data-target="#modal-detail">
+                        <button class="btn btn-sm btn-info detail-btn" data-id="{{ $d->id }}" data-toggle="modal" data-target="#modal-detail{{ $d->id }}">
                           <i class="fas fa-eye"></i>
+                        </button>
+                        <button class="btn btn-sm btn-danger delete-btn" data-id="{{ $d->id }}" data-toggle="modal" data-target="#modal-delete{{ $d->id }}">
+                          <i class="fas fa-trash"></i>
                         </button>
                       </td>
                     </tr>
@@ -93,7 +102,7 @@
                         <div class="col-md-6">
                             <div class="form-group">
                                 <label>NIP</label>
-                                <input type="text" name="nip" class="form-control" placeholder="Masukkan kode divisi">
+                                <input type="text" name="nip" class="form-control" placeholder="Masukkan NIP">
                                 @error('nip')
                                     <small class="text-danger">{{ $message }}</small>
                                 @enderror
@@ -101,7 +110,7 @@
 
                             <div class="form-group">
                                 <label>Nama Lengkap</label>
-                                <input type="text" name="nama" class="form-control" placeholder="Masukkan kode divisi">
+                                <input type="text" name="name" class="form-control" placeholder="Masukkan Nama Lengkap">
                                 @error('nama')
                                     <small class="text-danger">{{ $message }}</small>
                                 @enderror
@@ -109,7 +118,7 @@
 
                             <div class="form-group">
                                 <label>Jabatan</label>
-                                <input type="text" name="jabatan" class="form-control" placeholder="Masukkan kode divisi">
+                                <input type="text" name="jabatan" class="form-control" placeholder="Masukkan Jabatan">
                                 @error('jabatan')
                                     <small class="text-danger">{{ $message }}</small>
                                 @enderror
@@ -118,14 +127,14 @@
                         <div class="col-md-6">
                             <div class="form-group">
                                 <label>Email</label>
-                                <input type="email" name="email" class="form-control" placeholder="Masukkan kode divisi">
+                                <input type="email" name="email" class="form-control" placeholder="Masukkan Email">
                                 @error('Email')
                                     <small class="text-danger">{{ $message }}</small>
                                 @enderror
                             </div>
                             <div class="form-group">
                                 <label>Password</label>
-                                <input type="password" name="password" class="form-control" placeholder="Masukkan nama divisi">
+                                <input type="password" name="password" class="form-control" placeholder="Masukkan Password">
                                 @error('password')
                                     <small class="text-danger">{{ $message }}</small>
                                 @enderror
@@ -137,13 +146,13 @@
                       <div class="col-md-6">
                         <div class="form-group">
                           <label>Level</label>
-                          <select name="level" class="form-control">
+                          <select name="division_kode" class="form-control">
                             <option value="">--Pilih Level--</option>
-                            <option value="admin">Admin</option>
-                            <option value="user">User</option>
-                              <!-- Tambahkan opsi lain jika diperlukan -->
+                              @foreach ($data as $d)
+                                  <option value="{{ $d->division->kode }}">{{ $d->division->nama }}</option>
+                              @endforeach
                           </select>
-                          @error('level')
+                          @error('division_kode')
                             <small class="text-danger">{{ $message }}</small>
                           @enderror
                         </div>
@@ -174,7 +183,7 @@
           
           <!-- modal Edit data -->
           @foreach ($data as $d)
-          <div class="modal fade" id="modal-edit">
+          <div class="modal fade" id="modal-edit{{ $d->id }}">
             <div class="modal-dialog">
               <div class="modal-content">
                 <div class="modal-header">
@@ -184,7 +193,7 @@
                   </button>
                 </div>
                 <div class="modal-body">
-                  <form action="{{ route('user.store') }}" method="POST" enctype="multipart/form-data">
+                  <form action="{{ route('user.update', $d->id) }}" method="POST" enctype="multipart/form-data">
                     @csrf
                 
                     <h5 class="font-weight-bold mb-0">Informasi Umum</h5>
@@ -193,7 +202,7 @@
                       <div class="col-md-6">
                         <div class="form-group">
                           <label>NIP</label>
-                          <input type="text" value="{{ $d->nip }}" name="nip" class="form-control" placeholder="Masukkan kode divisi">
+                          <input type="text" value="{{ $d->nip }}" name="nip" class="form-control" placeholder="Masukkan NIP">
                           @error('nip')
                           <small class="text-danger">{{ $message }}</small>
                           @enderror
@@ -201,7 +210,7 @@
                 
                         <div class="form-group">
                           <label>Nama Lengkap</label>
-                          <input type="text" name="name" value="{{ $d->name }}" class="form-control" placeholder="Masukkan kode divisi">
+                          <input type="text" name="name" value="{{ $d->name }}" class="form-control" placeholder="Masukkan Nama Lengkap">
                           @error('nama')
                           <small class="text-danger">{{ $message }}</small>
                           @enderror
@@ -209,7 +218,7 @@
                 
                         <div class="form-group">
                           <label>Jabatan</label>
-                          <input type="text" value="{{ $d->jabatan }}" name="jabatan" class="form-control" placeholder="Masukkan kode divisi">
+                          <input type="text" value="{{ $d->jabatan }}" name="jabatan" class="form-control" placeholder="Masukkan Jabatan">
                           @error('jabatan')
                           <small class="text-danger">{{ $message }}</small>
                           @enderror
@@ -218,7 +227,7 @@
                       <div class="col-md-6">
                         <div class="form-group">
                           <label>Email</label>
-                          <input type="email" value="{{ $d->email }}" name="email" class="form-control" placeholder="Masukkan kode divisi">
+                          <input type="email" value="{{ $d->email }}" name="email" class="form-control" placeholder="Masukkan Email">
                           @error('Email')
                           <small class="text-danger">{{ $message }}</small>
                           @enderror
@@ -236,13 +245,14 @@
                       <div class="col-md-6">
                         <div class="form-group">
                           <label>Level</label>
-                          <select name="level" class="form-control">
+                          <select name="division_kode" class="form-control">
                             <option value="">Pilih Level</option>
-                            <option value="admin" {{ $d->level === 'admin' ? 'selected' : ''}} >Admin</option>
-                            <option value="user" {{ $d->level === 'user' ? 'selected' : ''}}>User</option>
-                            <!-- Tambahkan opsi lain jika diperlukan -->
-                          </select>
-                          @error('level')
+                            @foreach ($divisions as $dv)
+                            <option value="{{ $dv->kode }}" {{ $d->division_kode == $dv->kode ? 'selected' : '' }}>
+                              {{ $dv->nama }}
+                            </option>
+                            @endforeach
+                          @error('division_kode')
                           <small class="text-danger">{{ $message }}</small>
                           @enderror
                         </div>
@@ -273,11 +283,11 @@
           @endforeach
           
           <!-- modal detail data -->
-          <div class="modal fade" id="modal-detail">
+          <div class="modal fade" id="modal-detail{{ $d->id }}">
             <div class="modal-dialog">
               <div class="modal-content">
                 <div class="modal-header">
-                  <h4 class="modal-title">Detail Divisi</h4>
+                  <h4 class="modal-title">Detail User</h4>
                   <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                   </button>
@@ -286,12 +296,28 @@
                 <table class="table table-bordered">
                   <tbody>
                     <tr>
-                      <td><strong>Kode</strong></td>
-                      <td id="detail_kode"></td>
+                      <td><strong>NIP</strong></td>
+                      <td id="nip">{{ $d->nip }}</td>
+                    </tr>
+                    <tr>
+                      <td><strong>Nama</strong></td>
+                      <td id="nama">{{ $d->name }}</td>
+                    </tr>
+                    <tr>
+                      <td><strong>Jabatan</strong></td>
+                      <td id="jabatan">{{ $d->jabatan }}</td>
                     </tr>
                     <tr>
                       <td><strong>Nama Divisi</strong></td>
-                      <td id="detail_nama"></td>
+                      <td id="nama_divisi">{{ $d->division->nama }}</td>
+                    </tr>
+                    <tr>
+                      <td><strong>Email</strong></td>
+                      <td id="email">{{ $d->email }}</td>
+                    </tr>
+                    <tr>
+                      <td><strong>Status</strong></td>
+                      <td id="status" class="badge {{ $d->status === 'active' ? 'badge-success' : ($d->status === 'inactive' ? 'badge-danger' : '') }}">{{ $d->status }}</td>
                     </tr>
                   </tbody>
                 </table>
@@ -299,42 +325,44 @@
               </div>
             </div>
           </div>
+          <!-- modal delett data -->
+          @foreach ($data as $d)
+          <div class="modal fade" id="modal-delete{{ $d->id }}">
+            <div class="modal-dialog">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h4 class="modal-title">Hapus User</h4>
+                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                  </button>
+                </div>
+                <div class="modal-body">
+                <table class="table table-bordered">
+                  <tbody>
+                    <tr>
+                      <td><strong>Nama</strong></td>
+                      <td>{{ $d->name }}</td>
+                    </tr>
+                    <tr>
+                      <td><strong>Jabatan</strong></td>
+                      <td>{{ $d->jabatan }}</td>
+                    </tr>
+                  </tbody>
+                </table>
+                <form action="{{ route('user.delete', $d->id) }}" method="POST">
+                  @csrf
+                  @method('DELETE')
+                  <button type="submit" class="btn btn-danger">Hapus</button>
+                  <button type="button" class="btn btn-info" data-dismiss="modal">batal</button>
+                </form>
+                </div>
+              </div>
+            </div>
+          </div>
+          @endforeach
         </div>
       </div>
     </div>
   </section>
 </x-Layouts.main.app>
 
-<script>
-
-  $(document).on('click', '.edit-btn', function () {
-    var id = $(this).data('id');
-
-    $.ajax({
-      url: '/divisi/' + id + '/edit',
-      method: 'GET',
-      success: function (data) {
-        $('#edit_id').val(data.id);
-        $('#edit_kode').val(data.kode);
-        $('#edit_nama').val(data.nama);
-
-        $('#editForm').attr('action', '/divisi/' + id);
-      }
-    })
-  });
-
-  $(document).on('click', '.detail-btn', function() { 
-    var id = $(this).data('id');
-
-    $.ajax({
-      url: '/divisi/detail/' + id,
-      method: 'GET',
-      success: function(data) {
-        $('#detail_kode').text(data.kode);
-        $('#detail_nama').text(data.nama);
-      }
-    });
-  });
-
-
-</script>

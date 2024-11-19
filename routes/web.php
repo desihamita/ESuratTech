@@ -32,6 +32,8 @@ Route::middleware(['auth'])->group(function () {
     // kelola pengguna 
     Route::get('/user', [ProfilController::class, 'indexDatatable'])->name('user.index');
     Route::post('/user/create', [ProfilController::class, 'store'])->name('user.store');
+    Route::post('/user/update/{id}', [ProfilController::class, 'update'])->name('user.update');
+    Route::put('/user/delete/{id}', [ProfilController::class, 'destroy'])->name('user.delete');
 
     // surat masuk
     Route::get('/surat-masuk', [SuratMasukController::class, 'index'])->name('suratmasuk.index');
