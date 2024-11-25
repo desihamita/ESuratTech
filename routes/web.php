@@ -1,16 +1,19 @@
 <?php
 
-use App\Http\Controllers\DisposisiController;
+use Faker\Guesser\Name;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\DosenController;
 use App\Http\Controllers\DivisiController;
 use App\Http\Controllers\ProfilController;
+use App\Http\Controllers\DisposisiController;
 use App\Http\Controllers\SuratMasukController;
 use App\Http\Controllers\KlasifikasiController;
-use App\Http\Controllers\SuratKeluarController;
 use App\Http\Controllers\StatusSuratController;
+use App\Http\Controllers\SuratKeluarController;
+use App\Http\Controllers\FilterData\FilterDataMasukController;
+use App\Http\Controllers\FilterData\FilterDataKeluarkController;
 
 // Public Routes
 Route::get('/', [UserController::class, 'login'])->name('login');
@@ -72,4 +75,9 @@ Route::middleware(['auth'])->group(function () {
     Route::put('/klasifikasi/{id}', [KlasifikasiController::class, 'update'])->name('klasifikasi.update');
     Route::post('/klasifikasi/delete/{id}', [KlasifikasiController::class, 'destroy'])->name('klasifikasi.delete');
     Route::get('/klasifikasi/detail/{id}', [KlasifikasiController::class, 'detail'])->name('klasifikasi.detail');
+
+    // filter form surat masuk
+    Route::post('filter/suratmasuk',[FilterDataMasukController::class, 'filterSuratMasuk'])->name('filter.Suratmasuk');
+    Route::post('filter/suratkeluar', [FilterDataKeluarkController::class, 'filterSuratKeluar'])->name('filter.Suratkeluar');
+
 });

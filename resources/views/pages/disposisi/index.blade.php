@@ -7,16 +7,15 @@
 
             <!-- Notifications -->
             <x-alert />
-{{-- @foreach($disposisi as $d)
-@dd($d->letter, $d->letter->classification)
-@endforeach --}}
+
             <div class="row">
                 <div class="col-12">
                     <div class="card">
                         <div class="card-header m-2">
-                            <a class="btn btn-primary" data-toggle="modal" data-target="#modal-add">
+                            {{-- <a class="btn btn-primary" data-toggle="modal" data-target="#modal-add">
                                 <i class="fas fa-solid fa-plus mr-2"></i>Add
-                            </a>
+                            </a> --}}
+                            <h5>Riwayat Disposisi Surat</h5>
                             <div class="card-tools">
                                 <div class="d-flex align-items-center">
                                     <input type="date" id="start_date" class="form-control mr-2"
@@ -40,7 +39,6 @@
                                         <th>Catatan</th>
                                         <th>Perihal</th>
                                         <th>Status</th>
-                                        <th>Aksi</th>
                                     </tr>
                                 </thead>
                                 <tbody id="data-container">
@@ -50,24 +48,19 @@
                                         <td>{{ $d->letter->nomor_surat  }}</td>
                                         <td>{{ $d->penerima }}</td>
                                         <td>{{ $d->letter->pengirim }}</td>
-                                        <td>{{ $d->catatan }}</td>
+                                        <td>
+                                            @if ($d->catatan)
+                                            {{ $d->catatan }}
+                                            @else
+                                            <u>Tidak ada catatan</u>
+                                            @endif
+                                        </td>
                                         <td>{{ $d->letter->perihal }}</td>
                                         <td class="badge text-sm 
-                                        {{  $d->status === 'Pending' ? 'badge-warning' :
-                                            ($d->status === 'Processed' ? 'badge-primary' :
-                                            ($d->status === 'Completed' ? 'badge-success' :
-                                            ($d->status === 'Rejected' ? 'badge-danger' : '')))
+                                        {{  $d->status === 'dikirim' ? 'badge-warning' :
+                                            ($d->status === 'diterima' ? 'badge-primary' :
+                                            ($d->status === 'dibaca' ? 'badge-success' : ''))
                                         }}">{{ $d->status }}</td>
-                                        <td>
-                                            <button class="btn btn-sm btn-primary edit-btn" data-id=""
-                                            data-toggle="modal" data-target="#modal-edit{{ $d->id }}">
-                                            <i class="fas fa-edit"></i>
-                                        </button>
-                                        <button class="btn btn-sm btn-danger " data-id="" data-toggle="modal"
-                                            data-target="#modal-delete{{ $d->id }}">
-                                            <i class="fas fa-trash"></i>
-                                        </button>
-                                        </td>
                                     </tr>
                                     @endforeach
                                 </tbody>
