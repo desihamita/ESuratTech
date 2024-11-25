@@ -14,16 +14,6 @@
               <a class="btn btn-primary" data-toggle="modal" data-target="#modal-add">
                 <i class="fas fa-solid fa-plus mr-2"></i>Add
               </a>
-
-              <div class="card-tools">
-                <div class="d-flex align-items-center">
-                  <input type="date" id="start_date" class="form-control mr-2" placeholder="Tanggal Mulai" />
-                  <input type="date" id="end_date" class="form-control mr-2" placeholder="Tanggal Selesai" />
-                  <button id="filter" class="btn btn-primary">
-                    <i class="fas fa-sync-alt rotate-icon"></i>
-                  </button>
-                </div>
-              </div>
             </div>
             <div class="card-body">
               <table id="example2" class="table table-bordered table-hover">
@@ -31,7 +21,7 @@
                   <tr>
                     <th>Nomor</th>
                     <th>Kode</th>
-                    <th>Nama</th>
+                    <th>Jenis Dokumen</th>
                     <th>Aksi</th>
                   </tr>
                 </thead>

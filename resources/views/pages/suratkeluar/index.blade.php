@@ -15,13 +15,30 @@
                             </a>
                             <div class="card-tools">
                                 <div class="d-flex align-items-center">
-                                    <input type="date" id="start_date" class="form-control mr-2"
-                                        placeholder="Tanggal Mulai" />
-                                    <input type="date" id="end_date" class="form-control mr-2"
-                                        placeholder="Tanggal Selesai" />
-                                    <button id="filter" class="btn btn-primary">
-                                        <i class="fas fa-sync-alt rotate-icon"></i>
-                                    </button>
+                                    {{-- form filter --}}
+                                    <div class="form-group">
+                                        <div class="input-group input-group-lg">
+                                            <form id="form-filter" method="post">
+                                                @csrf
+                                                <div class="row">
+                                                    <div class="col-md-6">
+                                                        <input type="date" id="start_date" name="start_date" class="form-control"
+                                                            placeholder="Tanggal Mulai" />
+                                                    </div>
+                                                    <div class="col-md-6">
+                                                        <input type="date" id="end_date" name="end_date" class="form-control "
+                                                            placeholder="Tanggal Selesai" />
+                                                    </div>
+                                                </div>
+                                            </form>
+                                            <div class="input-group-append">
+                                                <button id="filter" type="button" class="btn-sm  btn-outline-primary">
+                                                    <i class="fas fa-sync-alt rotate-icon"></i> Filter
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    {{-- end form --}}
                                 </div>
                             </div>
                         </div>
@@ -457,7 +474,32 @@
             </div>
     </section>
 </x-Layouts.main.app>
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-<script type='text/javascript' > 
-
+<script>
+    $(document).ready(function () {
+      $('#filter').on('click', function () {
+      let startDate = $('#start_date').val();
+      let endDate = $('#end_date').val();
+  
+      if (!startDate || !endDate) {
+         alert('Harap pilih tanggal mulai dan tanggal selesai!');
+         return;
+      }
+  
+  $.ajax({
+    url: "{{ route('filter.Suratkeluar') }}",
+    method: "POST",
+    data: {
+      _token: "{{ csrf_token() }}",
+      start_date: startDate,
+      end_date: endDate,
+    },
+    success: function (response) {
+         $('#data-container').html(response.html);
+    },
+    error: function (xhr) {
+         alert('Terjadi kesalahan saat memfilter data.');
+      }
+      });
+    });
+});
 </script>

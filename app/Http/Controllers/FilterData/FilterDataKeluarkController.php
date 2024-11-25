@@ -15,40 +15,38 @@ class FilterDataKeluarkController extends Controller
             'end_date' => 'required|date|after_or_equal:start_date',
         ]);
 
-        $data = LetterOut::whereBetween('tgl_diterima', [$request->start_date, $request->end_date])->get();
+        $data = LetterOut::whereBetween('tgl_surat', [$request->start_date, $request->end_date])->get();
 
         $html = '';
         foreach ($data as $index => $d) {
             $html .= '<tr>';
             $html .= '<td>' . ($index + 1) . '</td>';
+            $html .= '<td>' . $d->tgl_surat . '</td>';
             $html .= '<td>' . $d->nomor_surat . '</td>';
             $html .= '<td>' . $d->no_agenda . '</td>';
-            $html .= '<td>' . $d->tgl_diterima . '</td>';
+            $html .= '<td>' . $d->kode_klasifikasi . '</td>';
+            $html .= '<td>' . $d->perihal . '</td>';
+            $html .= '<td>' . $d->perihal . '</td>';
+            $html .= '<td>' . $d->devisi . '</td>';
+            $html .= '<td>' . $d->pengirim . '</td>';
+            $html .= '<td>' . $d->penerima . '</td>';
             $html .= '<td>';
-            $html .= '<button class="btn btn-warning" data-id="" data-toggle="modal" data-target="#modal-disposisi' . $d->id . '">
-                    <i class="fas fa-clipboard"></i>
-                  </button>';
-            if ($d->dispositions && $d->dispositions->isNotEmpty()) {
-                foreach ($d->dispositions as $ds) {
-                    $statusClass = $ds->status === 'dikirim' ? 'badge-warning' : ($ds->status === 'diterima' ? 'badge-primary' : ($ds->status === 'dibaca' ? 'badge-success' : ''));
-                    $html .= '<small class="badge ' . $statusClass . '">' . $ds->status . '</small>';
-                }
+            if (!empty($d->file_surat)) {
+                $html .= '<a href="' . asset('uploads/surat_keluar/' . $d->file_surat) . '" target="_blank">Unduh Surat</a>';
             } else {
-                $html .= '<small class="text-sm badge badge-secondary">Belum Ada Aksi</small>';
+                $html .= '<p>Tidak ada file surat.</p>';
             }
             $html .= '</td>';
-            $html .= '<td>' . $d->pengirim . '</td>';
-            $html .= '<td>' . $d->perihal . '</td>';
             $html .= '<td>';
-            $html .= '<button class="btn btn-sm btn-primary edit-btn" data-id="" data-toggle="modal" data-target="#modal-edit' . $d->id . '">
-                    <i class="fas fa-edit"></i>
-                  </button>';
-            $html .= '<button class="btn btn-sm btn-info detail-btn" data-id="" data-toggle="modal" data-target="#modal-detail' . $d->id . '">
-                    <i class="fas fa-eye"></i>
-                  </button>';
+            $html .= '<button class="btn btn-sm btn-primary edit-btn" data-toggle="modal" data-target="#modal-edit' . $d->id . '">
+            <i class="fas fa-edit"></i>
+          </button>';
+            $html .= '<button class="btn btn-sm btn-info detail-btn" data-toggle="modal" data-target="#modal-detail' . $d->id . '">
+            <i class="fas fa-eye"></i>
+          </button>';
             $html .= '<button class="btn btn-sm btn-success print-btn" data-id="' . $d->id . '" data-toggle="modal" data-target="#modal-print">
-                    <i class="fas fa-solid fa-print"></i>
-                  </button>';
+            <i class="fas fa-solid fa-print"></i>
+          </button>';
             $html .= '</td>';
             $html .= '</tr>';
         }

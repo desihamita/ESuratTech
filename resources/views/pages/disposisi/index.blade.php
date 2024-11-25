@@ -16,17 +16,6 @@
                                 <i class="fas fa-solid fa-plus mr-2"></i>Add
                             </a> --}}
                             <h5>Riwayat Disposisi Surat</h5>
-                            <div class="card-tools">
-                                <div class="d-flex align-items-center">
-                                    <input type="date" id="start_date" class="form-control mr-2"
-                                        placeholder="Tanggal Mulai" />
-                                    <input type="date" id="end_date" class="form-control mr-2"
-                                        placeholder="Tanggal Selesai" />
-                                    <button id="filter" class="btn btn-primary">
-                                        <i class="fas fa-sync-alt rotate-icon"></i>
-                                    </button>
-                                </div>
-                            </div>
                         </div>
                         <div class="card-body">
                             <table id="example2" class="table table-bordered table-hover">
