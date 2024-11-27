@@ -67,7 +67,7 @@
             </a>
             <ul class="nav nav-treeview">
               <li class="nav-item">
-                <a href="/surat-masuk" class="nav-link ">
+                <a href="/laporan/surat-masuk" class="nav-link ">
                   <i class="far fa-circle nav-icon"></i>
                   <p>Surat Masuk</p>
                 </a>
