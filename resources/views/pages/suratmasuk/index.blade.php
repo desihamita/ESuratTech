@@ -6,7 +6,7 @@
     <div class="container-fluid">
 
       <!-- Notifications -->
-      <x-alert/>
+      <x-alert />
 
       <div class="row">
         <div class="col-12">
@@ -17,55 +17,86 @@
               </a>
               <div class="card-tools">
                 <div class="d-flex align-items-center">
-                  <input type="date" id="start_date" class="form-control mr-2" placeholder="Tanggal Mulai" />
-                  <input type="date" id="end_date" class="form-control mr-2" placeholder="Tanggal Selesai" />
-                  <button id="filter" class="btn btn-primary">
-                    <i class="fas fa-sync-alt rotate-icon"></i>
-                  </button>
+                  {{-- form filter --}}
+                  <div class="form-group">
+                    <div class="input-group input-group-lg">
+                      <form id="form-filter" method="post">
+                        @csrf
+                      <div class="row">
+                        <div class="col-md-6">
+                          <input type="date" id="start_date" name="start_date" class="form-control" placeholder="Tanggal Mulai" />
+                        </div>
+                        <div class="col-md-6">
+                          <input type="date" id="end_date" name="end_date" class="form-control " placeholder="Tanggal Selesai" />
+                        </div>
+                      </div>
+                      </form>
+                      <div class="input-group-append">
+                        <button id="filter" type="button" class="btn-sm  btn-outline-primary" >
+                          <i class="fas fa-sync-alt rotate-icon"></i> Filter
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                  {{-- end form --}}
                 </div>
               </div>
             </div>
             <div class="card-body">
               <table id="example2" class="table table-bordered table-hover">
                 <thead>
-                <tr>
-                  <th>No</th>
-                  <th>Nomor Surat</th>
-                  <th>Agenda</th>
-                  <th>Tgl. Diterima</th>
-                  <th>Disposisi Surat</th>
-                  <th>Pengirim</th>
-                  <th>Perihal</th>
-                  <th>Aksi</th>
-                </tr>
+                  <tr>
+                    <th>No</th>
+                    <th>Nomor Surat</th>
+                    <th>Agenda</th>
+                    <th>Tgl. Diterima</th>
+                    <th>Disposisi Surat</th>
+                    <th>Pengirim</th>
+                    <th>Perihal</th>
+                    <th>Aksi</th>
+                  </tr>
                 </thead>
                 <tbody id="data-container">
-                @foreach ($data as $d)
+                  @foreach ($data as $d)
                   <tr>
                     <td>{{ $loop->iteration }}</td>
                     <td>{{ $d->nomor_surat }}</td>
                     <td>{{ $d->no_agenda }}</td>
                     <td>{{ $d->tgl_diterima }}</td>
                     <td>
-                      <button class="btn btn-warning " data-id="" data-toggle="modal" data-target="#modal-disposisi{{ $d->id }}">
+                      <button class="btn btn-warning " data-id="" data-toggle="modal"
+                        data-target="#modal-disposisi{{ $d->id }}">
                         <i class="fas fa-clipboard"></i>
-                      </button>
+                      </button> |
+                      @if ($d->dispositions && $d->dispositions->isNotEmpty())
+                      @foreach ($d->dispositions as $ds)
+                      <small class="badge {{ $ds->status === 'dikirim' ? 'badge-warning' : 
+                              ($ds->status === 'diterima' ? 'badge-primary' : 
+                              ($ds->status === 'dibaca' ? 'badge-success' : '')) }}">{{ $ds->status }}</small>
+                      @endforeach
+                      @else
+                      <small class="text-sm badge badge-secondary">Belum Ada Aksi</small>
+                      @endif
+
                     </td>
                     <td>{{ $d->pengirim }}</td>
                     <td>{{ $d->perihal }}</td>
                     <td>
-                      <button class="btn btn-sm btn-primary edit-btn" data-id="" data-toggle="modal" data-target="#modal-edit{{ $d->id }}">
+                      <button class="btn btn-sm btn-primary edit-btn" data-id="" data-toggle="modal"
+                        data-target="#modal-edit{{ $d->id }}">
                         <i class="fas fa-edit"></i>
                       </button>
-                      <button class="btn btn-sm btn-info detail-btn" data-id=" " data-toggle="modal" data-target="#modal-detail{{ $d->id }}">
+                      <button class="btn btn-sm btn-info detail-btn" data-id=" " data-toggle="modal"
+                        data-target="#modal-detail{{$d->id }}">
                         <i class="fas fa-eye"></i>
                       </button>
-                      <button class="btn btn-sm btn-success print-btn" data-id="{{ $d->id }}" data-toggle="modal" data-target="#modal-print">
+                      <button class="btn btn-sm btn-success print-btn" data-id="{{ $d->id }}" data-toggle="modal"
+                        data-target="#modal-print">
                         <i class="fas fa-solid fa-print"></i>
                       </button>
                     </td>
                   </tr>
-                @endforeach
+                  @endforeach
                 </tbody>
               </table>
             </div>
@@ -91,12 +122,14 @@
                         <div class="col-md-6">
                           <div class="form-group">
                             <label>No. Surat</label>
-                            <input type="text" name="nomor_surat" class="form-control" placeholder="Masukkan nomor surat">
+                            <input type="text" name="nomor_surat" class="form-control"
+                              placeholder="Masukkan nomor surat">
                             @error('nomor_surat') <small class="text-danger">{{ $message }}</small> @enderror
                           </div>
                           <div class="form-group">
                             <label>Pengirim</label>
-                            <input type="text" name="pengirim" class="form-control" placeholder="Masukkan instansi asal">
+                            <input type="text" name="pengirim" class="form-control"
+                              placeholder="Masukkan instansi asal">
                             @error('pengirim') <small class="text-danger">{{ $message }}</small> @enderror
                           </div>
                         </div>
@@ -125,7 +158,7 @@
                                 <select name="kode_klasifikasi" class="form-control">
                                   <option value="">--Pilih Klasifikasi--</option>
                                   @foreach($classifications as $classification)
-                                    <option value="{{ $classification->kode }}">{{ $classification->nama }}</option>
+                                  <option value="{{ $classification->kode }}">{{ $classification->nama }}</option>
                                   @endforeach
                                 </select>
                                 @error('kode_klasifikasi') <small class="text-danger">{{ $message }}</small> @enderror
@@ -138,7 +171,8 @@
                         <div class="col-md-12">
                           <div class="form-group">
                             <label>Perihal Surat</label>
-                            <textarea name="perihal" class="form-control" rows="3" placeholder="Masukkan isi perihal surat"></textarea>
+                            <textarea name="perihal" class="form-control" rows="3"
+                              placeholder="Masukkan isi perihal surat"></textarea>
                             @error('perihal') <small class="text-danger">{{ $message }}</small> @enderror
                           </div>
                         </div>
@@ -183,8 +217,8 @@
                         <div class="col-md-6">
                           <div class="form-group">
                             <label>No. Surat</label>
-                            <input type="text" name="nomor_surat" class="form-control" placeholder="Masukkan nomor surat"
-                              value="{{ $d->nomor_surat }}">
+                            <input type="text" name="nomor_surat" class="form-control"
+                              placeholder="Masukkan nomor surat" value="{{ $d->nomor_surat }}">
                             @error('nomor') <small class="text-danger">{{ $message }}</small> @enderror
                           </div>
                           <div class="form-group">
@@ -212,7 +246,8 @@
                             <div class="col-md-6">
                               <div class="form-group">
                                 <label>Tgl. Diterima</label>
-                                <input type="date" name="tgl_diterima" class="form-control" value="{{ $d->tgl_diterima }}">
+                                <input type="date" name="tgl_diterima" class="form-control"
+                                  value="{{ $d->tgl_diterima }}">
                                 @error('tgl_diterima') <small class="text-danger">{{ $message }}</small> @enderror
                               </div>
                               <div class="form-group">
@@ -220,7 +255,8 @@
                                 <select name="kode_klasifikasi" class="form-control">
                                   <option value="">--Pilih Klasifikasi--</option>
                                   @foreach($classifications as $classification)
-                                  <option value="{{ $classification->kode }}" {{ $d->kode_klasifikasi == $classification->kode
+                                  <option value="{{ $classification->kode }}" {{ $d->kode_klasifikasi ==
+                                    $classification->kode
                                     ? 'selected' : '' }}>
                                     {{ $classification->nama }}
                                   </option>
@@ -283,10 +319,11 @@
                         <td>{{ $d->nomor_surat }}</td>
                         <td>{{ $d->no_agenda }}</td>
                         <td>{{ $d->pengirim }}</td>
-                        </tr>
+                      </tr>
                     </table>
                     <h5>File Surat</h5>
-                    <iframe src="{{ asset('uploads/surat_masuk/' . $d->file_surat) }}" width="100%" height="500px" frameborder="0">
+                    <iframe src="{{ asset('uploads/surat_masuk/' . $d->file_surat) }}" width="100%" height="500px"
+                      frameborder="0">
                       Dokumen tidak bisa ditampilkan di frame ini.</a>
                     </iframe>
                   </div>
@@ -317,24 +354,25 @@
                 </div>
                 <div class="modal-body p-0">
                   <form action="{{ route('suratmasuk.storeDisposisi' ) }}" method="POST">
-                  @csrf
-                  <input type="hidden" name="letter_id" value="{{ $d->id }}">
-                  <div class="card-body">
+                    @csrf
+                    <input type="hidden" name="letter_id" value="{{ $d->id }}">
+                    <div class="card-body">
                       <div class="form-group">
                         <label for="penerima">Penerima Disposisi</label>
-                        <input type="text" class="form-control" name="penerima" id="penerima" placeholder="Masukkan penerima disposisi" value="{{ $d->penerima }}" required>
+                        <input type="text" class="form-control" name="penerima" id="penerima"
+                          placeholder="Masukkan penerima disposisi" value="{{ $d->penerima }}" required>
                       </div>
                       <div class="form-group">
                         <label for="catatan">Catatan</label>
-                        <textarea class="form-control" name="catatan" id="catatan" rows="3" placeholder="Catatan untuk disposisi">{{ $d->catatan }}</textarea>
+                        <textarea class="form-control" name="catatan" id="catatan" rows="3"
+                          placeholder="Catatan untuk disposisi">{{ $d->catatan }}</textarea>
                       </div>
                       <div class="form-group">
                         <label for="disposisiStatus">Status Disposisi</label>
                         <select class="form-control" id="status" name="status" required>
-                          <option value="Pending" {{ $d->status === 'Pending' ? 'selected' : '' }}>Pending</option>
-                          <option value="Processed" {{ $d->status === 'Processed' ? 'selected' : '' }}>Processed</option>
-                          <option value="Completed" {{ $d->status === 'Completed' ? 'selected' : '' }}>Completed</option>
-                          <option value="Rejected" {{ $d->status === 'Rejected' ? 'selected' : '' }}>Rejected</option>
+                          <option value="dikirim" {{ $d->status === 'dikirim' ? 'selected' : '' }}>Dikirim</option>
+                          <option value="diterima" {{ $d->status === 'diterima' ? 'selected' : '' }}>Diterima</option>
+                          <option value="dibaca" {{ $d->status === 'dibaca' ? 'selected' : '' }}>Dibaca</option>
                         </select>
                       </div>
                     </div>
@@ -351,7 +389,8 @@
           <!-- end disposisi surat -->
 
           <!-- Modal disposisi surat -->
-          <div class="modal fade" id="modal-print" tabindex="-1" role="dialog" aria-labelledby="modalLabel" aria-hidden="true">
+          <div class="modal fade" id="modal-print" tabindex="-1" role="dialog" aria-labelledby="modalLabel"
+            aria-hidden="true">
             <div class="modal-dialog">
               <div class="modal-content">
                 <div class="modal-header">
@@ -362,8 +401,8 @@
                 </div>
                 {{-- <div class="modal-body p-0">
                   <form action="{{ route('suratmasuk.cetak') }}" method="POST">
-                  @csrf
-                  <input type="hidden" name="letter_id" id="letterId">
+                    @csrf
+                    <input type="hidden" name="letter_id" id="letterId">
                     <div class="card-body">
                       <p>Apakah Anda yakin ingin mencetak surat ini?</p>
                       <input type="hidden" id="printLetterId" value="">
@@ -396,7 +435,8 @@
                       <table class="table table-bordered">
                         <tbody>
                           <tr>
-                            <td colspan="2"><strong>Nomor Agenda</strong> ( <span id="detail_nomor_agenda">{{ $d->no_agenda }}</span> )</td>
+                            <td colspan="2"><strong>Nomor Agenda</strong> ( <span id="detail_nomor_agenda">{{
+                                $d->no_agenda }}</span> )</td>
                           </tr>
                           <tr>
                             <td><strong>Kode Surat</strong></td>
@@ -417,19 +457,23 @@
                       <table class="table table-bordered">
                         <tbody>
                           <tr>
-                            <td colspan="2"  class="bg-info text-white"><strong>Status</strong></td>
+                            <td colspan="2" class="bg-info text-white"><strong>Status</strong></td>
                           </tr>
                           <td><strong>Status</strong></td>
                           <td>
+                            @if ($d->dispositions && $d->dispositions->isNotEmpty())
                             @foreach($d->dispositions as $disposisi)
-                              <span class="badge 
-                                          {{ $disposisi->status === 'Pending' ? 'badge-warning' : 
-                                            ($disposisi->status === 'Processed' ? 'badge-primary' : 
-                                            ($disposisi->status === 'Completed' ? 'badge-success' : 
-                                            ($disposisi->status === 'Rejected' ? 'badge-danger' : 'badge-secondary'))) }}">
-                                {{ $disposisi->status }}
-                              </span>
+                            <span
+                              class="badge 
+                                          {{ $disposisi->status === 'dikirim' ? 'badge-warning' : 
+                                            ($disposisi->status === 'diterima' ? 'badge-primary' : 
+                                            ($disposisi->status === 'dibaca' ? 'badge-success' :  'badge-secondary')) }}">
+                              {{ $disposisi->status }}
+                            </span>
                             @endforeach
+                            @else
+                            <small class="text-sm badge badge-secondary">Belum Ada Aksi</small>
+                            @endif
                           </td>
                           <tr>
                             <td><strong>Tanggal</strong></td>
@@ -463,55 +507,48 @@
                         </tr>
                         <tr>
                           <td><strong>File</strong></td>
-                          <td><a id="detail_file" href="{{ asset('uploads/surat_masuk/' . $d->file_surat) }}" target="_blank">Download</a></td>
+                          <td><a id="detail_file" href="{{ asset('uploads/surat_masuk/' . $d->file_surat) }}"
+                              target="_blank">Download</a></td>
                         </tr>
                       </tbody>
                     </table>
                   </div>
+                </div>
               </div>
             </div>
           </div>
           @endforeach
           <!-- end modal detail -->
-
         </div>
       </div>
-    </div>
   </section>
 </x-Layouts.main.app>
-{{-- <script>
-
-  $(document).on('click', '.detail-btn', function() { 
-    var id = $(this).data('id');
-
-    $.ajax({
-      url: '/surat-masuk/detail/' + id,
-      method: 'GET',
-      success: function(data) {
-        console.log(data);
-        $('#detail_nomor_agenda').text(data.no_agenda );
-        $('#detail_kode').text(data.classification.code );
-        $('#detail_klasifikasi_nama').text(data.classification.name );
-        $('#detail_diterima').text(data.tgl_diterima );
-        $('#detail_no_surat').text(data.nomor_surat );
-        $('#detail_pengirim').text(data.pengirim );
-        $('#detail_perihal').text(data.perihal );
-        $('#detail_tgl_surat').text(data.tgl_surat );
-        
-        $('#detail_file').html(data.file_surat 
-          ? `
-            <a href="/storage/${data.file_surat}" class="btn btn-info" target="_blank"><i class="fas fa-solid fa-eye mr-2"></i>Preview</a>
-            <a href="/storage/${data.file_surat}" class="btn btn-success ml-2" download><i class="fas fa-download mr-2"></i>Download</a>
-            ` : 'No File');
-      },
-      error: function(xhr, status, error) {
-        console.error("AJAX error: ", status, error);
+<script>
+  $(document).ready(function () {
+      $('#filter').on('click', function () {
+      let startDate = $('#start_date').val();
+      let endDate = $('#end_date').val();
+  
+      if (!startDate || !endDate) {
+         alert('Harap pilih tanggal mulai dan tanggal selesai!');
+         return;
       }
+  
+  $.ajax({
+    url: "{{ route('filter.Suratmasuk') }}",
+    method: "POST",
+    data: {
+      _token: "{{ csrf_token() }}",
+      start_date: startDate,
+      end_date: endDate,
+    },
+    success: function (response) {
+         $('#data-container').html(response.html);
+    },
+    error: function (xhr) {
+         alert('Terjadi kesalahan saat memfilter data.');
+      }
+      });
     });
-  });
-
-  $(document).on('click', '.disposisi-btn', function () {
-    let letterId = $(this).data('id');
-    $('#letterId').val(letterId);
-  });
-</script> --}}
+});
+</script>

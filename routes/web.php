@@ -1,17 +1,22 @@
 <?php
 
-use App\Http\Controllers\DisposisiController;
+
+use Faker\Guesser\Name;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\DosenController;
 use App\Http\Controllers\DivisiController;
 use App\Http\Controllers\ProfilController;
+use App\Http\Controllers\DisposisiController;
 use App\Http\Controllers\SuratMasukController;
 use App\Http\Controllers\KlasifikasiController;
-use App\Http\Controllers\SuratKeluarController;
 use App\Http\Controllers\StatusSuratController;
 use App\Http\Controllers\LaporanSuratMasukController;
+use App\Http\Controllers\SuratKeluarController;
+use App\Http\Controllers\FilterData\FilterDataMasukController;
+use App\Http\Controllers\FilterData\FilterDataKeluarkController;
+
 
 // Public Routes
 Route::get('/', [UserController::class, 'login'])->name('login');
@@ -74,9 +79,15 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/klasifikasi/delete/{id}', [KlasifikasiController::class, 'destroy'])->name('klasifikasi.delete');
     Route::get('/klasifikasi/detail/{id}', [KlasifikasiController::class, 'detail'])->name('klasifikasi.detail');
 
+
     //laporan surat masuk 
     Route::get('/laporan/surat-masuk', [LaporanSuratMasukController::class, 'index'])->name('laporanSuratMasuk.index');
     Route::get('/laporan/filter-surat-masuk', [LaporanSuratMasukController::class, 'filter']);
     Route::get('/laporan/export-pdf-surat-masuk', [LaporanSuratMasukController::class, 'exportPdf'])->name('laporanSuratMasuk.export-pdf');
     Route::get('/laporan/export-excel-surat-masuk', [LaporanSuratMasukController::class, 'exportExcel'])->name('laporanSuratMasuk.export-excel');
+
+    // filter form surat masuk
+    Route::post('filter/suratmasuk',[FilterDataMasukController::class, 'filterSuratMasuk'])->name('filter.Suratmasuk');
+    Route::post('filter/suratkeluar', [FilterDataKeluarkController::class, 'filterSuratKeluar'])->name('filter.Suratkeluar');
+
 });

@@ -3,10 +3,12 @@
 namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Foundation\Auth\User as Authenticatable;
-use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
+use Illuminate\Notifications\Notifiable;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Foundation\Auth\User as Authenticatable;
 
 class User extends Authenticatable
 {
@@ -21,12 +23,11 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
-
         'nip',
         'jabatan',
-        'level',
         'status',
-        'profile_picture'
+        'profile_picture',
+        'division_kode'
     ];
 
     /**
@@ -47,4 +48,10 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+    public function division(): BelongsTo
+    {
+        return $this->belongsTo(Division::class, 'division_kode', 'kode');
+    }
+
+
 }

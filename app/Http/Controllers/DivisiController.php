@@ -20,6 +20,7 @@ class DivisiController extends Controller
         ];
         $data = Division::get();
         
+        
         return view('pages.divisi.index', compact('data','title', 'breadcrumbs'));
     }
 

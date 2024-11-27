@@ -14,6 +14,7 @@ class Disposisi extends Model
 
     public function letter(): BelongsTo
     {
-        return $this->belongsTo(Letter::class, 'letter_id', 'id');
+        return $this->belongsTo(Letter::class, 'letter_id', 'id'); 
     }
+
 }

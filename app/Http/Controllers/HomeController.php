@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Disposisi;
 use App\Models\Letter;
 use App\Models\LetterOut;
 use App\Models\User;
@@ -15,6 +16,7 @@ class HomeController extends Controller
         $useraktif = User::where('id', Auth::user()->id)->count();
         $countLeters_in = Letter::count();
         $countLeters_out = LetterOut::count();
+        $disposisi = Disposisi::count();
         $title = 'Dashboard';
         $breadcrumbs = [
             ['name' => 'Home', 'url' => '/'],
@@ -34,7 +36,7 @@ class HomeController extends Controller
         $user = Auth::user();
         $today = \Carbon\Carbon::now('Asia/Jakarta')->isoFormat('dddd, D MMMM YYYY');
 
-        return view('pages.home', compact('greeting', 'user', 'today', 'title', 'breadcrumbs', 'countLeters_in', 'countLeters_out', 'useraktif'));
+        return view('pages.home', compact('greeting', 'user', 'today', 'title', 'breadcrumbs', 'countLeters_in', 'countLeters_out', 'useraktif', 'disposisi'));
     }
 }
 
