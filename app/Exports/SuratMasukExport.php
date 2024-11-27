@@ -45,7 +45,6 @@ class SuratMasukExport implements FromCollection, WithHeadings, WithTitle, WithS
     {
         return [
             ['Laporan Data Surat Masuk'],
-            [],
             ['Periode : ' . $this->startDate . ' - ' . $this->endDate],
             [],
             ['No', 'Nomor Surat', 'Agenda', 'Tgl Surat', 'Pengirim', 'Perihal'],
