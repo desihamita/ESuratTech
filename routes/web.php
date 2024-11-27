@@ -1,6 +1,6 @@
 <?php
 
-
+use App\Http\Controllers\DisposisiController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\UserController;
@@ -11,6 +11,7 @@ use App\Http\Controllers\SuratMasukController;
 use App\Http\Controllers\KlasifikasiController;
 use App\Http\Controllers\SuratKeluarController;
 use App\Http\Controllers\StatusSuratController;
+use App\Http\Controllers\LaporanSuratMasukController;
 
 // Public Routes
 Route::get('/', [UserController::class, 'login'])->name('login');
@@ -32,6 +33,8 @@ Route::middleware(['auth'])->group(function () {
     // kelola pengguna 
     Route::get('/user', [ProfilController::class, 'indexDatatable'])->name('user.index');
     Route::post('/user/create', [ProfilController::class, 'store'])->name('user.store');
+    Route::post('/user/update/{id}', [ProfilController::class, 'update'])->name('user.update');
+    Route::put('/user/delete/{id}', [ProfilController::class, 'destroy'])->name('user.delete');
 
     // surat masuk
     Route::get('/surat-masuk', [SuratMasukController::class, 'index'])->name('suratmasuk.index');
@@ -51,8 +54,10 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/surat-keluar/detail/{id}', [SuratKeluarController::class, 'detail'])->name('suratkeluar.detail');
 
     Route::get('status-surat', [StatusSuratController::class,'index'])->name('status_surat.index');
-    
-    // divisi
+
+    Route::get('/diposisi', [DisposisiController::class,'index'])->name('disposisi.index');
+    Route::get('/diposisi/store', [DisposisiController::class,'store'])->name('disposisi.store');
+
     Route::get('/divisi', [DivisiController::class, 'index'])->name('divisi.index');
     Route::post('/divisi/store', [DivisiController::class, 'store'])->name('divisi.store');
     Route::get('/divisi/{id}/edit', [DivisiController::class, 'edit'])->name('divisi.edit');
@@ -68,4 +73,10 @@ Route::middleware(['auth'])->group(function () {
     Route::put('/klasifikasi/{id}', [KlasifikasiController::class, 'update'])->name('klasifikasi.update');
     Route::post('/klasifikasi/delete/{id}', [KlasifikasiController::class, 'destroy'])->name('klasifikasi.delete');
     Route::get('/klasifikasi/detail/{id}', [KlasifikasiController::class, 'detail'])->name('klasifikasi.detail');
+
+    //laporan surat masuk 
+    Route::get('/laporan/surat-masuk', [LaporanSuratMasukController::class, 'index'])->name('laporanSuratMasuk.index');
+    Route::get('/laporan/filter-surat-masuk', [LaporanSuratMasukController::class, 'filter']);
+    Route::get('/laporan/export-pdf-surat-masuk', [LaporanSuratMasukController::class, 'exportPdf'])->name('laporanSuratMasuk.export-pdf');
+    Route::get('/laporan/export-excel-surat-masuk', [LaporanSuratMasukController::class, 'exportExcel'])->name('laporanSuratMasuk.export-excel');
 });
