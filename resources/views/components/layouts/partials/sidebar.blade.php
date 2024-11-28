@@ -73,7 +73,7 @@
                 </a>
               </li>
               <li class="nav-item">
-                <a href="/surat-masuk" class="nav-link ">
+                <a href="/laporan/surat-keluar" class="nav-link ">
                   <i class="far fa-circle nav-icon"></i>
                   <p>Surat Keluar</p>
                 </a>

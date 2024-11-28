@@ -14,10 +14,10 @@
             <div class="card-header d-flex justify-content-between align-items-center p-2">
               <!-- Tombol Excel dan PDF -->
               <div class="d-flex ml-4">
-                <a class="btn btn-success mr-2" data-toggle="modal" data-target="#modal-add">
+                <a href="{{ route('laporanSuratMasuk.export-excel') }}" class="btn btn-success mr-2" id="export-excel">
                   <i class="fas fa-file-excel mr-2"></i>Excel
                 </a>
-                <a class="btn btn-warning" data-toggle="modal" data-target="#modal-add">
+                <a href="{{ route('laporanSuratMasuk.export-pdf') }}" class="btn btn-warning" id="export-pdf">
                   <i class="fas fa-file-pdf mr-2"></i>PDF
                 </a>
               </div>
@@ -37,21 +37,24 @@
                 </div>
 
                 <!-- Tombol Filter -->
-                <button id="filter" class="btn btn-primary mt-3">
+                <button id="filter" class="btn btn-primary mt-3 mr-0">
                   <i class="fas fa-sync-alt rotate-icon"></i>
                 </button>
               </div>
             </div>
-            
+
             <div class="card-body">
               <table id="example2" class="table table-bordered table-hover">
                 <thead>
                   <tr>
                     <th>No</th>
-                    <th>Nomor Surat</th>
-                    <th>Agenda</th>
-                    <th>Tgl surat</th>
+                    <th>Tanggal</th>
+                    <th>No Surat</th>
+                    <th>No Agenda</th>
+                    <th>Jenis Document</th>
+                    <th>Divisi</th>
                     <th>Pengirim</th>
+                    <th>Penerima</th>
                     <th>Perihal</th>
                   </tr>
                 </thead>
@@ -59,10 +62,13 @@
                   @foreach ($data as $d)
                     <tr>
                       <td>{{ $loop->iteration }}</td>
+                      <td>{{ $d->tgl_surat }}</td>
                       <td>{{ $d->nomor_surat }}</td>
                       <td>{{ $d->no_agenda }}</td>
-                      <td>{{ $d->tgl_diterima }}</td>
+                      <td>{{ $d->kode_klasifikasi }}</td>
+                      <td>{{ $d->devisi }}</td>
                       <td>{{ $d->pengirim }}</td>
+                      <td>{{ $d->penerima }}</td>
                       <td>{{ $d->perihal }}</td>
                     </tr>
                   @endforeach
@@ -74,3 +80,61 @@
     </div>
   </section>
 </x-Layouts.main.app>
+
+<script>
+$(document).ready(function() {
+  $('#filter').click(function () {
+    var startDate = $('#start_date').val();
+    var endDate = $('#end_date').val();
+
+    if (!startDate || !endDate) {
+      alert("Harap masukkan tanggal mulai dan tanggal selesai.");
+      return;
+    }
+
+    $.ajax({
+      url: '/laporan/filter-surat-keluar', 
+      data: {
+        start_date: startDate,
+        end_date: endDate
+      },
+      success: function(response) {
+        var html = '';
+        var counter = 1; 
+        
+        if (response.data.length === 0) {
+          html = `
+            <tr>
+              <td colspan="9" class="text-center">No matching records found</td>
+            </tr>
+          `;
+        } else {
+          response.data.forEach(function(item) {
+              html += `
+                <tr>
+                  <td>${counter}</td>
+                  <td>${item.nomor_surat}</td>
+                  <td>${item.nomor_agenda}</td>
+                  <td>${item.tgl_surat}</td>
+                  <td>${item.pengirim}</td>
+                  <td>${item.perihal}</td>
+                </tr>
+              `;
+              counter++;
+          });
+        }
+
+        $('#data-container').html(html);
+      },
+      error: function(xhr, status, error) {
+        console.error(error);
+        alert("Terjadi kesalahan saat mengambil data.");
+      }
+    });
+
+    // Update PDF export link
+    $('#export-pdf').attr('href', `/laporan/export-pdf-surat-masuk?start_date=${startDate}&end_date=${endDate}`);
+    $('#export-excel').attr('href', `/laporan/export-excel-surat-masuk?start_date=${startDate}&end_date=${endDate}`);
+  });
+});
+</script>
