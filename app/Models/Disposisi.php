@@ -24,8 +24,8 @@ class Disposisi extends Model
         return $this->belongsTo(Letter::class, 'letter_id', 'id'); 
     }
     
-    public function divisi()
+    public function divisi(): BelongsTo
     {
-        return $this->belongsTo(Division::class, 'penerima');
+        return $this->belongsTo(Division::class, 'penerima', 'id');
     }
 }
