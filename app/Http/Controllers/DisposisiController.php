@@ -9,12 +9,13 @@ use Illuminate\Support\Facades\Validator;
 
 class DisposisiController extends Controller
 {
-    public function index(){
+    public function index()
+    {
 
         $disposisi = Disposisi::with('letter')->get();
         $klasifikasi = Classification::all();
-    
-        
+        $divisi = Divisi::all();
+
         $data = [
             'title' => 'Disposisi',
             'breadcrumbs' => [
@@ -23,39 +24,22 @@ class DisposisiController extends Controller
             ],
             'disposisi'=> $disposisi,
             'klasifikasi' => $klasifikasi,
+            'divisi' => $divisi,
         ];
         return view('pages.disposisi.index', $data);
     }
-    public function store(Request $request){
-        $validator = Validator::make($request->all(),[
-            'nomor_surat' => 'requirde',
-            'penerima'=> 'required',
-            'pengirim'=> 'required',
-            'catatan'=> 'required',
-            'perihal'=>'required',
-            'status' => 'required'
+
+    public function updateStatus(Request $request, $id)
+    {
+        $disposition = Disposisi::findOrFail($id);
+
+        $request->validate([
+            'status' => 'required|in:dikirim,diterima,dibaca',
         ]);
 
-        if($validator->fails()){
-            return redirect()->back()->withErrors($validator)->withInput();
-        }
+        $disposition->status = $request->status;
+        $disposition->save();
 
-        try{
-            $disposisi = new Disposisi();
-            $disposisi->nomor_surat = $request->nomor_surat;
-            $disposisi->penerima = $request->penerima;
-            $disposisi->pengirim = $request->pengirim;
-            $disposisi->catatan = $request->catatan;
-            $disposisi->perihal = $request->perihal;
-            $disposisi->status = $request->status;
-
-            $disposisi->save();
-
-            return redirect()->route('disposisi.index')->with('success','Data Berhasil Disimpan');
-        }
-        catch(\Exception $e){
-            return redirect()->back()->with('error', 'Terjadi kesalahan: ' . $e->getMessage());
+        return redirect()->back()->with('success', 'Status berhasil diperbarui.');
     }
-
-}
 }

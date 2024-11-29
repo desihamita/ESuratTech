@@ -15,6 +15,7 @@ use App\Http\Controllers\KlasifikasiController;
 use App\Http\Controllers\SuratKeluarController;
 use App\Http\Controllers\StatusSuratController;
 use App\Http\Controllers\LaporanSuratMasukController;
+use App\Http\Controllers\LaporanSuratKeluarController;
 use App\Http\Controllers\FilterData\FilterDataMasukController;
 use App\Http\Controllers\FilterData\FilterDataKeluarkController;
 
@@ -62,6 +63,7 @@ Route::middleware(['auth'])->group(function () {
 
     Route::get('/diposisi', [DisposisiController::class,'index'])->name('disposisi.index');
     Route::get('/diposisi/store', [DisposisiController::class,'store'])->name('disposisi.store');
+    Route::put('/diposisi/{id}/update-status', [DisposisiController::class, 'updateStatus'])->name('disposisi.updateStatus');
 
     Route::get('/divisi', [DivisiController::class, 'index'])->name('divisi.index');
     Route::post('/divisi/store', [DivisiController::class, 'store'])->name('divisi.store');
@@ -89,4 +91,9 @@ Route::middleware(['auth'])->group(function () {
     Route::post('filter/suratmasuk',[FilterDataMasukController::class, 'filterSuratMasuk'])->name('filter.Suratmasuk');
     Route::post('filter/suratkeluar', [FilterDataKeluarkController::class, 'filterSuratKeluar'])->name('filter.Suratkeluar');
 
+    //laporan surat keluar 
+    Route::get('/laporan/surat-keluar', [LaporanSuratKeluarController::class, 'index'])->name('laporanSuratKeluar.indes');
+    Route::get('/laporan/filter-surat-keluar', [LaporanSuratKeluarController::class, 'filter']);
+    Route::get('/laporan/export-pdf-surat-keluar', [LaporanSuratKeluarController::class, 'exportPdf'])->name('laporanSuratKeluar.export-pdf');
+    Route::get('/laporan/export-excel-surat-keluar', [LaporanSuratKeluarController::class, 'exportExcel'])->name('laporanSuratKeluar.export-excel');
 });

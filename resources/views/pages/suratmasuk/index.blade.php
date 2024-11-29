@@ -31,9 +31,9 @@
                         </div>
                       </div>
                       </form>
-                      <div class="input-group-append">
-                        <button id="filter" type="button" class="btn-sm  btn-outline-primary" >
-                          <i class="fas fa-sync-alt rotate-icon"></i> Filter
+                      <div>
+                        <button id="filter" class="btn btn-primary ml-2">
+                          <i class="fas fa-sync-alt rotate-icon"></i>
                         </button>
                       </div>
                     </div>
@@ -64,20 +64,59 @@
                     <td>{{ $d->no_agenda }}</td>
                     <td>{{ $d->tgl_diterima }}</td>
                     <td>
-                      <button class="btn btn-warning " data-id="" data-toggle="modal"
-                        data-target="#modal-disposisi{{ $d->id }}">
-                        <i class="fas fa-clipboard"></i>
-                      </button> |
                       @if ($d->dispositions && $d->dispositions->isNotEmpty())
-                      @foreach ($d->dispositions as $ds)
-                      <small class="badge {{ $ds->status === 'dikirim' ? 'badge-warning' : 
-                              ($ds->status === 'diterima' ? 'badge-primary' : 
-                              ($ds->status === 'dibaca' ? 'badge-success' : '')) }}">{{ $ds->status }}</small>
-                      @endforeach
-                      @else
-                      <small class="text-sm badge badge-secondary">Belum Ada Aksi</small>
-                      @endif
+                        <!-- Menampilkan Status Disposisi -->
+                        @foreach ($d->dispositions as $ds)
+                          | <small class="badge {{ $ds->status === 'dikirim' ? 'badge badge-warning py-1 px-2' : 
+                                  ($ds->status === 'diterima' ? 'badge badge-primary py-1 px-2' : 
+                                  ($ds->status === 'dibaca' ? 'badge badge-success py-1 px-2' : '')) }}">{{ $ds->status }}</small>
+                          
+                          @if ($ds->status === 'dikirim' || $ds->status === 'diterima')
+                            <!-- Tombol Edit Status -->
+                            | <button class="btn btn-info btn-sm" data-toggle="modal" data-target="#modal-edit-status{{ $ds->id }}">
+                              <i class="fas fa-edit"></i>
+                            </button>
 
+                            <!-- Modal Edit Status -->
+                            <div class="modal fade" id="modal-edit-status{{ $ds->id }}" tabindex="-1" role="dialog" aria-labelledby="editStatusLabel" aria-hidden="true">
+                              <div class="modal-dialog" role="document">
+                                <div class="modal-content">
+                                  <div class="modal-header">
+                                    <h5 class="modal-title" id="editStatusLabel">Edit Status Disposisi</h5>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                      <span aria-hidden="true">&times;</span>
+                                    </button>
+                                  </div>
+                                  <form action="{{ route('disposisi.updateStatus', $ds->id) }}" method="POST">
+                                    @csrf
+                                    @method('PUT')
+                                    <div class="modal-body">
+                                      <div class="form-group">
+                                        <label for="status">Pilih Status</label>
+                                        <select name="status" id="status" class="form-control" required>
+                                          <option value="dikirim" {{ $ds->status === 'dikirim' ? 'selected' : '' }}>Dikirim</option>
+                                          <option value="diterima" {{ $ds->status === 'diterima' ? 'selected' : '' }}>Diterima</option>
+                                          <option value="dibaca" {{ $ds->status === 'dibaca' ? 'selected' : '' }}>Dibaca</option>
+                                        </select>
+                                      </div>
+                                    </div>
+                                    <div class="modal-footer">
+                                      <button type="button" class="btn btn-secondary" data-dismiss="modal">Tutup</button>
+                                      <button type="submit" class="btn btn-primary">Simpan</button>
+                                    </div>
+                                  </form>
+                                </div>
+                              </div>
+                            </div>
+                          @endif
+                        @endforeach
+                      @else
+                        <!-- Tombol Tambah Disposisi -->
+                        <button class="btn btn-info btn-sm" data-id="" data-toggle="modal"
+                          data-target="#modal-disposisi{{ $d->id }}">
+                          <i class="fas fa-clipboard"></i>
+                        </button> | 
+                      @endif
                     </td>
                     <td>{{ $d->pengirim }}</td>
                     <td>{{ $d->perihal }}</td>
@@ -341,7 +380,7 @@
           @endforeach
           <!-- end delete data -->
 
-          <!-- Modal disposisi surat -->
+          <!-- Modal disposisi surat --> 
           @foreach ($data as $d)
           <div class="modal fade" id="modal-disposisi{{ $d->id }}">
             <div class="modal-dialog">
@@ -359,8 +398,14 @@
                     <div class="card-body">
                       <div class="form-group">
                         <label for="penerima">Penerima Disposisi</label>
-                        <input type="text" class="form-control" name="penerima" id="penerima"
-                          placeholder="Masukkan penerima disposisi" value="{{ $d->penerima }}" required>
+                        <select class="form-control" name="penerima" id="penerima" required>
+                            <option value="" disabled selected>Pilih penerima disposisi</option>
+                            @foreach($divisi as $div)
+                                <option value="{{ $div->id }}" {{ $d->penerima == $div->id ? 'selected' : '' }}>
+                                    {{ $div->nama }}
+                                </option>
+                            @endforeach
+                        </select>
                       </div>
                       <div class="form-group">
                         <label for="catatan">Catatan</label>
@@ -374,6 +419,18 @@
                           <option value="diterima" {{ $d->status === 'diterima' ? 'selected' : '' }}>Diterima</option>
                           <option value="dibaca" {{ $d->status === 'dibaca' ? 'selected' : '' }}>Dibaca</option>
                         </select>
+                      </div>
+                      <div class="form-group">
+                        <label for="priority">Prioritas</label>
+                        <select class="form-control" id="priority" name="priority">
+                          <option value="low">Rendah</option>
+                          <option value="medium">Sedang</option>
+                          <option value="high">Tinggi</option>
+                        </select>
+                      </div>
+                      <div class="form-group">
+                        <label for="due_date">Tanggal Jatuh Tempo</label>
+                        <input type="date" class="form-control" id="due_date" name="due_date">
                       </div>
                     </div>
                     <div class="modal-footer">

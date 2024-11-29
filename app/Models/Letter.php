@@ -35,7 +35,6 @@ class Letter extends Model
         return $this->belongsTo(Classification::class, 'kode_klasifikasi', 'kode');
     }
 
-
     public function dispositions(): HasMany
     {
         return $this->hasMany(Disposisi::class, 'letter_id', 'id');
