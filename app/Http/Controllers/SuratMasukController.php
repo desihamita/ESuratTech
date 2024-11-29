@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\Letter;
 use App\Models\Classification;
 use App\Models\Disposisi;
+use App\Models\Division;
 use Illuminate\Support\Facades\Validator;
 
 class SuratMasukController extends Controller
@@ -24,8 +25,9 @@ class SuratMasukController extends Controller
 
         $data = $letter;
         $classifications = Classification::all();
+        $divisi = Division::all();
 
-        return view('pages.suratmasuk.index', compact('data', 'title', 'breadcrumbs', 'classifications'));
+        return view('pages.suratmasuk.index', compact('data', 'title', 'breadcrumbs', 'classifications', 'divisi'));
     }
 
     public function store(Request $request)
@@ -131,22 +133,15 @@ class SuratMasukController extends Controller
         }
     }
 
-
-    // public function detail(Request $request, string $id)
-    // {
-    //     $surat = Letter::with(['classification', 'user'])->findOrFail($id);
-    //     return response()->json($surat);
-    // }
-
-
-
     public function storeDisposisi(Request $request)
     {
         $request->validate([
             'letter_id' => 'required|exists:letters,id',
             'penerima' => 'required|string|max:255',
             'catatan' => 'nullable|string',
-            'status' => 'required|string',
+            'status' => 'required||in:dikirim,diterima,dibaca',
+            'priority' => 'nullable|in:low,medium,high',
+            'due_date' => 'nullable|date',
         ]);
 
         try {
@@ -168,6 +163,8 @@ class SuratMasukController extends Controller
                     'penerima' => $request->penerima,
                     'catatan' => $request->catatan,
                     'status' => $request->status,
+                    'priority' => $request->priority,
+                    'due_date' => $request->due_date,
                 ]);
                 $message = 'Data berhasil disimpan!';
             }
@@ -177,22 +174,4 @@ class SuratMasukController extends Controller
             return redirect()->back()->with('error', 'Terjadi kesalahan: ' . $e->getMessage());
         }
     }
-
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(string $id)
-    {
-        $letter = Letter::findOrFail($id);
-
-        if ($letter->file_surat && file_exists(public_path('uploads/surat_masuk/' . $letter->file_surat))) {
-            unlink(public_path('uploads/surat_masuk/' . $letter->file_surat));
-        }
-
-        // Hapus data surat masuk dari database
-        $letter->delete();
-        return redirect()->route('suratmasuk.index')->with('success', 'Surat masuk berhasil dihapus.');
-    }
-
 }
