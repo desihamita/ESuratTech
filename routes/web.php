@@ -64,6 +64,8 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/diposisi', [DisposisiController::class,'index'])->name('disposisi.index');
     Route::get('/diposisi/store', [DisposisiController::class,'store'])->name('disposisi.store');
     Route::put('/diposisi/{id}/update-status', [DisposisiController::class, 'updateStatus'])->name('disposisi.updateStatus');
+    Route::get('/disposisi/{id}/pdf', [DisposisiController::class, 'generatePDF'])->name('disposisi.pdf');
+
 
     Route::get('/divisi', [DivisiController::class, 'index'])->name('divisi.index');
     Route::post('/divisi/store', [DivisiController::class, 'store'])->name('divisi.store');

@@ -137,7 +137,7 @@ class SuratMasukController extends Controller
     {
         $request->validate([
             'letter_id' => 'required|exists:letters,id',
-            'penerima' => 'required|string|max:255',
+            'penerima' => 'required|string|exists:divisions,id',
             'catatan' => 'nullable|string',
             'status' => 'required||in:dikirim,diterima,dibaca',
             'priority' => 'nullable|in:low,medium,high',
@@ -149,14 +149,6 @@ class SuratMasukController extends Controller
             $disposisi = Disposisi::where('letter_id', $request->letter_id)->first();
 
             if ($disposisi) {
-                // Jika data sudah ada, update data yang ada
-                $disposisi->update([
-                    'penerima' => $request->penerima,
-                    'catatan' => $request->catatan,
-                    'status' => $request->status,
-                ]);
-                $message = 'Data berhasil diperbarui!';
-            } else {
                 // Jika data belum ada, buat data baru
                 Disposisi::create([
                     'letter_id' => $request->letter_id,

@@ -67,7 +67,7 @@
                       @if ($d->dispositions && $d->dispositions->isNotEmpty())
                         <!-- Menampilkan Status Disposisi -->
                         @foreach ($d->dispositions as $ds)
-                          | <small class="badge {{ $ds->status === 'dikirim' ? 'badge badge-warning py-1 px-2' : 
+                            | <small class="badge {{ $ds->status === 'dikirim' ? 'badge badge-warning py-1 px-2' : 
                                   ($ds->status === 'diterima' ? 'badge badge-primary py-1 px-2' : 
                                   ($ds->status === 'dibaca' ? 'badge badge-success py-1 px-2' : '')) }}">{{ $ds->status }}</small>
                           

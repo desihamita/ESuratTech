@@ -1,2 +1,4 @@
 *
 !.gitignore
+
+*.blade.php text eol=crlf

@@ -6,15 +6,15 @@ use App\Models\Disposisi;
 use Illuminate\Http\Request;
 use App\Models\Classification;
 use Illuminate\Support\Facades\Validator;
+use Barryvdh\DomPDF\Facade\Pdf;
 
 class DisposisiController extends Controller
 {
     public function index()
     {
 
-        $disposisi = Disposisi::with('letter')->get();
+        $disposisi = Disposisi::with('letter', 'divisi')->get();
         $klasifikasi = Classification::all();
-        $divisi = Divisi::all();
 
         $data = [
             'title' => 'Disposisi',
@@ -24,7 +24,6 @@ class DisposisiController extends Controller
             ],
             'disposisi'=> $disposisi,
             'klasifikasi' => $klasifikasi,
-            'divisi' => $divisi,
         ];
         return view('pages.disposisi.index', $data);
     }
@@ -41,5 +40,16 @@ class DisposisiController extends Controller
         $disposition->save();
 
         return redirect()->back()->with('success', 'Status berhasil diperbarui.');
+    }
+
+    public function generatePDF($id)
+    {
+        $disposisi = Disposisi::with('letter', 'divisi')->findOrFail($id);
+
+        // Load the view and pass data to it
+        $pdf = PDF::loadView('pages.disposisi.pdf', ['letter' => $disposisi->letter, 'divisi' => $disposisi->divisi, 'disposisi' => $disposisi])->setPaper('a4');
+
+        // Download PDF
+        return $pdf->download('lembar_disposisi_' . $disposisi->letter->nomor_surat . '.pdf');
     }
 }
