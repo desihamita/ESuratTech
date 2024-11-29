@@ -148,8 +148,8 @@
                           <label>Level</label>
                           <select name="division_kode" class="form-control">
                             <option value="">--Pilih Level--</option>
-                              @foreach ($data as $d)
-                                  <option value="{{ $d->division->kode }}">{{ $d->division->nama }}</option>
+                              @foreach ($divisions as $d)
+                                  <option value="{{ $d->kode }}">{{ $d->nama }}</option>
                               @endforeach
                           </select>
                           @error('division_kode')
@@ -252,6 +252,7 @@
                               {{ $dv->nama }}
                             </option>
                             @endforeach
+                          </select>
                           @error('division_kode')
                           <small class="text-danger">{{ $message }}</small>
                           @enderror
@@ -262,8 +263,8 @@
                           <label>Status</label>
                           <select name="status" class="form-control">
                             <option value="">--Pilih Status--</option>
-                            <option value="inactive" {{ $d->status === 'inactive' ? 'selected' : '' }}>Inactive</option>
-                            <option value="active" {{ $d->status === 'active' ? 'selected' : ''}}>Active</option>
+                            <option value="inactive">Inactive</option>
+                            <option value="active">Active</option>
                           </select>
                           @error('status')
                           <small class="text-danger">{{ $message }}</small>
@@ -309,7 +310,7 @@
                     </tr>
                     <tr>
                       <td><strong>Nama Divisi</strong></td>
-                      <td id="nama_divisi">{{ $d->division->nama }}</td>
+                      <td id="nama_divisi">{{ $d->division_kode }}</td>
                     </tr>
                     <tr>
                       <td><strong>Email</strong></td>
@@ -317,7 +318,7 @@
                     </tr>
                     <tr>
                       <td><strong>Status</strong></td>
-                      <td id="status" class="badge {{ $d->status === 'active' ? 'badge-success' : ($d->status === 'inactive' ? 'badge-danger' : '') }}">{{ $d->status }}</td>
+                      <td id="status" class="badge {{ $d->status === 'active' ? 'badge-success' : ($d->status === 'inactive' ? 'badge-danger' : '') }} badge-pill text-sm py-2 px-3 m-2">{{ $d->status }}</td>
                     </tr>
                   </tbody>
                 </table>

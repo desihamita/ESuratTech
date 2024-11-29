@@ -89,7 +89,7 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/laporan/export-pdf-surat-masuk', [LaporanSuratMasukController::class, 'exportPdf'])->name('laporanSuratMasuk.export-pdf');
     Route::get('/laporan/export-excel-surat-masuk', [LaporanSuratMasukController::class, 'exportExcel'])->name('laporanSuratMasuk.export-excel');
 
-    // filter form surat masuk
+    // filter form surat
     Route::post('filter/suratmasuk',[FilterDataMasukController::class, 'filterSuratMasuk'])->name('filter.Suratmasuk');
     Route::post('filter/suratkeluar', [FilterDataKeluarkController::class, 'filterSuratKeluar'])->name('filter.Suratkeluar');
 
