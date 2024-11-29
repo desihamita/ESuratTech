@@ -35,7 +35,8 @@ class ProfilController extends Controller
         ];
         $data = User::with('division')->get();
         $divisions = Division::all();
-        return view('pages.kelola_pengguna.index', compact('data', 'divisions', 'title', 'breadcrumbs') );
+
+        return view('pages.kelola_pengguna.index', compact('data','divisions','title', 'breadcrumbs') );
     }
 
     public function store(Request $request)
