@@ -18,6 +18,7 @@ use App\Http\Controllers\LaporanSuratMasukController;
 use App\Http\Controllers\LaporanSuratKeluarController;
 use App\Http\Controllers\FilterData\FilterDataMasukController;
 use App\Http\Controllers\FilterData\FilterDataKeluarkController;
+use App\Http\Controllers\LembagaController;
 
 // Public Routes
 Route::get('/', [UserController::class, 'login'])->name('login');
@@ -98,4 +99,12 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/laporan/filter-surat-keluar', [LaporanSuratKeluarController::class, 'filter']);
     Route::get('/laporan/export-pdf-surat-keluar', [LaporanSuratKeluarController::class, 'exportPdf'])->name('laporanSuratKeluar.export-pdf');
     Route::get('/laporan/export-excel-surat-keluar', [LaporanSuratKeluarController::class, 'exportExcel'])->name('laporanSuratKeluar.export-excel');
+
+    
+    Route::get('/klasifikasi/{id}/edit', [KlasifikasiController::class, 'edit'])->name('klasifikasi.edit');
+    Route::put('/klasifikasi/{id}', [KlasifikasiController::class, 'update'])->name('klasifikasi.update');
+    
+    Route::get('/lembaga', [LembagaController::class, 'edit'])->name('lembaga.edit');
+    Route::put('/lembaga/update/', [LembagaController::class, 'update'])->name('lembaga.update');
+    Route::put('/lembaga/update/logo/', [LembagaController::class, 'updateLogo'])->name('lembaga.updateLogo');
 });

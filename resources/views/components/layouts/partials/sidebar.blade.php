@@ -102,6 +102,12 @@
                 </a>
               </li>
               <li class="nav-item">
+                <a href="/lembaga" class="nav-link">
+                  <i class="far fa-circle nav-icon"></i>
+                  <p>Lembaga</p>
+                </a>
+              </li>
+              <li class="nav-item">
                 <a href="/status-surat" class="nav-link">
                   <i class="far fa-circle nav-icon"></i>
                   <p>Status Surat</p>
