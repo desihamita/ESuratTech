@@ -120,7 +120,7 @@
                                                 <div class="col-md-6">
                                                     <div class="form-group">
                                                         <label id="tgl" >Tgl. Surat</label>
-                                                        <input for="tgl" type="date" name="tgl_surat" class="form-control @error('tgl_surat') is-invalid @enderror" placeholder="Masukan tanggal surat"  value="{{ old('tgl_surat') }}" required>
+                                                        <input for="tgl" type="date" name="tgl_surat" class="form-control @error('tgl_surat') is-invalid @enderror" placeholder="Masukan tanggal surat"  value="{{ old('tgl_surat', $today) }}" required>
 
                                                         @error('tgl_surat') <small class="text-danger">{{ $message
                                                             }}</small> @enderror
@@ -128,7 +128,7 @@
                                                     <div class="form-group">
                                                         <label>No. Surat</label>
                                                         <input type="text" name="nomor_surat" class="form-control @error( 'nomor_surat') is-invalid @enderror" placeholder="Masukan nomor surat"
-                                                        value="{{ old('nomor_surat') }}" required>
+                                                        value="{{ old('nomor_surat', $nomorSurat) }}" required>
                                                         @error('nomor_surat')
                                                         <div class="invalid-feedback">{{ $message }}</div>
                                                         @enderror
