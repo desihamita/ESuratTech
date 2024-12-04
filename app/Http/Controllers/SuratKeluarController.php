@@ -13,11 +13,51 @@ class SuratKeluarController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $letterOut = LetterOut::with('devisi', 'classification')->get();
+        // Dapatkan tgl_surat dari input form
+        $tglSurat = $request->input('tgl_surat', now()->toDateString());
+
+        // Ambil bulan dan tahun dari tgl_surat
+        $currentMonth = \Carbon\Carbon::parse($tglSurat)->format('m');
+        $currentYear = \Carbon\Carbon::parse($tglSurat)->format('Y');
+
+        // cari surt terkahir
+        $lastSurat = LetterOut::whereRaw('MONTH(tgl_surat) = ?', [$currentMonth])
+            ->whereRaw('YEAR(tgl_surat) = ?', [$currentYear])
+            ->orderBy('id', 'desc')
+            ->first();
+
+        // Tentukan nomor surat baru 
+        $newNumber = $lastSurat ? intval(substr($lastSurat->nomor_surat, 0, 3)) + 1 : 1;
+
+        // Konversi bulan ke angka Romawi
+        $romawi = [
+            '01' => 'I',
+            '02' => 'II',
+            '03' => 'III',
+            '04' => 'IV',
+            '05' => 'V',
+            '06' => 'VI',
+            '07' => 'VII',
+            '08' => 'VIII',
+            '09' => 'IX',
+            '10' => 'X',
+            '11' => 'XI',
+            '12' => 'XII',
+        ];
+        $month = $romawi[$currentMonth];
+
+        // Format nomor surat
+        $nomorSurat = sprintf('%03d/SE/BU/NIIT/%s/%s', $newNumber, $month, $currentYear);
+
+
+
+
+        $letterOut = LetterOut::with('devisi', 'classification')->OrderBy('nomor_surat','desc')->get();
         $devisi = Division::all();
         $klasifikasi = Classification::all();
+        $today = now()->toDateString();
         $data = [
             'title'=> 'Surat Keluar ',
             'breadcrumbs' => [
@@ -26,7 +66,9 @@ class SuratKeluarController extends Controller
             ],
             'letterOut' => $letterOut,
             'divisi' => $devisi,
-            'klasifikasi' => $klasifikasi
+            'klasifikasi' => $klasifikasi,
+            'nomorSurat'=> $nomorSurat,
+            'today'=>$today
             ];
         // dd($letterOut);
         return view('pages.suratkeluar.index', $data);
