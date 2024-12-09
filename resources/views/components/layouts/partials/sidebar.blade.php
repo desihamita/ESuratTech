@@ -1,6 +1,6 @@
 <aside class="main-sidebar sidebar-light-primary elevation-4">
   <a href="/home" class="brand-link">
-    <img src="assets/dist/img/itech.jpg" alt="Logo" class="brand-image img-fluid" style="">
+    <img src="/assets/dist/img/itech.jpg" alt="Logo" class="brand-image img-fluid" style="">
     <span class="brand-text font-weight-light"><b>E-Surat</b></span>
   </a>
 
@@ -107,12 +107,12 @@
                   <p>Lembaga</p>
                 </a>
               </li>
-              <li class="nav-item">
+              <!-- <li class="nav-item">
                 <a href="/status-surat" class="nav-link">
                   <i class="far fa-circle nav-icon"></i>
                   <p>Status Surat</p>
                 </a>
-              </li>
+              </li> -->
             </ul>
           </li>
           <li class="nav-item">

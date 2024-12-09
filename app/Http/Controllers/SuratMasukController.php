@@ -143,25 +143,20 @@ class SuratMasukController extends Controller
             'priority' => 'nullable|in:low,medium,high',
             'due_date' => 'nullable|date',
         ]);
-
+        
+        
         try {
-            // Cek apakah data Disposisi dengan `letter_id` ini sudah ada
             $disposisi = Disposisi::where('letter_id', $request->letter_id)->first();
+            Disposisi::create([
+                'letter_id' => $request->letter_id,
+                'penerima' => $request->penerima,
+                'catatan' => $request->catatan,
+                'status' => $request->status,
+                'status' => $request->status,   
+                'status' => $request->status,
+            ]);
 
-            if ($disposisi) {
-                // Jika data belum ada, buat data baru
-                Disposisi::create([
-                    'letter_id' => $request->letter_id,
-                    'penerima' => $request->penerima,
-                    'catatan' => $request->catatan,
-                    'status' => $request->status,
-                    'priority' => $request->priority,
-                    'due_date' => $request->due_date,
-                ]);
-                $message = 'Data berhasil disimpan!';
-            }
-
-            return redirect()->route('suratmasuk.index')->with('success', $message);
+            return redirect()->route('suratmasuk.index')->with('success',  'Data berhasil disimpan!');
         } catch (\Exception $e) {
             return redirect()->back()->with('error', 'Terjadi kesalahan: ' . $e->getMessage());
         }
