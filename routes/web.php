@@ -59,6 +59,7 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/surat-keluar/update/{id}', [SuratKeluarController::class, 'update'])->name('suratkeluar.update');
     Route::post('/surat-keluar/delete/{id}', [SuratKeluarController::class, 'destroy'])->name('suratkeluar.delete');
     Route::get('/surat-keluar/detail/{id}', [SuratKeluarController::class, 'detail'])->name('suratkeluar.detail');
+    Route::post('/generate-nomor-surat', [SuratKeluarController::class, 'generateNomorSurat'])->name('generate.nomor_surat');
 
     Route::get('status-surat', [StatusSuratController::class,'index'])->name('status_surat.index');
 
