@@ -67,7 +67,6 @@ Route::middleware(['auth'])->group(function () {
     Route::put('/diposisi/{id}/update-status', [DisposisiController::class, 'updateStatus'])->name('disposisi.updateStatus');
     Route::get('/disposisi/{id}/pdf', [DisposisiController::class, 'generatePDF'])->name('disposisi.pdf');
 
-
     Route::get('/divisi', [DivisiController::class, 'index'])->name('divisi.index');
     Route::post('/divisi/store', [DivisiController::class, 'store'])->name('divisi.store');
     Route::get('/divisi/{id}/edit', [DivisiController::class, 'edit'])->name('divisi.edit');
@@ -100,7 +99,6 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/laporan/export-pdf-surat-keluar', [LaporanSuratKeluarController::class, 'exportPdf'])->name('laporanSuratKeluar.export-pdf');
     Route::get('/laporan/export-excel-surat-keluar', [LaporanSuratKeluarController::class, 'exportExcel'])->name('laporanSuratKeluar.export-excel');
 
-    
     Route::get('/klasifikasi/{id}/edit', [KlasifikasiController::class, 'edit'])->name('klasifikasi.edit');
     Route::put('/klasifikasi/{id}', [KlasifikasiController::class, 'update'])->name('klasifikasi.update');
     

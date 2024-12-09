@@ -50,6 +50,8 @@ class DisposisiController extends Controller
         $pdf = PDF::loadView('pages.disposisi.pdf', ['letter' => $disposisi->letter, 'divisi' => $disposisi->divisi, 'disposisi' => $disposisi])->setPaper('a4');
 
         // Download PDF
-        return $pdf->download('lembar_disposisi_' . $disposisi->letter->nomor_surat . '.pdf');
+        $cleaned_nomor_surat = preg_replace('/[\/\\\\]/', '', $disposisi->letter->nomor_surat);
+        return $pdf->download('lembar_disposisi_' . $cleaned_nomor_surat . '.pdf');
+
     }
 }
