@@ -31,9 +31,9 @@
                                                     </div>
                                                 </div>
                                             </form>
-                                            <div class="input-group-append">
-                                                <button id="filter" type="button" class="btn-sm  btn-outline-primary">
-                                                    <i class="fas fa-sync-alt rotate-icon"></i> Filter
+                                            <div class="ml-2">
+                                                <button id="filter" type="button" class="btn btn-outline-primary btn-xs p-2">
+                                                    <i class="fas fa-sync-alt rotate-icon "></i>
                                                 </button>
                                             </div>
                                         </div>
@@ -120,35 +120,41 @@
                                                 <div class="col-md-6">
                                                     <div class="form-group">
                                                         <label id="tgl" >Tgl. Surat</label>
-                                                        <input for="tgl" type="date" name="tgl_surat" class="form-control @error('tgl_surat') is-invalid @enderror" placeholder="Masukan tanggal surat"  value="{{ old('tgl_surat', $today) }}" required>
+                                                        <input for="tgl" type="date" name="tgl_surat" class="form-control @error('tgl_surat') is-invalid @enderror" placeholder="Masukan tanggal surat"  value="{{ old('tgl_surat', $today) }}" readonly>
 
-                                                        @error('tgl_surat') <small class="text-danger">{{ $message
-                                                            }}</small> @enderror
+                                                        @error('tgl_surat') 
+                                                            <small class="text-danger">{{ $message
+                                                            }}</small> 
+                                                        @enderror
                                                     </div>
                                                     <div class="form-group">
                                                         <label>No. Surat</label>
                                                         <input type="text" name="nomor_surat" class="form-control @error( 'nomor_surat') is-invalid @enderror" placeholder="Masukan nomor surat"
-                                                        value="{{ old('nomor_surat', $nomorSurat) }}" required>
+                                                        value="{{ old('nomor_surat', $nomorSurat) }}" readonly>
                                                         @error('nomor_surat')
                                                         <div class="invalid-feedback">{{ $message }}</div>
                                                         @enderror
                                                     </div>
-                                                   <div class="form-group">
-                                                    <label class="mb-0">Jenis Dokumen</label>
-                                                    <select name="kode_klasifikasi" id="" class="form-control" required>
-                                                        <option value="">--Pilih Jenis Dokumen--</option>
-                                                        @foreach($klasifikasi as $k)
-                                                        <option value="{{$k->nama}}">{{$k->nama}}</option>
-                                                        @endforeach
-                                                    </select>
-                                                    @error('kode_klasifikasi') <small class="text-danger">{{ $message }}</small> @enderror
-                                                </div>
+                                                    <div class="form-group">
+                                                        <label class="mb-0">Jenis Dokumen</label>
+                                                        <select name="kode_klasifikasi" class="form-control" required>
+                                                            <option value="">--Pilih Jenis Dokumen--</option>
+                                                            @foreach($klasifikasi as $k)
+                                                                <option value="{{ $k->kode }}" {{ old('kode_klasifikasi') == $k->kode ? 'selected' : '' }}>
+                                                                    {{ $k->nama }}
+                                                                </option>
+                                                            @endforeach
+                                                        </select>
+                                                        @error('kode_klasifikasi') <small class="text-danger">{{ $message }}</small> @enderror
+                                                    </div>
                                                     <div class="form-group">
                                                         <label>No. Agenda</label>
-                                                        <input type="text" name="no_agenda" class="form-control"
-                                                            placeholder="Masukkan nomor agenda" value="{{ old('no_agenda') }}" required>
-                                                        @error('no_agenda') <small class="text-danger">{{ $message
-                                                            }}</small> @enderror
+                                                        <input type="text" name="no_agenda" class="form-control @error('no_agenda') is-invalid @enderror"
+                                                            placeholder="Masukkan nomor agenda" value="{{ old('no_agenda') }}" required
+                                                            pattern="^[1-9]{1}[0-9]{0,2}[a-zA-Z]*$" title="No agenda harus angka 1-399 diikuti huruf (opsional)">
+                                                        @error('no_agenda') 
+                                                            <small class="text-danger">{{ $message }}</small> 
+                                                        @enderror
                                                     </div>
                                                     <div class="form-group">
                                                         <label>Pengirim</label>
@@ -174,10 +180,12 @@
                                                     </div>
                                                     <div class="form-group">
                                                         <label class="mb-0">Divisi</label>
-                                                        <select name="devisi" id="" class="form-control" required>
+                                                        <select name="devisi" class="form-control" required>
                                                             <option value="">--Pilih Divisi--</option>
                                                             @foreach($divisi as $d)
-                                                            <option value="{{$d->nama}}">{{$d->nama}}</option>
+                                                                <option value="{{ $d->kode }}" {{ old('devisi') == $d->kode ? 'selected' : '' }}>
+                                                                    {{ $d->nama }}
+                                                                </option>
                                                             @endforeach
                                                         </select>
                                                         @error('devisi') <small class="text-danger">{{ $message }}</small> @enderror
@@ -205,7 +213,6 @@
                         </div>
                     </div>
                     <!-- end tambah data -->
-
                     
                     <!-- Modal Edit Surat Keluar -->
                     @foreach ($letterOut as $d )
@@ -228,32 +235,27 @@
                                                 <div class="col-md-6">
                                                     <div class="form-group">
                                                         <label>Tgl. Surat</label>
-                                                        <input type="date" name="tgl_surat" class="form-control" value="{{ $d->tgl_surat }}"
-                                                            required>
+                                                        <input type="date" name="tgl_surat" class="form-control" value="{{ $d->tgl_surat }}" readonly>
                                                         @error('tgl_surat') <small class="text-danger">{{ $message }}</small> @enderror
                                                     </div>
                                                     <div class="form-group">
                                                         <label>No. Surat</label>
-                                                        <input type="text" name="nomor_surat" class="form-control"
-                                                            value="{{ $d->nomor_surat }}" required>
+                                                        <input type="text" name="nomor_surat" class="form-control" id="nomor_surat" value="{{ $d->nomor_surat }}" readonly required>
+
                                                         @error('nomor_surat') <small class="text-danger">{{ $message }}</small> @enderror
                                                     </div>
                                                     <div class="form-group">
                                                         <label class="mb-0">Jenis Dokumen</label>
-                                                        <select name="kode_klasifikasi" class="form-control" required>
+                                                        <select name="kode_klasifikasi" class="form-control" id="jenis_dokumen" required>
                                                             <option value="">Pilih Jenis Dokumen</option>
                                                             @foreach($klasifikasi as $k)
-                                                            <option value="{{ $k->nama }}" {{ $k->nama == $d->kode_klasifikasi ? 'selected'
-                                                                : '' }}>{{ $k->nama }}</option>
+                                                                <option value="{{ $k->kode }}" {{ $k->kode == $d->kode_klasifikasi ? 'selected' : '' }}>{{ $k->nama }}</option>
                                                             @endforeach
                                                         </select>
-                                                        @error('kode_klasifikasi') <small class="text-danger">{{ $message }}</small>
-                                                        @enderror
                                                     </div>
                                                     <div class="form-group">
                                                         <label>No. Agenda</label>
-                                                        <input type="text" name="no_agenda" class="form-control" value="{{ $d->no_agenda }}"
-                                                            required>
+                                                        <input type="text" name="no_agenda" class="form-control" id="no_agenda" value="{{ $d->no_agenda }}" required>
                                                         @error('no_agenda') <small class="text-danger">{{ $message }}</small> @enderror
                                                     </div>
                                                     <div class="form-group">
@@ -278,15 +280,12 @@
                                                     </div>
                                                     <div class="form-group">
                                                         <label class="mb-0">Divisi</label>
-                                                        <select name="devisi" class="form-control" required>
+                                                        <select name="devisi" class="form-control" id="divisi" required>
                                                             <option value="">Pilih Divisi</option>
                                                             @foreach($divisi as $div)
-                                                            <option value="{{ $div->nama }}" {{ $div->nama == $d->devisi ? 'selected' : '' }}>
-                                                                {{ $div->nama }}
-                                                            </option>
+                                                                <option value="{{ $div->kode }}" {{ $div->kode == $d->devisi ? 'selected' : '' }}>{{ $div->nama }}</option>
                                                             @endforeach
                                                         </select>
-                                                        @error('devisi') <small class="text-danger">{{ $message }}</small> @enderror
                                                     </div>
                                                     <div class="form-group">
                                                         <label class="mb-0">Unggah File Surat</label>
@@ -310,9 +309,9 @@
                         </div>
                     </div>
                     @endforeach
-                    <!-- end modal edit  surat kelaur-->
+                    <!-- end modal edit surat kelaur-->
 
-                    {{-- modal delete surat keluar  --}}
+                    <!-- modal delete surat keluar -->
                     @foreach ($letterOut as $d )
                     <div class="modal fade" id="modal-delete{{ $d->id }}">
                         <div class="modal-dialog modal-dialog-centered">
@@ -353,7 +352,7 @@
                         </div>
                     </div>
                     @endforeach
-                    {{-- end  modal delete surat keluar  --}}
+                    <!-- end modal delete surat keluar -->
 
                     <!-- Modal cetak surat keluar-->
                     <div class="modal fade" id="modal-print" tabindex="-1" role="dialog" aria-labelledby="modalLabel"
@@ -476,30 +475,105 @@
 </x-Layouts.main.app>
 <script>
     $(document).ready(function () {
-      $('#filter').on('click', function () {
-      let startDate = $('#start_date').val();
-      let endDate = $('#end_date').val();
+        $('#filter').on('click', function () {
+        let startDate = $('#start_date').val();
+        let endDate = $('#end_date').val();
+    
+        if (!startDate || !endDate) {
+            alert('Harap pilih tanggal mulai dan tanggal selesai!');
+            return;
+        }
   
-      if (!startDate || !endDate) {
-         alert('Harap pilih tanggal mulai dan tanggal selesai!');
-         return;
-      }
-  
-  $.ajax({
-    url: "{{ route('filter.Suratkeluar') }}",
-    method: "POST",
-    data: {
-      _token: "{{ csrf_token() }}",
-      start_date: startDate,
-      end_date: endDate,
-    },
-    success: function (response) {
-         $('#data-container').html(response.html);
-    },
-    error: function (xhr) {
-         alert('Terjadi kesalahan saat memfilter data.');
-      }
-      });
+        $.ajax({
+            url: "{{ route('filter.Suratkeluar') }}",
+            method: "POST",
+            data: {
+                _token: "{{ csrf_token() }}",
+                start_date: startDate,
+                end_date: endDate,
+            },
+            success: function (response) {
+                $('#data-container').html(response.html);
+            },
+            error: function (xhr) {
+                alert('Terjadi kesalahan saat memfilter data.');
+            }
+        });
     });
+
+    $(document).ready(function() {
+        // Ketika ada perubahan pada jenis dokumen, divisi, atau no.agenda
+        $('#jenis_dokumen, #divisi, #no_agenda').on('change keyup', function() {
+            // Ambil nilai dari input yang diubah
+            var noAgenda = $('#no_agenda').val();
+            var kodeKlasifikasi = $('#jenis_dokumen').val();
+            var devisi = $('#divisi').val();
+            var tglSurat = $('input[name="tgl_surat"]').val(); // ambil tgl_surat
+
+            // Kirim data ke server dengan AJAX
+            $.ajax({
+                url: '{{ route("generate.nomor_surat") }}',
+                method: 'POST',
+                data: {
+                    _token: '{{ csrf_token() }}',
+                    no_agenda: noAgenda,
+                    kode_klasifikasi: kodeKlasifikasi,
+                    devisi: devisi,
+                    tgl_surat: tglSurat,
+                },
+                success: function(response) {
+                    // Update nomor surat dengan hasil yang digenerate dari backend
+                    $('#nomor_surat').val(response.nomor_surat);
+                },
+                error: function(xhr, status, error) {
+                    console.log('Error: ' + error);
+                }
+            });
+        });
+    });
+
+
+});
+</script>
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+    const jenisDokumenSelect = document.querySelector('[name="kode_klasifikasi"]');
+    const devisiSelect = document.querySelector('[name="devisi"]'); 
+    const tglSuratInput = document.querySelector('[name="tgl_surat"]');
+    const noAgendaInput = document.querySelector('[name="no_agenda"]');
+    const nomorSuratInput = document.querySelector('[name="nomor_surat"]');
+
+    function updateNomorSurat() {
+        const kodeKlasifikasi = jenisDokumenSelect.value;
+        const devisi = devisiSelect.value;
+        const tglSurat = tglSuratInput.value;
+        const noAgenda = noAgendaInput.value;
+
+        if (kodeKlasifikasi && devisi && tglSurat) {
+            fetch('{{ route("generate.nomor_surat") }}', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                },
+                body: JSON.stringify({
+                    kode_klasifikasi: kodeKlasifikasi,
+                    devisi: devisi,
+                    tgl_surat: tglSurat,
+                    no_agenda: noAgenda,
+                }),
+            })
+            .then(response => response.json())
+            .then(data => {
+                nomorSuratInput.value = data.nomor_surat;
+            })
+            .catch(error => console.error('Error:', error));
+        }
+    }
+
+    jenisDokumenSelect.addEventListener('change', updateNomorSurat);
+    devisiSelect.addEventListener('change', updateNomorSurat);
+    tglSuratInput.addEventListener('change', updateNomorSurat);
+    noAgendaInput.addEventListener('input', updateNomorSurat);
 });
 </script>

@@ -10,76 +10,31 @@ use Illuminate\Support\Facades\Validator;
 
 class SuratKeluarController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
     public function index(Request $request)
-    {
-        // Dapatkan tgl_surat dari input form
-        $tglSurat = $request->input('tgl_surat', now()->toDateString());
-
-        // Ambil bulan dan tahun dari tgl_surat
-        $currentMonth = \Carbon\Carbon::parse($tglSurat)->format('m');
-        $currentYear = \Carbon\Carbon::parse($tglSurat)->format('Y');
-
-        // cari surt terkahir
-        $lastSurat = LetterOut::whereRaw('MONTH(tgl_surat) = ?', [$currentMonth])
-            ->whereRaw('YEAR(tgl_surat) = ?', [$currentYear])
-            ->orderBy('id', 'desc')
-            ->first();
-
-        // Tentukan nomor surat baru 
-        $newNumber = $lastSurat ? intval(substr($lastSurat->nomor_surat, 0, 3)) + 1 : 1;
-
-        // Konversi bulan ke angka Romawi
-        $romawi = [
-            '01' => 'I',
-            '02' => 'II',
-            '03' => 'III',
-            '04' => 'IV',
-            '05' => 'V',
-            '06' => 'VI',
-            '07' => 'VII',
-            '08' => 'VIII',
-            '09' => 'IX',
-            '10' => 'X',
-            '11' => 'XI',
-            '12' => 'XII',
-        ];
-        $month = $romawi[$currentMonth];
-
-        // Format nomor surat
-        $nomorSurat = sprintf('%03d/SE/BU/NIIT/%s/%s', $newNumber, $month, $currentYear);
-
-
-
-
-        $letterOut = LetterOut::with('devisi', 'classification')->OrderBy('nomor_surat','desc')->get();
-        $devisi = Division::all();
+    {   
+        $letterOut = LetterOut::with('devisi', 'classification')->orderBy('nomor_surat', 'desc')->get();
+        $devisiList = Division::all();
         $klasifikasi = Classification::all();
         $today = now()->toDateString();
+        
         $data = [
-            'title'=> 'Surat Keluar ',
+            'title' => 'Surat Keluar',
             'breadcrumbs' => [
-            ['name' => 'Home', 'url' => '/home'],
-            ['name' => 'Surat Keluar', 'url' => ''],
+                ['name' => 'Home', 'url' => '/home'],
+                ['name' => 'Surat Keluar', 'url' => ''],
             ],
             'letterOut' => $letterOut,
-            'divisi' => $devisi,
+            'divisi' => $devisiList,
             'klasifikasi' => $klasifikasi,
-            'nomorSurat'=> $nomorSurat,
-            'today'=>$today
-            ];
-        // dd($letterOut);
+            'today' => $today,
+            'nomorSurat' => null,
+        ];
+        
         return view('pages.suratkeluar.index', $data);
     }
-
-    /**
-     * Store a newly created resource in storage.
-     */
+    
     public function store(Request $request)
     {
-        // \dd($request);
         $validator = Validator::make($request->all(), [
             'tgl_surat' => 'required|date',
             'nomor_surat' => 'required|string|max:255',
@@ -87,12 +42,11 @@ class SuratKeluarController extends Controller
             'pengirim' => 'required|string|max:255',
             'penerima' => 'required|string|max:255',
             'perihal' => 'required|string',
-            'devisi' => 'required',
+            'devisi' => 'required',  // Updated to 'devisi'
             'kode_klasifikasi' => 'required|string',
             'file_surat' => 'required|file|mimes:pdf|max:2048',
         ]);
 
-        // \dd($validator);
         if ($validator->fails()) {
             return redirect()->back()->withErrors($validator)->withInput();
         }
@@ -100,22 +54,27 @@ class SuratKeluarController extends Controller
         try {
             if ($request->hasFile('file_surat')) {
                 $file = $request->file('file_surat');
-
                 $originalNameWithoutExtension = pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME);
                 $extension = $file->getClientOriginalExtension();
                 $newFileName = date('Y_m_d') . '_'. $originalNameWithoutExtension .'.' . $extension;
                 $file->move(public_path('uploads/surat_keluar'), $newFileName);
             }
 
+            $tglSurat = $request->tgl_surat;
+            $nomorSurat = $request->nomor_surat;
+            $noAgenda = $request->no_agenda;
+            $devisi = $request->devisi;  // Updated to 'devisi'
+            $kodeKlasifikasi = $request->kode_klasifikasi;
+
             LetterOut::create([
-                'tgl_surat' => $request->tgl_surat,
-                'nomor_surat' => $request->nomor_surat,
-                'no_agenda' => $request->no_agenda,
+                'tgl_surat' => $tglSurat,
+                'nomor_surat' => $nomorSurat,
+                'no_agenda' => $noAgenda,
                 'pengirim' => $request->pengirim,
                 'penerima' => $request->penerima,
                 'perihal' => $request->perihal,
-                'devisi' => $request->devisi,
-                'kode_klasifikasi' => $request->kode_klasifikasi,
+                'devisi' => $devisi,  // Updated to 'devisi'
+                'kode_klasifikasi' => $kodeKlasifikasi,
                 'file_surat' => $newFileName,
             ]);
 
@@ -124,9 +83,7 @@ class SuratKeluarController extends Controller
             return redirect()->back()->with('error', 'Terjadi kesalahan: ' . $e->getMessage());
         }
     }
-    /**
-     * Update the specified resource in storage.
-     */
+
     public function update(Request $request, $id)
     {
         $validator = Validator::make($request->all(), [
@@ -165,16 +122,39 @@ class SuratKeluarController extends Controller
                 // Set nama file baru ke variabel
                 $letterOut->file_surat = $newFileName;
             }
+
+            $tglSurat = $request->tgl_surat;
+            $nomorSurat = $request->nomor_surat;
+            $noAgenda = $request->no_agenda;
+            $devisi = $request->devisi;
+            $kodeKlasifikasi = $request->kode_klasifikasi;
+
+            // Generate the nomor_surat
+            $currentMonth = \Carbon\Carbon::parse($tglSurat)->format('m');
+            $currentYear = \Carbon\Carbon::parse($tglSurat)->format('Y');
+
+            // Convert month to Roman numeral
+            $romawi = [
+                '01' => 'I', '02' => 'II', '03' => 'III', '04' => 'IV',
+                '05' => 'V', '06' => 'VI', '07' => 'VII', '08' => 'VIII',
+                '09' => 'IX', '10' => 'X', '11' => 'XI', '12' => 'XII',
+            ];
+            $month = $romawi[$currentMonth];
+
+            // Generate the nomor_surat
+            $nomorSuratGenerated = sprintf('%s/%s/%s/NIIT/%s/%s', $noAgenda, $kodeKlasifikasi, $devisi, $month, $currentYear);
+
+            // Update the record
             $letterOut->update([
-                'tgl_surat' => $request->tgl_surat,
-                'nomor_surat' => $request->nomor_surat,
-                'no_agenda' => $request->no_agenda,
+                'tgl_surat' => $tglSurat,
+                'nomor_surat' => $nomorSuratGenerated,  // Use the generated nomor_surat
+                'no_agenda' => $noAgenda,
                 'pengirim' => $request->pengirim,
                 'penerima' => $request->penerima,
                 'perihal' => $request->perihal,
-                'devisi' => $request->devisi,
-                'kode_klasifikasi' => $request->kode_klasifikasi,
-                'file_surat' => $letterOut->file_surat, 
+                'devisi' => $devisi,
+                'kode_klasifikasi' => $kodeKlasifikasi,
+                'file_surat' => $letterOut->file_surat,
             ]);
 
             return redirect()->route('suratkeluar.index')->with('success', 'Data berhasil diubah!');
@@ -183,25 +163,48 @@ class SuratKeluarController extends Controller
         }
     }
 
-
-           
-
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(string $id)
+    public function generateNomorSurat(Request $request)
     {
-        $letterOut = LetterOut::findOrFail($id);
+        $request->validate([
+            'kode_klasifikasi' => 'required|string|max:10',
+            'devisi' => 'required|string|max:10',  // Updated to 'devisi'
+            'tgl_surat' => 'required|date',
+            'no_agenda' => 'required|regex:/^[1-9]{1}[0-9]{0,2}[a-zA-Z]*$/',
+        ]);
 
-        if ($letterOut->file_surat && file_exists(public_path('uploads/surat_keluar/' . $letterOut->file_surat))) {
-            unlink(public_path('uploads/surat_keluar/' . $letterOut->file_surat));
+        $tglSurat = $request->input('tgl_surat');
+        $kodeKlasifikasi = $request->input('kode_klasifikasi');
+        $devisi = $request->input('devisi');  // Updated to 'devisi'
+        $noAgenda = $request->input('no_agenda');
+
+        // Cek apakah no_agenda lebih dari 399
+        $noAgendaNumber = intval($noAgenda);  // Ambil angka dari no_agenda
+        if ($noAgendaNumber > 399) {
+            return response()->json(['error' => 'No agenda tidak boleh lebih dari 399'], 400);
         }
 
-        // Hapus data surat keluar dari database
-        $letterOut->delete();
-        return redirect()->route('suratkeluar.index')->with('success', 'Surat keluar berhasil dihapus.');
-    }
+        // Ambil bulan dan tahun dari tgl_surat
+        $currentMonth = \Carbon\Carbon::parse($tglSurat)->format('m');
+        $currentYear = \Carbon\Carbon::parse($tglSurat)->format('Y');
 
+        // Cari surat terakhir berdasarkan bulan dan tahun
+        $lastSurat = LetterOut::whereRaw('MONTH(tgl_surat) = ?', [$currentMonth])
+            ->whereRaw('YEAR(tgl_surat) = ?', [$currentYear])
+            ->orderBy('id', 'desc')
+            ->first();
+
+        // Konversi bulan ke angka Romawi
+        $romawi = [
+            '01' => 'I', '02' => 'II', '03' => 'III', '04' => 'IV',
+            '05' => 'V', '06' => 'VI', '07' => 'VII', '08' => 'VIII',
+            '09' => 'IX', '10' => 'X', '11' => 'XI', '12' => 'XII',
+        ];
+        $month = $romawi[$currentMonth];
+
+        // Format nomor surat
+        $nomorSurat = sprintf('%s/%s/%s/NIIT/%s/%s', $noAgenda, $kodeKlasifikasi, $devisi, $month, $currentYear);
+
+        return response()->json(['nomor_surat' => $nomorSurat]);
+    }
 }
 
