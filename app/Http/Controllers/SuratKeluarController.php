@@ -7,6 +7,7 @@ use App\Models\LetterOut;
 use Illuminate\Http\Request;
 use App\Models\Classification;
 use Illuminate\Support\Facades\Validator;
+use Barryvdh\DomPDF\Facade\Pdf;
 
 class SuratKeluarController extends Controller
 {
@@ -71,7 +72,7 @@ class SuratKeluarController extends Controller
                 'perihal' => $request->perihal,
                 'devisi' => $request->devisi,
                 'kode_klasifikasi' => $request->kode_klasifikasi,
-                'file_surat' => $newFileName, // Akan null jika file tidak ada
+                'file_surat' => $newFileName,
             ]);
         
             return redirect()->route('suratkeluar.index')->with('success', 'Data berhasil ditambahkan!');
@@ -102,21 +103,17 @@ class SuratKeluarController extends Controller
         try {
             $letterOut = LetterOut::findOrFail($id);
 
-            // Cek apakah ada file baru yang diunggah
             if ($request->hasFile('file_surat')) {
-                // Hapus file lama jika ada
                 if ($letterOut->file_surat && file_exists(public_path('uploads/surat_keluar/' . $letterOut->file_surat))) {
                     unlink(public_path('uploads/surat_keluar/' . $letterOut->file_surat));
                 }
 
-                // Simpan file baru
                 $file = $request->file('file_surat');
                 $originalNameWithoutExtension = pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME);
                 $extension = $file->getClientOriginalExtension();
                 $newFileName = date('Y_m_d') . '_' . $originalNameWithoutExtension . '.' . $extension;
                 $file->move(public_path('uploads/surat_keluar'), $newFileName);
 
-                // Set nama file baru ke variabel
                 $letterOut->file_surat = $newFileName;
             }
 
@@ -126,11 +123,9 @@ class SuratKeluarController extends Controller
             $devisi = $request->devisi;
             $kodeKlasifikasi = $request->kode_klasifikasi;
 
-            // Generate the nomor_surat
             $currentMonth = \Carbon\Carbon::parse($tglSurat)->format('m');
             $currentYear = \Carbon\Carbon::parse($tglSurat)->format('Y');
 
-            // Convert month to Roman numeral
             $romawi = [
                 '01' => 'I', '02' => 'II', '03' => 'III', '04' => 'IV',
                 '05' => 'V', '06' => 'VI', '07' => 'VII', '08' => 'VIII',
@@ -138,10 +133,8 @@ class SuratKeluarController extends Controller
             ];
             $month = $romawi[$currentMonth];
 
-            // Generate the nomor_surat
             $nomorSuratGenerated = sprintf('%s/%s/%s/NIIT/%s/%s', $noAgenda, $kodeKlasifikasi, $devisi, $month, $currentYear);
 
-            // Update the record
             $letterOut->update([
                 'tgl_surat' => $tglSurat,
                 'nomor_surat' => $nomorSuratGenerated, 
@@ -197,6 +190,16 @@ class SuratKeluarController extends Controller
         $nomorSurat = sprintf('%s/%s/%s/NIIT/%s/%s', $noAgenda, $kodeKlasifikasi, $devisi, $month, $currentYear);
 
         return response()->json(['nomor_surat' => $nomorSurat]);
+    }
+
+    public function cetak($id)
+    {
+        $suratKeluar = LetterOut::findOrFail($id);
+
+        $pdf = PDF::loadView('pages.suratKeluar.pdf.se', ['suratKeluar' => $suratKeluar])->setPaper('a4');
+
+        $cleaned_nomor_surat = preg_replace('/[\/\\\\]/', '', $suratKeluar->nomor_surat);
+        return $pdf->download('Surat_Edaran_' . $cleaned_nomor_surat . '.pdf');
     }
 }
 
