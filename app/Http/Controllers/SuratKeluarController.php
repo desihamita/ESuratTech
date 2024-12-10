@@ -12,7 +12,7 @@ class SuratKeluarController extends Controller
 {
     public function index(Request $request)
     {   
-        $letterOut = LetterOut::with('devisi', 'classification')->orderBy('nomor_surat', 'desc')->get();
+        $letterOut = LetterOut::with('divisi', 'classification')->orderBy('nomor_surat', 'desc')->get();
         $devisiList = Division::all();
         $klasifikasi = Classification::all();
         $today = now()->toDateString();
@@ -42,9 +42,9 @@ class SuratKeluarController extends Controller
             'pengirim' => 'required|string|max:255',
             'penerima' => 'required|string|max:255',
             'perihal' => 'required|string',
-            'devisi' => 'required',  // Updated to 'devisi'
+            'devisi' => 'required', 
             'kode_klasifikasi' => 'required|string',
-            'file_surat' => 'required|file|mimes:pdf|max:2048',
+            'file_surat' => 'nullable|file|mimes:pdf|max:2048',
         ]);
 
         if ($validator->fails()) {
@@ -52,36 +52,33 @@ class SuratKeluarController extends Controller
         }
 
         try {
+            $newFileName = null;
+        
             if ($request->hasFile('file_surat')) {
                 $file = $request->file('file_surat');
                 $originalNameWithoutExtension = pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME);
                 $extension = $file->getClientOriginalExtension();
-                $newFileName = date('Y_m_d') . '_'. $originalNameWithoutExtension .'.' . $extension;
+                $newFileName = date('Y_m_d') . '_' . $originalNameWithoutExtension . '.' . $extension;
                 $file->move(public_path('uploads/surat_keluar'), $newFileName);
             }
-
-            $tglSurat = $request->tgl_surat;
-            $nomorSurat = $request->nomor_surat;
-            $noAgenda = $request->no_agenda;
-            $devisi = $request->devisi;  // Updated to 'devisi'
-            $kodeKlasifikasi = $request->kode_klasifikasi;
-
+        
             LetterOut::create([
-                'tgl_surat' => $tglSurat,
-                'nomor_surat' => $nomorSurat,
-                'no_agenda' => $noAgenda,
+                'tgl_surat' => $request->tgl_surat,
+                'nomor_surat' => $request->nomor_surat,
+                'no_agenda' => $request->no_agenda,
                 'pengirim' => $request->pengirim,
                 'penerima' => $request->penerima,
                 'perihal' => $request->perihal,
-                'devisi' => $devisi,  // Updated to 'devisi'
-                'kode_klasifikasi' => $kodeKlasifikasi,
-                'file_surat' => $newFileName,
+                'devisi' => $request->devisi,
+                'kode_klasifikasi' => $request->kode_klasifikasi,
+                'file_surat' => $newFileName, // Akan null jika file tidak ada
             ]);
-
+        
             return redirect()->route('suratkeluar.index')->with('success', 'Data berhasil ditambahkan!');
         } catch (\Exception $e) {
             return redirect()->back()->with('error', 'Terjadi kesalahan: ' . $e->getMessage());
         }
+        
     }
 
     public function update(Request $request, $id)
@@ -147,7 +144,7 @@ class SuratKeluarController extends Controller
             // Update the record
             $letterOut->update([
                 'tgl_surat' => $tglSurat,
-                'nomor_surat' => $nomorSuratGenerated,  // Use the generated nomor_surat
+                'nomor_surat' => $nomorSuratGenerated, 
                 'no_agenda' => $noAgenda,
                 'pengirim' => $request->pengirim,
                 'penerima' => $request->penerima,
@@ -167,33 +164,29 @@ class SuratKeluarController extends Controller
     {
         $request->validate([
             'kode_klasifikasi' => 'required|string|max:10',
-            'devisi' => 'required|string|max:10',  // Updated to 'devisi'
+            'devisi' => 'required|string|max:10', 
             'tgl_surat' => 'required|date',
             'no_agenda' => 'required|regex:/^[1-9]{1}[0-9]{0,2}[a-zA-Z]*$/',
         ]);
 
         $tglSurat = $request->input('tgl_surat');
         $kodeKlasifikasi = $request->input('kode_klasifikasi');
-        $devisi = $request->input('devisi');  // Updated to 'devisi'
+        $devisi = $request->input('devisi'); 
         $noAgenda = $request->input('no_agenda');
 
-        // Cek apakah no_agenda lebih dari 399
-        $noAgendaNumber = intval($noAgenda);  // Ambil angka dari no_agenda
+        $noAgendaNumber = intval($noAgenda);  
         if ($noAgendaNumber > 399) {
             return response()->json(['error' => 'No agenda tidak boleh lebih dari 399'], 400);
         }
 
-        // Ambil bulan dan tahun dari tgl_surat
         $currentMonth = \Carbon\Carbon::parse($tglSurat)->format('m');
         $currentYear = \Carbon\Carbon::parse($tglSurat)->format('Y');
 
-        // Cari surat terakhir berdasarkan bulan dan tahun
         $lastSurat = LetterOut::whereRaw('MONTH(tgl_surat) = ?', [$currentMonth])
             ->whereRaw('YEAR(tgl_surat) = ?', [$currentYear])
             ->orderBy('id', 'desc')
             ->first();
 
-        // Konversi bulan ke angka Romawi
         $romawi = [
             '01' => 'I', '02' => 'II', '03' => 'III', '04' => 'IV',
             '05' => 'V', '06' => 'VI', '07' => 'VII', '08' => 'VIII',
@@ -201,7 +194,6 @@ class SuratKeluarController extends Controller
         ];
         $month = $romawi[$currentMonth];
 
-        // Format nomor surat
         $nomorSurat = sprintf('%s/%s/%s/NIIT/%s/%s', $noAgenda, $kodeKlasifikasi, $devisi, $month, $currentYear);
 
         return response()->json(['nomor_surat' => $nomorSurat]);
