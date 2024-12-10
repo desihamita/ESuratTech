@@ -87,10 +87,10 @@
                                                 data-toggle="modal" data-target="#modal-detail{{ $d->id }}">
                                                 <i class="fas fa-eye"></i>
                                             </button>
-                                            <button class="btn btn-sm btn-success print-btn" data-id="{{ $d->id }}"
-                                                data-toggle="modal" data-target="#modal-print">
+
+                                            <a href="{{ route('suratKeluar.cetak', ['id' => $d->id]) }}" class="btn btn-info btn-sm" id="export-pdf">
                                                 <i class="fas fa-solid fa-print"></i>
-                                            </button>
+                                            </a>
                                         </td>
                                     </tr>
                                     @endforeach
@@ -354,38 +354,6 @@
                     @endforeach
                     <!-- end modal delete surat keluar -->
 
-                    <!-- Modal cetak surat keluar-->
-                    <div class="modal fade" id="modal-print" tabindex="-1" role="dialog" aria-labelledby="modalLabel"
-                        aria-hidden="true">
-                        <div class="modal-dialog">
-                            <div class="modal-content">
-                                <div class="modal-header">
-                                    <h4 class="modal-title"><i class="fas fa-solid fa-print mr-2"></i>Cetak Surat Masuk
-                                    </h4>
-                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                        <span aria-hidden="true">&times;</span>
-                                    </button>
-                                </div>
-                                <div class="modal-body p-0">
-                                    {{-- <form action="{{ route('suratmasuk.cetak') }}" method="POST">
-                                        @csrf
-                                        <input type="hidden" name="letter_id" id="letterId">
-                                        <div class="card-body">
-                                            <p>Apakah Anda yakin ingin mencetak surat ini?</p>
-                                            <input type="hidden" id="printLetterId" value="">
-                                        </div>
-                                        <div class="modal-footer">
-                                            <button type="button" class="btn btn-danger"
-                                                data-dismiss="modal">Tutup</button>
-                                            <button type="button" class="btn btn-info" id="confirmPrint">Cetak</button>
-                                        </div>
-                                    </form> --}}
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <!-- end cetak surat surat -->
-
                     @foreach ($letterOut as $d)
                     <!-- modal detail data -->
                     <div class="modal fade" id="modal-detail{{ $d->id }}">
@@ -584,12 +552,6 @@
         tglSuratInput.on('change', updateNomorSurat);
         noAgendaInput.on('input', updateNomorSurat);
     });
-
-    function openPreview(url) {
-    if (url) {
-        window.open(url, '_blank', 'width=800,height=600,scrollbars=yes,resizable=yes');
-    } else {
-        alert('File tidak tersedia.');
-    }
-}
 </script>
+
+
