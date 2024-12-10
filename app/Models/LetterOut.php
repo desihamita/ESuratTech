@@ -16,7 +16,7 @@ class LetterOut extends Model
         'penerima', 'perihal', 'devisi', 'kode_klasifikasi', 'file_surat'
     ];
 
-    public function devisi(): BelongsTo
+    public function divisi(): BelongsTo
     {
         return $this->belongsTo(Division::class, 'devisi', 'kode');
     }

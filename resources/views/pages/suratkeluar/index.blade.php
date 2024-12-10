@@ -140,7 +140,7 @@
                                                         <select name="kode_klasifikasi" class="form-control" required>
                                                             <option value="">--Pilih Jenis Dokumen--</option>
                                                             @foreach($klasifikasi as $k)
-                                                                <option value="{{ $k->kode }}" {{ old('kode_klasifikasi') == $k->kode ? 'selected' : '' }}>
+                                                                <option value="{{ $k->kode }} {{ old('kode_klasifikasi') == $k->kode ? 'selected' : '' }}" >
                                                                     {{ $k->nama }}
                                                                 </option>
                                                             @endforeach
@@ -183,7 +183,7 @@
                                                         <select name="devisi" class="form-control" required>
                                                             <option value="">--Pilih Divisi--</option>
                                                             @foreach($divisi as $d)
-                                                                <option value="{{ $d->kode }}" {{ old('devisi') == $d->kode ? 'selected' : '' }}>
+                                                                <option value="{{ $d->kode }} {{ old('devisi') == $d->kode ? 'selected' : '' }}" >
                                                                     {{ $d->nama }}
                                                                 </option>
                                                             @endforeach
@@ -193,7 +193,7 @@
                                                     <div class="form-group">
                                                         <label class="mb-0">Unggah File Surat</label>
                                                         <span class="d-block mb-2 text-muted">Silahkan unggah file surat dalam satu file.</span>
-                                                        <input type="file" name="file_surat" class="form-control" value="{{ old('file_surat') }}" required>
+                                                        <input type="file" name="file_surat" class="form-control" value="{{ old('file_surat') }}">
                                                         <small class="form-text text-danger">*File harus bertipe PDF
                                                             dengan ukuran maksimum 2MB!</small>
                                                         @error('file_surat') <small class="text-danger">{{ $message
@@ -408,12 +408,16 @@
                                                                 id="detail_nomor_agenda">{{ $d->no_agenda }}</span> )</td>
                                                     </tr>
                                                     <tr>
-                                                        <td><strong>Kode Surat</strong></td>
+                                                        <td><strong>Nomor Surat</strong></td>
                                                         <td id="detail_kode">{{ $d->nomor_surat }}</td>
                                                     </tr>
                                                     <tr>
                                                         <td><strong>Jenis Dokumen</strong></td>
-                                                        <td id="detail_klasifikasi_nama">{{ $d->kode_klasifikasi }}</td>
+                                                        <td id="detail_klasifikasi_nama">{{ $d->classification->nama }}</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td><strong>Divisi</strong></td>
+                                                        <td id="detail_devisi_nama">{{ $d->divisi->nama }}</td>
                                                     </tr>
                                                 </tbody>
                                             </table>
@@ -428,7 +432,7 @@
                                                     </tr>
                                                     <tr>
                                                         <td><strong>Tanggal</strong></td>
-                                                        <td id="detail_status_date">{{ $d->tgl_surat }}</td>
+                                                        <td id="detail_status_date">{{ \Carbon\Carbon::parse($d->tgl_surat)->translatedFormat('d F Y') }}</td>
                                                     </tr>
                                                 </tbody>
                                             </table>
@@ -449,17 +453,26 @@
                                                     <td id="detail_pengirim">{{ $d->pengirim }}</td>
                                                 </tr>
                                                 <tr>
+                                                    <td><strong>Penerima</strong></td>
+                                                    <td id="detail_pengirim">{{ $d->penerima }}</td>
+                                                </tr>
+                                                <tr>
                                                     <td><strong>Perihal</strong></td>
                                                     <td id="detail_perihal">{{$d->perihal}}</td>
                                                 </tr>
+                                                @if (!empty($d->file_surat))
                                                 <tr>
-                                                    <td><strong>Tanggal Surat</strong></td>
-                                                    <td id="detail_tgl_surat">{{ $d->tgl_surat }}</td>
+                                                    <td><strong>File Surat</strong></td>
+                                                    <td>
+                                                        <a id="detail_file" 
+                                                        href="{{ asset('uploads/surat_keluar/' . $d->file_surat) }}" 
+                                                        target="_blank" 
+                                                        class="btn btn-success btn-sm"> 
+                                                            <i class="fas fa-solid fa-download"></i> Download
+                                                        </a>
+                                                    </td>
                                                 </tr>
-                                                <tr>
-                                                    <td><strong>File</strong></td>
-                                                    <td><a id="detail_file" href="{{ asset('uploads/surat_keluar/' . $d->file_surat) }}" target="_blank">Download</a></td>
-                                                </tr>
+                                                @endif
                                             </tbody>
                                         </table>
                                     </div>
@@ -476,41 +489,39 @@
 <script>
     $(document).ready(function () {
         $('#filter').on('click', function () {
-        let startDate = $('#start_date').val();
-        let endDate = $('#end_date').val();
-    
-        if (!startDate || !endDate) {
-            alert('Harap pilih tanggal mulai dan tanggal selesai!');
-            return;
-        }
-  
-        $.ajax({
-            url: "{{ route('filter.Suratkeluar') }}",
-            method: "POST",
-            data: {
-                _token: "{{ csrf_token() }}",
-                start_date: startDate,
-                end_date: endDate,
-            },
-            success: function (response) {
-                $('#data-container').html(response.html);
-            },
-            error: function (xhr) {
-                alert('Terjadi kesalahan saat memfilter data.');
+            let startDate = $('#start_date').val();
+            let endDate = $('#end_date').val();
+        
+            if (!startDate || !endDate) {
+                alert('Harap pilih tanggal mulai dan tanggal selesai!');
+                return;
             }
+    
+            $.ajax({
+                url: "{{ route('filter.Suratkeluar') }}",
+                method: "POST",
+                data: {
+                    _token: "{{ csrf_token() }}",
+                    start_date: startDate,
+                    end_date: endDate,
+                },
+                success: function (response) {
+                    $('#data-container').html(response.html);
+                },
+                error: function (xhr) {
+                    alert('Terjadi kesalahan saat memfilter data.');
+                }
+            });
         });
     });
 
     $(document).ready(function() {
-        // Ketika ada perubahan pada jenis dokumen, divisi, atau no.agenda
         $('#jenis_dokumen, #divisi, #no_agenda').on('change keyup', function() {
-            // Ambil nilai dari input yang diubah
             var noAgenda = $('#no_agenda').val();
             var kodeKlasifikasi = $('#jenis_dokumen').val();
             var devisi = $('#divisi').val();
-            var tglSurat = $('input[name="tgl_surat"]').val(); // ambil tgl_surat
+            var tglSurat = $('input[name="tgl_surat"]').val(); 
 
-            // Kirim data ke server dengan AJAX
             $.ajax({
                 url: '{{ route("generate.nomor_surat") }}',
                 method: 'POST',
@@ -522,7 +533,6 @@
                     tgl_surat: tglSurat,
                 },
                 success: function(response) {
-                    // Update nomor surat dengan hasil yang digenerate dari backend
                     $('#nomor_surat').val(response.nomor_surat);
                 },
                 error: function(xhr, status, error) {
@@ -532,48 +542,54 @@
         });
     });
 
+    $(document).ready(function () {
+        const jenisDokumenSelect = $('[name="kode_klasifikasi"]');
+        const devisiSelect = $('[name="devisi"]');
+        const tglSuratInput = $('[name="tgl_surat"]');
+        const noAgendaInput = $('[name="no_agenda"]');
+        const nomorSuratInput = $('[name="nomor_surat"]');
 
-});
-</script>
-<script>
-    document.addEventListener('DOMContentLoaded', function () {
-    const jenisDokumenSelect = document.querySelector('[name="kode_klasifikasi"]');
-    const devisiSelect = document.querySelector('[name="devisi"]'); 
-    const tglSuratInput = document.querySelector('[name="tgl_surat"]');
-    const noAgendaInput = document.querySelector('[name="no_agenda"]');
-    const nomorSuratInput = document.querySelector('[name="nomor_surat"]');
+        function updateNomorSurat() {
+            const kodeKlasifikasi = jenisDokumenSelect.val();
+            const devisi = devisiSelect.val();
+            const tglSurat = tglSuratInput.val();
+            const noAgenda = noAgendaInput.val();
 
-    function updateNomorSurat() {
-        const kodeKlasifikasi = jenisDokumenSelect.value;
-        const devisi = devisiSelect.value;
-        const tglSurat = tglSuratInput.value;
-        const noAgenda = noAgendaInput.value;
-
-        if (kodeKlasifikasi && devisi && tglSurat) {
-            fetch('{{ route("generate.nomor_surat") }}', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'X-CSRF-TOKEN': '{{ csrf_token() }}',
-                },
-                body: JSON.stringify({
-                    kode_klasifikasi: kodeKlasifikasi,
-                    devisi: devisi,
-                    tgl_surat: tglSurat,
-                    no_agenda: noAgenda,
-                }),
-            })
-            .then(response => response.json())
-            .then(data => {
-                nomorSuratInput.value = data.nomor_surat;
-            })
-            .catch(error => console.error('Error:', error));
+            if (kodeKlasifikasi && devisi && tglSurat) {
+                $.ajax({
+                    url: '{{ route("generate.nomor_surat") }}',
+                    type: 'POST',
+                    headers: {
+                        'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                    },
+                    contentType: 'application/json',
+                    data: JSON.stringify({
+                        kode_klasifikasi: kodeKlasifikasi,
+                        devisi: devisi,
+                        tgl_surat: tglSurat,
+                        no_agenda: noAgenda
+                    }),
+                    success: function (data) {
+                        nomorSuratInput.val(data.nomor_surat);
+                    },
+                    error: function (xhr, status, error) {
+                        console.error('Error:', error);
+                    }
+                });
+            }
         }
-    }
 
-    jenisDokumenSelect.addEventListener('change', updateNomorSurat);
-    devisiSelect.addEventListener('change', updateNomorSurat);
-    tglSuratInput.addEventListener('change', updateNomorSurat);
-    noAgendaInput.addEventListener('input', updateNomorSurat);
-});
+        jenisDokumenSelect.on('change', updateNomorSurat);
+        devisiSelect.on('change', updateNomorSurat);
+        tglSuratInput.on('change', updateNomorSurat);
+        noAgendaInput.on('input', updateNomorSurat);
+    });
+
+    function openPreview(url) {
+    if (url) {
+        window.open(url, '_blank', 'width=800,height=600,scrollbars=yes,resizable=yes');
+    } else {
+        alert('File tidak tersedia.');
+    }
+}
 </script>
