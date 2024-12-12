@@ -6,6 +6,7 @@ use App\Models\Division;
 use App\Models\LetterOut;
 use Illuminate\Http\Request;
 use App\Models\Classification;
+use App\Models\Lembaga;
 use Illuminate\Support\Facades\Validator;
 use Barryvdh\DomPDF\Facade\Pdf;
 
@@ -13,7 +14,7 @@ class SuratKeluarController extends Controller
 {
     public function index(Request $request)
     {   
-        $letterOut = LetterOut::with('divisi', 'classification')->orderBy('nomor_surat', 'desc')->get();
+        $letterOut = LetterOut::with('divisi', 'klasifikasi')->orderBy('nomor_surat', 'desc')->get();
         $devisiList = Division::all();
         $klasifikasi = Classification::all();
         $today = now()->toDateString();
@@ -194,12 +195,37 @@ class SuratKeluarController extends Controller
 
     public function cetak($id)
     {
-        $suratKeluar = LetterOut::findOrFail($id);
+        // Ambil surat keluar berdasarkan ID
+        $suratKeluar = LetterOut::with('klasifikasi')->findOrFail($id);
 
-        $pdf = PDF::loadView('pages.suratKeluar.pdf.se', ['suratKeluar' => $suratKeluar])->setPaper('a4');
+        // Ambil data lembaga secara manual
+        $lembaga = Lembaga::first(); // Jika hanya ada satu lembaga
 
+        if (!$lembaga) {
+            abort(404, 'Data lembaga tidak ditemukan.');
+        }
+
+        // Pilih template berdasarkan kode klasifikasi
+        $kodeKlasifikasi = $suratKeluar->kode_klasifikasi;
+        $template = match ($kodeKlasifikasi) {
+            'SE' => 'pages.suratKeluar.pdf.se',
+            'ST' => 'pages.suratKeluar.pdf.st',
+            default => 'pages.suratKeluar.pdf.default',
+        };
+
+        // Generate PDF
+        $pdf = PDF::loadView($template, [
+            'suratKeluar' => $suratKeluar,
+            'lembaga' => $lembaga,
+            'klasifikasi' => $suratKeluar->klasifikasi,
+        ])->setPaper('a4');
+
+        // Bersihkan nomor surat
         $cleaned_nomor_surat = preg_replace('/[\/\\\\]/', '', $suratKeluar->nomor_surat);
-        return $pdf->download('Surat_Edaran_' . $cleaned_nomor_surat . '.pdf');
+
+        return $pdf->download('Surat_' . $kodeKlasifikasi . '_' . $cleaned_nomor_surat . '.pdf');
     }
+
+
 }
 

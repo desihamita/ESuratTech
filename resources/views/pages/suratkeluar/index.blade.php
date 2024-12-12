@@ -381,7 +381,7 @@
                                                     </tr>
                                                     <tr>
                                                         <td><strong>Jenis Dokumen</strong></td>
-                                                        <td id="detail_klasifikasi_nama">{{ $d->classification->nama }}</td>
+                                                        <td id="detail_klasifikasi_nama">{{ $d->klasifikasi->nama }}</td>
                                                     </tr>
                                                     <tr>
                                                         <td><strong>Divisi</strong></td>
