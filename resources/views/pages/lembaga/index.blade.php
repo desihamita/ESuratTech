@@ -16,7 +16,7 @@
                 
                 <!-- Label Ikon Kamera -->
                 <label for="file-input" 
-                       style="position: absolute; bottom: 0; right: 30px;  white; border-radius: 50%; padding: 10px; cursor: pointer; margin-bottom:40px; font-size: 25px;">
+                       style="position: absolute; bottom: 0; right: 30px;  white; border-radius: 50%; padding: 10px; cursor: pointer; margin-bottom:80px; font-size: 25px;">
                   <i class="fa fa-camera "></i>
                 </label>
                 

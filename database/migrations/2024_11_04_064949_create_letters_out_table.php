@@ -20,9 +20,7 @@ return new class extends Migration
             $table->text('perihal')->nullable();
             $table->string('devisi')->nullable();
             $table->date('tgl_surat')->nullable();
-            $table->text('file_surat')->nullable();
             $table->string('kode_klasifikasi');
-
 
             $table->foreign('devisi')->references('nama')->on('division');
             $table->foreign('kode_klasifikasi')->references('code')->on('classifications');

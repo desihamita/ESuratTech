@@ -24,7 +24,7 @@ class LembagaController extends Controller
         $request->validate([
             'nama_lembaga' => 'required|string|max:255',
             'telepon' => 'required|string|max:15',
-            'website' => 'nullable|url',
+            'website' => 'nullable|',
             'email' => 'nullable|email',
             'alamat' => 'nullable|string|max:255',
             'tahun' => 'required|integer',

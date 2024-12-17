@@ -20,8 +20,20 @@ class LetterOut extends Model
     {
         return $this->belongsTo(Division::class, 'devisi', 'kode');
     }
-    public function classification(): BelongsTo
+    public function klasifikasi(): BelongsTo
     {
         return $this->belongsTo(Classification::class, 'kode_klasifikasi', 'kode');
+    }
+    public function lembaga(): BelongsTo
+    {
+        return $this->belongsTo(Lembaga::class);
+    }
+    public function suratTugas()
+    {
+        return $this->hasOne(SuratTugas::class, 'letterout_id');
+    }
+    public function suratEdaran()
+    {
+        return $this->hasOne(CircullarLetter::class, 'letterout_id');
     }
 }
