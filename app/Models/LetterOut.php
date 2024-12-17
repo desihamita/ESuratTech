@@ -28,4 +28,12 @@ class LetterOut extends Model
     {
         return $this->belongsTo(Lembaga::class);
     }
+    public function suratTugas()
+    {
+        return $this->hasOne(SuratTugas::class, 'letterout_id');
+    }
+    public function suratEdaran()
+    {
+        return $this->hasOne(CircullarLetter::class, 'letterout_id');
+    }
 }

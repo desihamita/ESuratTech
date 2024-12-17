@@ -117,33 +117,33 @@
             <table>
                 <tr>
                     <td>Nama</td>
-                    <td>: Bunga Wahyuningtyas, S.T</td>
+                    <td>: {{ $suratTugas->nama }}</td>
                 </tr>
                 <tr>
                     <td>Jabatan</td>
-                    <td>: Kepala Pengelola Dosen</td>
+                    <td>: {{ $suratTugas->jabatan }}</td>
                 </tr>
             </table>
             
-            <p>Untuk menghadiri acara Bimbingan Teknis Penyusunan Rencana Strategis Merdeka Belajar Kampus Merdeka (MBKM) Bagi Perguruan Tinggi di Lingkungan LLDikti Wilayah III Tahun 2024, yang akan dilaksanakan pada:</p>
+            <p>Untuk menghadiri acara {{ $suratKeluar->perihal}}, yang akan dilaksanakan pada:</p>
             <table>
                 <tr>
                     <td>Hari/Tanggal</td>
-                    <td>: Kamis / 31 Oktober 2024</td>
+                    <td>: {{ \Carbon\Carbon::parse($suratTugas->tgl_acara)->translatedFormat('l, d F Y') }}</td>
                 </tr>
                 <tr>
                     <td>Waktu</td>
-                    <td>: Pukul 09.00 WIB – selesai</td>
+                    <td>: Pukul {{ \Carbon\Carbon::parse($suratTugas->waktu)->format('H:i') }} WIB – selesai</td>
                 </tr>
                 <tr>
                     <td>Tempat</td>
-                    <td>: Universitas Bina Nusantara, Kampus Anggrek Jl. Kebun Jeruk Raya No. 27 Kebon Jeruk Jakarta Barat 11530</td>
+                    <td>: {{ $suratTugas->tempat}}</td>
                 </tr>
             </table>
             
             <p>Demikian surat tugas ini dibuat untuk dilaksanakan dengan penuh rasa tanggung jawab.</p>
             
-            <div class="signature">
+            <div class="signature"> 
                 <p>{{ $lembaga->kota}}, {{ \Carbon\Carbon::parse($suratKeluar->tgl_surat)->translatedFormat('d F Y') }}</p>
                 <div class="space"></div>
                 <p style="text-decoration: underline;"><strong>{{ $lembaga->kepala}}</strong></p>

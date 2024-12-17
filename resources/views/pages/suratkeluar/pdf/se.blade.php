@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="id">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Surat Undangan</title>
+    <title>Surat Edaran</title>
     <style>
         html, body {
             margin: 0;
@@ -11,70 +11,42 @@
             font-family: 'Times New Roman';
             background-color: #ffff99;
         }
-
         .container {
             margin: 2.5cm;
             padding-top: 50px;
         }
-
         .header {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
             text-align: center;
-            padding: 15px 0;
-            z-index: 1000;
-        }
-
-        .header img {
-            width: 120px;
-            margin-bottom: 10px;
-        }
-
-        .header h1 {
-            font-size: 20px;
-            margin: 0;
             font-weight: bold;
+            font-size: 18px;
             text-transform: uppercase;
-            color: #4a75af;
-        }
-
-        .content {
-            font-size: 14px;
-            line-height: 1.8;
-        }
-
-        .content p {
-            margin: 0 0 15px;
-        }
-
-        .tanggal {
-            text-align: right; 
             margin-bottom: 30px;
         }
-
-        .surat-info strong {
-            display: inline-block;
-            width: 120px; 
+        .header h2 {
+            margin: 0;
         }
-
-        .surat-info span {
-            display: inline-block;
-            min-width: 150px; 
-        }
-
-        .signature {
-            text-align: right; 
-            margin-top: 50px;
+        .details {
+            margin-bottom: 20px;
             font-size: 14px;
-            line-height: 1.6;
         }
-
-        .signature .space {
-            height: 70px;
+        .details p {
+            margin: 5px 0;
         }
-
+        .content {
+            font-size: 14px;
+            line-height: 1.5;
+        }
+        .content p {
+            text-align: justify;
+        }
+        .content ul {
+            margin-left: 20px;
+        }
+        .signature {
+            margin-top: 50px;
+            text-align: right;
+            font-size: 14px;
+        }
         .footer {
             position: fixed;
             left: 0;
@@ -83,61 +55,67 @@
             text-align: center;
             font-size: 12px;
             padding: 10px 0;
-            width: 100%;
-        }
-
-        .footer p {
-            margin: 5px 0;
-            color: #4a75af;
         }
     </style>
 </head>
 <body>
-    <!-- Header -->
-    <div class="header">
-        <img src="assets/dist/img/logo.png" alt="Logo">
-        <h1>SEKOLAH TINGGI TEKNOLOGI INFORMASI NIIT</h1>
-    </div>
-
-    <!-- Konten Surat -->
     <div class="container">
-        <div class="content">
-            <p class="tanggal">Jakarta, {{ \Carbon\Carbon::parse($suratKeluar->created_at)->translatedFormat('d F Y') }}</p>
-
-            <div class="surat-info" style="margin-bottom: 30px;">
-                <div><strong>No</strong> <span>: {{ $suratKeluar->nomor_surat }}</span></div>
-                <div><strong>Lampiran</strong> <span>: -</span></div>
-                <div><strong>Perihal</strong> <span>: {{ $suratKeluar->perihal }}</span></div>
-            </div>
-
-            <p>Kepada Yth,<br>Bapak/Ibu Staff dan Dosen<br>Sekolah Tinggi Teknologi Informasi NIIT<br>Di tempat</p>
-
-            <p>Dengan Hormat,</p>
-            <p>Bersama ini kami mengundang Bapak/Ibu seluruh staff dan dosen Sekolah Tinggi Teknologi Informasi NIIT untuk menghadiri General Meeting pada:</p>
-
-            <div class="surat-info">
-                <div><strong>Hari/Tanggal</strong><span>: {{ \Carbon\Carbon::parse($suratKeluar->tgl_surat)->translatedFormat('l, d F Y') }}</span></div>
-                <div><strong>Waktu</strong><span>: Jam 9.00 s/d selesai</span></div>
-                <div><strong>Tempat</strong><span>: Ruang LR 1</span></div>
-            </div>
-
-            <p>Demikian surat undangan ini kami buat. Atas perhatian nya kami ucapkan terima kasih.</p>
-
-            <!-- Tanda Tangan -->
-            <div class="signature">
-                <p>Hormat Kami,</p>
-                <p><strong>Ketua STTI NIIT</strong></p>
-                <div class="space"></div>
-                <p style="text-decoration: underline;"><strong>(Dr. Trinugi Wira Harjanti, S.T., M.Kom)</strong></p>
-            </div>
+        <div class="header">
+            <h2>Surat Edaran</h2>
+            <p>Nomor: 433/SE/WK-II/NIIT/XI/2024</p>
         </div>
-    </div>
 
-    <!-- Footer -->
-    <div class="footer">
-        <p>Jl. Asem Dua No. 22 Cipete, Jakarta Selatan 12410</p>
-        <p>Telp: (62-21) 7155670, Fax: (62-21) 7911018</p>
-        <p>www.i-tech.ac.id | info@i-tech.ac.id</p>
+        <div class="details">
+            <p><strong>Kepada:</strong> Seluruh Civitas Akademika STTI NIIT</p>
+            <p><strong>Dari:</strong> Wakil Ketua Non Akademik</p>
+            <p><strong>Mengenai:</strong> Pelaksanaan Kewajiban Menjaga Kebersihan Dan Larangan Makan Di Ruang Kelas</p>
+            <p><strong>Cc:</strong> Ketua STTI NIIT</p>
+        </div>
+
+        <div class="content">
+            <p>Salam,</p>
+            <p>Dalam rangka menciptakan lingkungan kampus yang bersih, nyaman, dan kondusif untuk kegiatan belajar mengajar di Kampus STTI NIIT, dengan ini disampaikan beberapa hal terkait kewajiban menjaga kebersihan serta aturan larangan makan di ruang kelas. Hal ini bertujuan untuk meningkatkan kepedulian seluruh civitas akademika Kampus STTI NIIT terhadap kebersihan lingkungan kampus.</p>
+            <ul>
+                <li><strong>Kewajiban Menjaga Kebersihan</strong>
+                    <ul>
+                        <li>Seluruh civitas akademika (mahasiswa, dosen, dan staf) wajib menjaga kebersihan di area kampus, termasuk ruang kelas, ruang laboratorium, perpustakaan, kantin, dan fasilitas umum lainnya.</li>
+                        <li>Sampah harus dibuang pada tempat sampah yang telah disediakan.</li>
+                        <li>Semua pihak diharapkan berperan aktif dalam menjaga kerapian dan ketertiban di lingkungan kampus.</li>
+                    </ul>
+                </li>
+                <li><strong>Larangan Makan di Ruang Kelas</strong>
+                    <ul>
+                        <li>Dilarang membawa dan mengonsumsi makanan di dalam ruang kelas selama kegiatan perkuliahan berlangsung untuk menjaga kebersihan dan menghindari gangguan proses belajar mengajar.</li>
+                        <li>Apabila memerlukan tempat untuk makan atau minum, harap menggunakan area yang telah disediakan, seperti kantin.</li>
+                    </ul>
+                </li>
+                <li><strong>Sanksi Pelanggaran</strong>
+                    <ul>
+                        <li>Setiap pelanggaran terhadap ketentuan ini akan dikenakan sanksi berupa teguran hingga tindakan disiplin lainnya sesuai kebijakan kampus.</li>
+                        <li>Petugas kebersihan dan keamanan kampus berhak menegur pihak-pihak yang melanggar aturan kebersihan dan larangan makan di dalam ruang kelas.</li>
+                    </ul>
+                </li>
+                <li><strong>Pengawasan dan Pelaporan</strong>
+                    <ul>
+                        <li>Pengawasan terhadap pelaksanaan kebijakan ini dilakukan oleh seluruh civitas akademika dan petugas kebersihan serta keamanan kampus.</li>
+                        <li>Apabila ditemukan pelanggaran atau ketidaktertiban, civitas akademika dapat melaporkannya kepada pihak pengelola kampus.</li>
+                    </ul>
+                </li>
+                <li><strong>Sosialisasi Kebijakan</strong>
+                    <ul>
+                        <li>Surat edaran ini diharapkan menjadi pedoman bagi seluruh civitas akademika Kampus STTI NIIT untuk senantiasa menjaga kebersihan lingkungan dan mematuhi aturan larangan makan di ruang kelas.</li>
+                        <li>Diharapkan juga untuk menyebarkan informasi ini secara menyeluruh melalui berbagai media informasi kampus agar diketahui oleh seluruh pihak.</li>
+                    </ul>
+                </li>
+            </ul>
+            <p>Demikian surat edaran ini disampaikan untuk dilaksanakan dengan penuh tanggung jawab dan kesadaran bersama, demi terciptanya lingkungan kampus yang bersih, sehat, dan nyaman.</p>
+        </div>
+
+        <div class="signature">
+            <p>Jakarta, 6 November 2024</p>
+            <p><strong>Wakil Ketua II Non Akademik</strong></p>
+            <p><strong>Hari Setiyani, S.T, M.Kom</strong></p>
+        </div>
     </div>
 </body>
 </html>
