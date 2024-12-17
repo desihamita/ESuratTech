@@ -38,6 +38,9 @@
 <!-- SweetAlert2 JS -->
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.all.min.js') }}"></script>
 
+<!-- Summernote -->
+<script src="{{ asset('assets/plugins/summernote/summernote-bs4.min.js') }}"></script>
+
 <script>
     const currentYear = new Date().getFullYear();
     document.getElementById('currentYear').textContent = currentYear;
@@ -55,6 +58,16 @@
       "responsive": true,
     });
   });
+  $(function () {
+    // Summernote
+    $('#summernote').summernote()
+
+    // CodeMirror
+    CodeMirror.fromTextArea(document.getElementById("codeMirrorDemo"), {
+      mode: "htmlmixed",
+      theme: "monokai"
+    });;
+  })
 </script>
 </body>
 </html>

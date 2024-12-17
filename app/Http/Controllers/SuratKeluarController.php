@@ -7,6 +7,7 @@ use App\Models\LetterOut;
 use Illuminate\Http\Request;
 use App\Models\Classification;
 use App\Models\Lembaga;
+use App\Models\CircularLetter;
 use App\Models\SuratTugas;
 use Illuminate\Support\Facades\Validator;
 use Barryvdh\DomPDF\Facade\Pdf;
@@ -80,11 +81,10 @@ class SuratKeluarController extends Controller
             }
             // Jika jenis dokumen adalah Surat Edaran
             elseif ($request->kode_klasifikasi == 'SE') {
-                $letterData['nomor_edaran'] = $request->nomor_edaran;
-                $letterData['tgl_edaran'] = $request->tgl_edaran;
+                $letterData['konten'] = $request->konten;
                 $letterData['letterout_id'] = $letterOut->id;
 
-                SuratEdaran::create($letterData);
+                CircularLetter::create($letterData);
             }
 
             return redirect()->route('suratkeluar.index')->with('success', 'Data berhasil ditambahkan!');

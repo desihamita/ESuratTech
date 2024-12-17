@@ -133,42 +133,13 @@
                         </div>
                         <!-- Form Surat Edaran Tambahan (Disembunyikan) -->
                         <div id="surat_edaran_fields" class="additional-fields" style="display:none;">
-                            <h5>Form Surat Tugas</h5>
+                            <h5>Form Surat Edaran</h5>
                             <div class="row">
-                                <div class="col-md-6">
-                                    <div class="form-group">
-                                        <label>Nama </label>
-                                        <input type="text" name="namaDitugaskan" class="form-control" placeholder="Masukkan nama ">
-                                    </div>
-                                </div>
-                                <div class="col-md-6">
-                                    <div class="form-group">
-                                        <label>Jabatan</label>
-                                        <input type="text" name="jabatan" class="form-control" placeholder="Masukkan nama jabatan">
-                                    </div>
-                                </div>
                                 <div class="col-md-12">
-                                    <div class="row">
-                                        <div class="col-md-4">
-                                            <div class="form-group">
-                                                <label>Hari/Tanggal</label>
-                                                <input type="date" name="tgl_acara" class="form-control">
-                                            </div>
-                                        </div>
-                                        
-                                        <div class="col-md-4">
-                                            <div class="form-group">
-                                                <label>Waktu</label>
-                                                <input type="time" name="waktu" class="form-control">
-                                            </div>
-                                        </div>
-                                        
-                                        <div class="col-md-4">
-                                            <div class="form-group">
-                                                <label>Tempat</label>
-                                                <input type="text" name="tempat" class="form-control">
-                                            </div>
-                                        </div>
+                                    <div class="form-group">
+                                        <label>Konten</label>
+                                        <textarea type="text" id="summernote" name="konten" class="form-control" rows="3"
+                                        placeholder="Masukkan Konten" value="{{ old('konten') }}" required></textarea>
                                     </div>
                                 </div>
                             </div>
