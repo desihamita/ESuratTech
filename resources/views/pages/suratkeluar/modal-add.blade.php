@@ -157,6 +157,10 @@
 <!-- end tambah data -->
 
 <script>
+    $(function () {
+        $('#summernote').summernote()
+    })
+    
     $(document).ready(function () {
         const jenisDokumenSelect = $('[name="kode_klasifikasi"]');
         const devisiSelect = $('[name="devisi"]');
