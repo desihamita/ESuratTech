@@ -34,6 +34,6 @@ class LetterOut extends Model
     }
     public function suratEdaran()
     {
-        return $this->hasOne(CircullarLetter::class, 'letterout_id');
+        return $this->hasOne(SuratEdaran::class, 'letterout_id');
     }
 }

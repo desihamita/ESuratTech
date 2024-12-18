@@ -7,7 +7,7 @@ use App\Models\LetterOut;
 use Illuminate\Http\Request;
 use App\Models\Classification;
 use App\Models\Lembaga;
-use App\Models\CircularLetter;
+use App\Models\SuratEdaran;
 use App\Models\SuratTugas;
 use Illuminate\Support\Facades\Validator;
 use Barryvdh\DomPDF\Facade\Pdf;
@@ -84,7 +84,7 @@ class SuratKeluarController extends Controller
                 $letterData['konten'] = $request->konten;
                 $letterData['letterout_id'] = $letterOut->id;
 
-                CircularLetter::create($letterData);
+                SuratEdaran::create($letterData);
             }
 
             return redirect()->route('suratkeluar.index')->with('success', 'Data berhasil ditambahkan!');
@@ -111,7 +111,6 @@ class SuratKeluarController extends Controller
     
         try {
             $letterOut = LetterOut::findOrFail($id);
-            $suratTugas = SuratTugas::where('letterout_id', $id)->first();
 
             // Update data Surat Keluar
             $tglSurat = $request->tgl_surat;
@@ -155,8 +154,7 @@ class SuratKeluarController extends Controller
             } elseif ($kodeKlasifikasi === 'SE') {
                 $suratEdaran = SuratEdaran::firstOrNew(['letterout_id' => $letterOut->id]);
                 $suratEdaran->fill([
-                    'nomor_edaran' => $request->nomor_edaran,
-                    'tgl_edaran' => $request->tgl_edaran,
+                    'konten' => $request->konten,
                 ])->save();
             }
     
@@ -210,7 +208,7 @@ class SuratKeluarController extends Controller
     public function cetak($id)
     {
         // Ambil surat keluar berdasarkan ID
-        $suratKeluar = LetterOut::with('klasifikasi','suratTugas')->findOrFail($id);
+        $suratKeluar = LetterOut::with('klasifikasi','suratTugas', 'suratEdaran')->findOrFail($id);
 
         // Ambil data lembaga secara manual
         $lembaga = Lembaga::first(); // Jika hanya ada satu lembaga
@@ -233,6 +231,7 @@ class SuratKeluarController extends Controller
             'lembaga' => $lembaga,
             'klasifikasi' => $suratKeluar->klasifikasi,
             'suratTugas' => $suratKeluar->suratTugas,
+            'suratEdaran' => $suratKeluar->suratEdaran,
         ])->setPaper('a4');
 
         // Bersihkan nomor surat

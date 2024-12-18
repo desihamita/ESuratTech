@@ -1,5 +1,4 @@
-<!-- Modal Edit Surat Keluar -->
-@foreach ($letterOut as $d )
+@foreach ($letterOut as $d)
 <div class="modal fade" id="modal-edit{{ $d->id }}">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
@@ -9,72 +8,67 @@
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
-            <div class="modal-body p-0">
-                <form action="{{ route('suratkeluar.update', $d->id) }}" method="POST" enctype="multipart/form-data">
+            <div class="modal-body p-0" style="max-height: 500px; overflow-y: auto;">
+                <form action="{{ route('suratkeluar.update', $d->id) }}" method="POST">
                     @csrf
                     <div class="card-body">
                         <h5 class="font-weight-bold mb-0">Informasi Umum</h5>
-                        <span class="d-block mb-2">Lengkapi informasi pada surat keluar.</span>
+                        <span class="d-block mb-2">Perbarui informasi surat keluar.</span>
                         <div class="row">
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label>Tgl. Surat</label>
                                     <input type="date" name="tgl_surat" class="form-control" value="{{ $d->tgl_surat }}" readonly>
-                                    @error('tgl_surat') <small class="text-danger">{{ $message }}</small> @enderror
                                 </div>
                                 <div class="form-group">
                                     <label>No. Surat</label>
-                                    <input type="text" name="nomor_surat" class="form-control" id="nomor_surat" value="{{ $d->nomor_surat }}" readonly required>
-
-                                    @error('nomor_surat') <small class="text-danger">{{ $message }}</small> @enderror
+                                    <input type="text" name="nomor_surat" class="form-control" value="{{ $d->nomor_surat }}" readonly>
                                 </div>
                                 <div class="form-group">
-                                    <label class="mb-0">Jenis Dokumen</label>
-                                    <select name="kode_klasifikasi" class="form-control" id="jenis_dokumen" required>
-                                        <option value="">Pilih Jenis Dokumen</option>
+                                    <label>Penerima</label>
+                                    <input type="text" name="penerima" class="form-control" value="{{ $d->penerima }}" required>
+                                </div>
+                                <div class="form-group">
+                                    <label>Pengirim</label>
+                                    <input type="text" name="pengirim" class="form-control" value="{{ $d->pengirim }}" required>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label>Jenis Dokumen</label>
+                                    <select name="kode_klasifikasi" id="kode_klasifikasi_edit{{ $d->id }}" class="form-control" required>
+                                        <option value="">--Pilih Jenis Dokumen--</option>
                                         @foreach($klasifikasi as $k)
-                                            <option value="{{ $k->kode }}" {{ $k->kode == $d->kode_klasifikasi ? 'selected' : '' }}>{{ $k->nama }}</option>
+                                        <option value="{{ $k->kode }}" {{ $d->kode_klasifikasi == $k->kode ? 'selected' : '' }}>
+                                            {{ $k->nama }}
+                                        </option>
                                         @endforeach
                                     </select>
                                 </div>
                                 <div class="form-group">
                                     <label>No. Agenda</label>
-                                    <input type="text" name="no_agenda" class="form-control" id="no_agenda" value="{{ $d->no_agenda }}" required>
-                                    @error('no_agenda') <small class="text-danger">{{ $message }}</small> @enderror
+                                    <input type="text" name="no_agenda" class="form-control" value="{{ $d->no_agenda }}" required>
                                 </div>
                                 <div class="form-group">
-                                    <label>Pengirim</label>
-                                    <input type="text" name="pengirim" class="form-control" value="{{ $d->pengirim }}"
-                                        required>
-                                    @error('pengirim') <small class="text-danger">{{ $message }}</small> @enderror
-                                </div>
-                            </div>
-                            <div class="col-md-6">
-                                <div class="form-group">
-                                    <label>Penerima</label>
-                                    <input type="text" name="penerima" class="form-control" value="{{ $d->penerima }}"
-                                        required>
-                                    @error('penerima') <small class="text-danger">{{ $message }}</small> @enderror
-                                </div>
-                                <div class="form-group">
-                                    <label>Perihal</label>
-                                    <input type="text" name="perihal" class="form-control" value="{{ $d->perihal }}"
-                                        required>
-                                    @error('perihal') <small class="text-danger">{{ $message }}</small> @enderror
-                                </div>
-                                <div class="form-group">
-                                    <label class="mb-0">Divisi</label>
-                                    <select name="devisi" class="form-control" id="divisi" required>
-                                        <option value="">Pilih Divisi</option>
+                                    <label>Divisi</label>
+                                    <select name="devisi" class="form-control" required>
+                                        <option value="">--Pilih Divisi--</option>
                                         @foreach($divisi as $div)
-                                            <option value="{{ $div->kode }}" {{ $div->kode == $d->devisi ? 'selected' : '' }}>{{ $div->nama }}</option>
+                                        <option value="{{ $div->kode }}" {{ $d->devisi == $div->kode ? 'selected' : '' }}>
+                                            {{ $div->nama }}
+                                        </option>
                                         @endforeach
                                     </select>
                                 </div>
+                                <div class="form-group">
+                                    <label>Perihal</label>
+                                    <textarea name="perihal" class="form-control" rows="3" required>{{ $d->perihal }}</textarea>
+                                </div>
                             </div>
                         </div>
-                        @if($d->kode_klasifikasi === 'ST')
-                        <div id="surat_tugas" class="additional-fields" style="display:none;">
+
+                        <!-- Surat Tugas Tambahan -->
+                        <div id="surat_tugas_fields_edit{{ $d->id }}" class="additional-fields" style="display: none;">
                             <h5>Form Surat Tugas</h5>
                             <div class="row">
                                 <div class="col-md-6">
@@ -118,7 +112,16 @@
                                 </div>
                             </div>
                         </div>
-                        @endif
+
+                        <!-- Surat Edaran Tambahan -->
+                        <div id="surat_edaran_fields_edit{{ $d->id }}" class="additional-fields" style="display: none;">
+                            <h5>Form Surat Edaran</h5>
+                            <div class="form-group">
+                                <label>Konten</label>
+                                <textarea type="text" name="konten" class="form-control summernote" rows="3"
+                                placeholder="Masukkan Konten" value="{{ old('konten') }}" required>{{ $d->suratEdaran->konten ?? '' }}</textarea>
+                            </div>
+                        </div>
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-danger" data-dismiss="modal">Tutup</button>
@@ -130,57 +133,49 @@
     </div>
 </div>
 @endforeach
-<!-- end modal edit surat kelaur-->
- 
+
+
 <script>
-    $(document).ready(function() {
-        $('#jenis_dokumen, #divisi, #no_agenda').on('change keyup', function() {
-            var noAgenda = $('#no_agenda').val();
-            var kodeKlasifikasi = $('#jenis_dokumen').val();
-            var devisi = $('#divisi').val();
-            var tglSurat = $('input[name="tgl_surat"]').val(); 
+    $(function () {
+        $('.summernote').summernote();
+    });
+    $(document).ready(function () {
+        // Fungsi Update Nomor Surat
+        function updateNomorSurat(id) {
+            var kodeKlasifikasi = $('#kode_klasifikasi_edit' + id).val();
+            var devisi = $('[name="devisi"]').val();
+            var tglSurat = $('[name="tgl_surat"]').val();
+            var noAgenda = $('[name="no_agenda"]').val();
 
             $.ajax({
                 url: '{{ route("generate.nomor_surat") }}',
-                method: 'POST',
-                data: {
-                    _token: '{{ csrf_token() }}',
-                    no_agenda: noAgenda,
-                    kode_klasifikasi: kodeKlasifikasi,
-                    devisi: devisi,
-                    tgl_surat: tglSurat,
+                type: 'POST',
+                headers: { 'X-CSRF-TOKEN': '{{ csrf_token() }}' },
+                data: { kode_klasifikasi: kodeKlasifikasi, devisi: devisi, tgl_surat: tglSurat, no_agenda: noAgenda },
+                success: function (data) {
+                    $('[name="nomor_surat"]').val(data.nomor_surat);
                 },
-                success: function(response) {
-                    $('#nomor_surat').val(response.nomor_surat);
-                },
-                error: function(xhr, status, error) {
-                    console.log('Error: ' + error);
+                error: function () {
+                    console.error("Error generating nomor surat.");
                 }
             });
-        });
-    });
+        }
 
-    $(document).ready(function() {
-        // Event handler untuk pilihan jenis dokumen
-        $('#jenis_dokumen').change(function() {
-            var jenis_dokumen = $(this).val(); // Ambil nilai dari jenis_dokumen
+        // Event Handler Jenis Dokumen
+        $('[id^="kode_klasifikasi_edit"]').change(function () {
+            var id = $(this).attr('id').split('edit')[1];
+            $('#surat_tugas_fields_edit' + id).hide();
+            $('#surat_edaran_fields_edit' + id).hide();
 
-            // Sembunyikan semua field tambahan terlebih dahulu
-            $('#surat_tugas').hide();
-            $('#surat_edaran').hide();
-
-            // Tampilkan field berdasarkan jenis dokumen
-            if (jenis_dokumen == 'ST') {
-                $('#surat_tugas').show();
-                $('#surat_edaran').hide();
-            } else if (jenis_dokumen == 'SE') {
-                $('#surat_edaran').show();
-                $('#surat_tugas').hide();
+            if ($(this).val() == 'ST') {
+                $('#surat_tugas_fields_edit' + id).show();
+            } else if ($(this).val() == 'SE') {
+                $('#surat_edaran_fields_edit' + id).show();
             }
+
+            updateNomorSurat(id);
         });
 
-        // Trigger change event saat halaman selesai dimuat
-        $('#jenis_dokumen').trigger('change');
+        $('[id^="kode_klasifikasi_edit"]').trigger('change'); // Trigger on page load
     });
-
 </script>
