@@ -119,7 +119,54 @@
                             <div class="form-group">
                                 <label>Konten</label>
                                 <textarea type="text" name="konten" class="form-control summernote" rows="3"
-                                placeholder="Masukkan Konten" value="{{ old('konten') }}" required>{{ $d->suratEdaran->konten ?? '' }}</textarea>
+                                placeholder="Masukkan Konten" value="{{ old('konten') }}">{{ $d->suratEdaran->konten ?? '' }}</textarea>
+                            </div>
+                        </div>
+                        
+                        
+                        <!-- Surat Tugas Tambahan -->
+                        <div id="surat_undangan_fields_edit{{ $d->id }}" class="additional-fields" style="display: none;">
+                            <h5>Form Surat Udangan</h5>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label>Nama</label>
+                                        <input type="text" name="namaDitugaskan" class="form-control" 
+                                            value="{{ old('namaDitugaskan', $d->suratTugas->nama ?? '') }}" placeholder="Masukkan nama">
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label>Jabatan</label>
+                                        <input type="text" name="jabatan" class="form-control" 
+                                        value="{{ old('jabatan', $d->suratTugas->jabatan ?? '') }}" placeholder="Masukkan nama jabatan">
+                                    </div>
+                                </div>
+                                <div class="col-md-12">
+                                    <div class="row">
+                                        <div class="col-md-4">
+                                            <div class="form-group">
+                                                <label>Hari/Tanggal</label>
+                                                <input type="date" name="tgl_acara" class="form-control" 
+                                                value="{{ old('tgl_acara', $d->suratTugas->tgl_acara ?? '') }}">
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <div class="form-group">
+                                                <label>Waktu</label>
+                                                <input type="time" name="waktu" class="form-control" 
+                                                value="{{ old('waktu', $d->suratTugas->waktu ?? '') }}">
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <div class="form-group">
+                                                <label>Tempat</label>
+                                                <input type="text" name="tempat" class="form-control" 
+                                                value="{{ old('tempat', $d->suratTugas->tempat ?? '') }}" placeholder="Masukkan tempat">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -166,16 +213,19 @@
             var id = $(this).attr('id').split('edit')[1];
             $('#surat_tugas_fields_edit' + id).hide();
             $('#surat_edaran_fields_edit' + id).hide();
+            $('#surat_undanga_fields_edit' + id).hide();
 
             if ($(this).val() == 'ST') {
                 $('#surat_tugas_fields_edit' + id).show();
             } else if ($(this).val() == 'SE') {
                 $('#surat_edaran_fields_edit' + id).show();
+            }else if ($(this).val() == 'SU') {
+                $('#surat_undangan_fields_edit' + id).show();
             }
 
             updateNomorSurat(id);
         });
 
-        $('[id^="kode_klasifikasi_edit"]').trigger('change'); // Trigger on page load
+        $('[id^="kode_klasifikasi_edit"]').trigger('change');
     });
 </script>

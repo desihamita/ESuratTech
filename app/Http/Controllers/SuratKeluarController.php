@@ -69,7 +69,7 @@ class SuratKeluarController extends Controller
             $letterOut = LetterOut::create($letterData);
 
             // Jika jenis dokumen adalah Surat Tugas
-            if ($request->kode_klasifikasi == 'ST') {
+            if ($request->kode_klasifikasi == 'ST' || $request->kode_klasifikasi == 'SU') {
                 $letterData['nama'] = $request->namaDitugaskan;
                 $letterData['jabatan'] = $request->jabatan;
                 $letterData['tgl_acara'] = $request->tgl_acara;
@@ -89,6 +89,7 @@ class SuratKeluarController extends Controller
 
             return redirect()->route('suratkeluar.index')->with('success', 'Data berhasil ditambahkan!');
         } catch (\Exception $e) {
+            Log::error($e->getMessage());
             return redirect()->back()->with('error', 'Terjadi kesalahan: ' . $e->getMessage());
         }
     }
@@ -142,7 +143,7 @@ class SuratKeluarController extends Controller
             ]);
     
             // Update data jenis dokumen khusus
-            if ($kodeKlasifikasi === 'ST') {
+            if ($kodeKlasifikasi === 'ST' || $kodeKlasifikasi === "SU") {
                 $suratTugas = SuratTugas::firstOrNew(['letterout_id' => $letterOut->id]);
                 $suratTugas->fill([
                     'nama' => $request->namaDitugaskan,
@@ -222,6 +223,7 @@ class SuratKeluarController extends Controller
         $template = match ($kodeKlasifikasi) {
             'SE' => 'pages.suratKeluar.pdf.se',
             'ST' => 'pages.suratKeluar.pdf.st',
+            'SU' => 'pages.suratKeluar.pdf.su',
             default => 'pages.suratKeluar.pdf.default',
         };
 

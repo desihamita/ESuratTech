@@ -91,7 +91,8 @@
                         </div>
                         <!-- Form Surat Tugas Tambahan (Disembunyikan) -->
                         <div id="surat_tugas_fields" class="additional-fields" style="display:none;">
-                            <h5>Form Surat Tugas</h5>
+                            <h5 class="font-weight-bold mb-0">Form Surat Tugas</h5>
+                            <span class="d-block mb-2">Lengkapi informasi pada surat tugas.</span>
                             <div class="row">
                                 <div class="col-md-6">
                                     <div class="form-group">
@@ -133,13 +134,56 @@
                         </div>
                         <!-- Form Surat Edaran Tambahan (Disembunyikan) -->
                         <div id="surat_edaran_fields" class="additional-fields" style="display:none;">
-                            <h5>Form Surat Edaran</h5>
+                            <h5 class="font-weight-bold mb-0">Form Surat Edaran</h5>
+                            <span class="d-block mb-2">Lengkapi informasi pada surat edaran.</span>
                             <div class="row">
                                 <div class="col-md-12">
                                     <div class="form-group">
                                         <label>Konten</label>
                                         <textarea type="text" id="summernote" name="konten" class="form-control" rows="3"
-                                        placeholder="Masukkan Konten" value="{{ old('konten') }}" required></textarea>
+                                        placeholder="Masukkan Konten" value="{{ old('konten') }}"></textarea>
+                                    </div>
+                                </div>
+                            </div>
+                        </div><!-- Form Surat Edaran Tambahan (Disembunyikan) -->
+                        <div id="surat_udangan_fields" class="additional-fields" style="display:none;">
+                            <h5 class="font-weight-bold mb-0">Form Surat Undangan</h5>
+                            <span class="d-block mb-2">Lengkapi informasi pada surat undangan.</span>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label>Nama </label>
+                                        <input type="text" name="namaDitugaskan" class="form-control" placeholder="Masukkan nama ">
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label>Jabatan</label>
+                                        <input type="text" name="jabatan" class="form-control" placeholder="Masukkan nama jabatan">
+                                    </div>
+                                </div>
+                                <div class="col-md-12">
+                                    <div class="row">
+                                        <div class="col-md-4">
+                                            <div class="form-group">
+                                                <label>Hari/Tanggal</label>
+                                                <input type="date" name="tgl_acara" class="form-control">
+                                            </div>
+                                        </div>
+                                        
+                                        <div class="col-md-4">
+                                            <div class="form-group">
+                                                <label>Waktu</label>
+                                                <input type="time" name="waktu" class="form-control">
+                                            </div>
+                                        </div>
+                                        
+                                        <div class="col-md-4">
+                                            <div class="form-group">
+                                                <label>Tempat</label>
+                                                <input type="text" name="tempat" class="form-control">
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -211,13 +255,20 @@
 
             $('#surat_tugas_fields').hide();
             $('#surat_edaran_fields').hide();
+            $('#surat_undangan_fields').hide();
 
             if (jenis_dokumen == 'ST') {
                 $('#surat_tugas_fields').show();
                 $('#surat_edaran_fields').hide();  
+                $('#surat_udangan_fields').hide();  
             } else if (jenis_dokumen == 'SE') {
-                $('#surat_edaran_fields').show();
                 $('#surat_tugas_fields').hide(); 
+                $('#surat_edaran_fields').show();
+                $('#surat_udangan_fields').hide(); 
+            }else if (jenis_dokumen == 'SU') {
+                $('#surat_edaran_fields').hide();
+                $('#surat_tugas_fields').hide(); 
+                $('#surat_udangan_fields').show(); 
             }
         });
     });
